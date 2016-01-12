@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>List</title>
+    </head>
+
+    <body>
+        <!-- list uploaded documents -->
+        {% if documents %}
+            <ul>
+                {% for document in documents %}
+                    <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- delete all form -->
+        <form action="{% url "delete" %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+            <input type="submit" value="Clear All" />
+        </form>
+
+        <hr></hr>
+
+        <!-- upload form -->
+        <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
+            
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+          
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+            <p>
+                <!-- no errors specified -->
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            </p>
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+        
+        
+    </body>
+
+</html>
