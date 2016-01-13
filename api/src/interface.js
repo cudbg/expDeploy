@@ -14,16 +14,29 @@ function setup(callback) {
 	window.addEventListener("load", callback);
 }
 
+/*
 
+ options = {
+  "n":Number, // the number of parameters you want to receive
+  "userId": String, //the user id to be hashed
+  "saveProgress":true //whether to query the server 
+ }
+
+*/
 function getParameters(userid, options) {
 	params = []
 
 
 	var n = 1
+	var id = Math.round(Math.random()*1000000);
 
 	if (options["n"]) {
 		n = options["n"];
 	}
+	if (options["userId"]) {
+		id = options["userId"];
+	}
+
 
 	/*
 
@@ -35,7 +48,7 @@ function getParameters(userid, options) {
 
 	for (i = 0; i < n; i++) {
 		
-		var exp = new window[experimentName]({userId: Math.round(Math.random()*1000000)});
+		var exp = new window[experimentName]({userId:(id + i)});
 
 		names = exp.getParamNames();
 
