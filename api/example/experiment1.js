@@ -22,7 +22,10 @@ var DummyExperiment = extend.call(window.PlanOut.Experiment, {
 });
 
 
-setExperiment('DummyExperiment')
+var userId = "hn2284";
+var researcherId = "hn2284@columbia.edu"
+
+setExperiment('DummyExperiment',userId, researcherId)
 
 
 setup(function (){
@@ -31,7 +34,7 @@ setup(function (){
 
      options = {
       "n":n,
-      "userId":"hn2285",
+      "userId":userId,
       "saveProgress":true
      }
 
@@ -41,9 +44,14 @@ setup(function (){
 
      for (i = 0; i < n; i++) {
        var btn = document.createElement("BUTTON");
-       btn.style.background = parameters[i].color;
-       var t = document.createTextNode(parameters[i].text);     
-       btn.appendChild(t);                             
+       var c = parameters[i].color;
+       var t = parameters[i].text;
+       btn.addEventListener("click", function(){
+          logData({"color":c, "text":t})
+      });
+       btn.style.background = c;
+       var txt = document.createTextNode(t);     
+       btn.appendChild(txt);                             
        document.body.appendChild(btn);              
     }
 })

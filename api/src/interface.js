@@ -1,13 +1,21 @@
 import "planout";
 import "extend";
 
+/*
+CONFIG
+*/
+var serverurl = "http://localhost:3000"
+
+
+
 var experimentName = "";
+var userId = "";
+var researchId = "";
 
-
-function setExperiment(name) {
+function setExperiment(name, userid, researcher_id) {
 	experimentName = name;
-
-
+	userId = userid;
+	researchId = researcher_id;
 }
 
 function setup(callback) {
@@ -36,16 +44,8 @@ function getParameters(userid, options) {
 	if (options["userId"]) {
 		id = options["userId"];
 	}
-
-
-	/*
-
-		TODO: Send HTTP request to server, check to see if USERID has been used before
-
-		if it has: return the parameters that were saved before
-		else: do the code below to generate new parameters, and save them to the server
-	*/
-
+	
+	
 	for (i = 0; i < n; i++) {
 		
 		var exp = new window[experimentName]({userId:(id + i)});
@@ -60,9 +60,22 @@ function getParameters(userid, options) {
         params[i] = exp._assignment._data;
 
 	}
-
-
-
 	return params;
+}
+
+function logData(d) {
+	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+	xmlhttp.open("POST", serverurl + "/log");
+	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+	var postData = {
+		data:d,
+		worker_id: userId,
+		experiment_name: experimentName,
+		researcher_id: researchId 
+	}
+
+	console.log(JSON.stringify(postData));
+	xmlhttp.send(JSON.stringify(postData));
 }
 
