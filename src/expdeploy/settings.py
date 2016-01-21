@@ -39,7 +39,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'expdeploy.fileloader',
-    'expdeploy.imageloader'
+    'expdeploy.imageloader',
+    'expdeploy.templateloader',
+    'expdeploy.planout_test'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,7 +62,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
-            os.path.join(BASE_DIR, 'expdeploy', 'imageloader', 'templates')
+            os.path.join(BASE_DIR, 'expdeploy', 'imageloader', 'templates'),
+            os.path.join(BASE_DIR, 'expdeploy', 'templateloader', 'templates'),
+            os.path.join(BASE_DIR, 'expdeploy', 'planout_test', 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {

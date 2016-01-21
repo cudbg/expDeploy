@@ -1,0 +1,22 @@
+    {% block head %}
+    <script>
+	function boop() {
+    	document.getElementById("demo").innerHTML = "boop";
+	}
+	function beep(){
+		document.getElementById("demo").innerHTML ="beep";
+	}
+
+	</script>
+    {% endblock %}
+
+    {% block content %}
+    <h1>js test</h1>
+
+	<p id="demo">beep</p>
+
+	<button type="button" onclick="boop()">boop</button>
+	<br></br>
+	<button type="button" onclick="beep()">beep</button>
+
+    {% endblock %}
