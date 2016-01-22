@@ -1,12 +1,17 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
 <html>
   <head>
     <title>Example Experiment Implementation</title>
   </head>
   <body>
 
-    <script type="text/javascript" src="api.js"></script>
-    <script type="text/javascript" src="experiment1.js"></script>
+    <script type="text/javascript" src="{% static "planout_test/api.js" %}"></script>
+    <script type="text/javascript" src="{% static "planout_test/experiment1.js" %}"></script>
 
   </body>
 </html>
+
+
 
