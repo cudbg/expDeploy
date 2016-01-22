@@ -60,8 +60,7 @@ ROOT_URLCONF = 'expdeploy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
+        'DIRS': [ os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
             os.path.join(BASE_DIR, 'expdeploy', 'imageloader', 'templates'),
             os.path.join(BASE_DIR, 'expdeploy', 'templateloader', 'templates'),
             os.path.join(BASE_DIR, 'expdeploy', 'planout_test', 'templates')
@@ -79,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
             ],
+           
         },
     },
 ]
