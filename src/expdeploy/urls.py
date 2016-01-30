@@ -8,9 +8,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^fileloader/', include('expdeploy.fileloader.urls')),
-    url(r'^imageloader/', include('expdeploy.imageloader.urls')),
-    url(r'^planout_test/', include('expdeploy.planout_test.urls')),
-    url(r'^templateloader/', include('expdeploy.templateloader.urls')),
     url(r'^$', RedirectView.as_view(url='/myapp/list/', permanent=True)),
     #SOME JANK
     url(r'^myapp/list/', RedirectView.as_view(url = "/fileloader/list/", permanent = True)),

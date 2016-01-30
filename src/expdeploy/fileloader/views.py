@@ -32,13 +32,15 @@ def list(request):
             return HttpResponseRedirect(reverse('expdeploy.fileloader.views.list'))
     else:
         form = DocumentForm()  # empty form
+        form2 = AttachmentForm()
 
     # Load documents for the list page
     documents = Document.objects.all()
     attachments = AttachmentForm();
+
     # Render list page with the documents and the form
     return render_to_response('list.html',
-        {'documents': documents, 'form': form, 'attachments':attachments},
+        {'documents': documents, 'form': form, 'form2': form2},
         context_instance=RequestContext(request)
     )
 

@@ -38,10 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'expdeploy.fileloader',
-    'expdeploy.imageloader',
-    'expdeploy.templateloader',
-    'expdeploy.planout_test'
+    'expdeploy.fileloader'
+    'expdeploy.testapp',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -61,9 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
-            os.path.join(BASE_DIR, 'expdeploy', 'imageloader', 'templates'),
-            os.path.join(BASE_DIR, 'expdeploy', 'templateloader', 'templates'),
-            os.path.join(BASE_DIR, 'expdeploy', 'planout_test', 'templates')
+            
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,6 +74,9 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
             ],
+            #'loaders': [
+            #   
+            #],
            
         },
     },
@@ -111,7 +110,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, "expdeploy/fileloader")
 MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)
