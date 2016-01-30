@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
+from expdeploy.testapp.models import ExperimentFile
 
-# Register your models here.
+#register models
+
+
+admin.site.register(ExperimentFile)

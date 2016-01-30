@@ -1,0 +1,16 @@
+<html>
+<head>
+	<title> test upload </title>
+</head>
+
+<body>
+	<form action="/testapp/" method="post" enctype="multipart/form-data">
+            
+            {% csrf_token %}
+            {{ uploadform.as_p}}
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+</body>
+
+</html>

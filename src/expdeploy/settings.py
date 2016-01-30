@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'expdeploy.fileloader'
+    'expdeploy.fileloader',
     'expdeploy.testapp',
 )
 
@@ -59,7 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
-            
+                os.path.join(BASE_DIR,  'expdeploy', 'testapp', 'combined_media'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -110,7 +110,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "expdeploy/fileloader")
+MEDIA_ROOT = os.path.join(BASE_DIR, "expdeploy")
 MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)

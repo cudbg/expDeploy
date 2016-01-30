@@ -8,8 +8,10 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^fileloader/', include('expdeploy.fileloader.urls')),
-    url(r'^$', RedirectView.as_view(url='/myapp/list/', permanent=True)),
     #SOME JANK
+    url(r'^$', RedirectView.as_view(url='/myapp/list/', permanent=True)),
     url(r'^myapp/list/', RedirectView.as_view(url = "/fileloader/list/", permanent = True)),
+    #Need to redo some jank later. Here's testapp:
+    url(r'^testapp/', include('expdeploy.testapp.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
