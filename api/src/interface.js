@@ -11,11 +11,16 @@ var serverurl = "http://localhost:3000"
 var experimentName = "";
 var userId = "";
 var researchId = "";
+var tasks = []
 
 function setExperiment(name, userid, researcher_id) {
 	experimentName = name;
 	userId = userid;
 	researchId = researcher_id;
+}
+
+function addTask(name) {
+	tasks.push(name);
 }
 
 function setup(callback) {
@@ -31,7 +36,7 @@ function setup(callback) {
  }
 
 */
-function getParameters(userid, options) {
+function getParameters(taskName,userid, options) {
 	params = []
 
 
@@ -48,7 +53,7 @@ function getParameters(userid, options) {
 	
 	for (i = 0; i < n; i++) {
 		
-		var exp = new window[experimentName]({userId:(id + i)});
+		var exp = new window[taskName]({userId:(id + i)});
 
 		names = exp.getParamNames();
 
@@ -63,7 +68,7 @@ function getParameters(userid, options) {
 	return params;
 }
 
-function logData(d) {
+function logData(task_name,d) {
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
 	xmlhttp.open("POST", serverurl + "/log");
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
