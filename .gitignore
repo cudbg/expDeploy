@@ -2,3 +2,4 @@ node_modules/
 documents/
 db.sqlite3
 *.pyc
+db.sqlite3
