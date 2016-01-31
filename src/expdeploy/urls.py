@@ -6,6 +6,7 @@ from django.views.generic import RedirectView
 from django.contrib import admin
 
 urlpatterns = [
+	url(r'^api/', include('expdeploy.api.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^fileloader/', include('expdeploy.fileloader.urls')),
     #SOME JANK
