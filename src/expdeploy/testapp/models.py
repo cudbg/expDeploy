@@ -4,10 +4,5 @@ from __future__ import unicode_literals
 from django.db import models
 
 class ExperimentFile(models.Model):
-	#can send html and static files to separate locations later
-    docfile = models.FileField(upload_to='testapp/webfiles')
+    docfile = models.FileField(upload_to='attachments')
     username = models.CharField(max_length=120, blank=True, null=True)
-    filetext = models.TextField()
-
-    #def __str__(self):
-    #	return self.docfile
