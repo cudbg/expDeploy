@@ -4,7 +4,7 @@ import "extend";
 /*
 CONFIG
 */
-var serverurl = "http://localhost:3000"
+var serverurl = "http://localhost:8000"
 
 
 
@@ -70,14 +70,15 @@ function getParameters(taskName,userid, options) {
 
 function logData(task_name,d) {
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-	xmlhttp.open("POST", serverurl + "/log");
+	xmlhttp.open("POST", serverurl + "/api/log");
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
 	var postData = {
 		data:d,
 		worker_id: userId,
 		experiment_name: experimentName,
-		researcher_id: researchId 
+		researcher_id: researchId,
+		task_name: task_name
 	}
 
 	console.log(JSON.stringify(postData));
