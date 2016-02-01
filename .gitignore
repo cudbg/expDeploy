@@ -3,3 +3,5 @@ documents/
 db.sqlite3
 *.pyc
 db.sqlite3
+
+src/expdeploy/testapp/webfiles/index.html
