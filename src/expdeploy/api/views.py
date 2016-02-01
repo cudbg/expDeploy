@@ -33,11 +33,11 @@ def log(request):
 			else:
 				tasks = findTask[0]
 
-		d = json.dumps(tasks.trials);
+		d = json.loads(tasks.trials);
 		d[len(d)] = body["data"];
-		tasks.trials = str(d);
+		tasks.trials = json.dumps(d);
 		tasks.save();
-		print(d);
+		print(tasks.trials);
 
 		return HttpResponse("Your data has been logged.")
 	return HttpResponse("Not a post request")
