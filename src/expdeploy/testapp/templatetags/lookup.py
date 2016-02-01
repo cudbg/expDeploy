@@ -3,4 +3,4 @@ register = template.Library()
 
 @register.simple_tag
 def lookup(dictionary, key):
-    return dictionary.get(key, '')
+    return dictionary.get("testapp/webfiles/" + key, '')

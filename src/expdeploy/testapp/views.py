@@ -63,6 +63,6 @@ def ExperimentView(request):
 	for each in ExperimentFile.objects.all():
 		filedict[each.docfile] = each.filetext
 	#testfile = ExperimentFile.objects.get(docfile ="testapp/webfiles/hello.js").filetext
-	return render_to_response('index.html',
+	return render_to_response('Experiment.html',
 		{'testfiles': filedict}
 	)
