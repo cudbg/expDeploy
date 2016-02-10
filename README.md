@@ -26,3 +26,20 @@ response:
 	message:String //Success, otherwise explain the error reason (i.e, user not found);
 }
 
+
+Get Experiment Example:
+http://localhost:8000/api/experiment?experimentId=Experiment1&userId=hn2284
+http://localhost:8000/api/experiment?experimentId=Experiment1&userId=hn2284&task=ButtonTask
+
+
+
+Info for setup
+
+source Django/bin.activate
+
+Migrate DB:
+
+python manage.py sqlmigrate api 0001
+python manage.py makemigrations api
+python manage.py migrate
+
