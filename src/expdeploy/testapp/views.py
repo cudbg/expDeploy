@@ -26,6 +26,11 @@ from django.core.urlresolvers import reverse
 from .models import ExperimentFile
 from .forms import UploadForm
 
+import json
+import sys
+
+from expdeploy.api.models import Experiment
+
 def UploadView(request):
 	#Upload files for post request
 	if request.method == 'POST':
@@ -34,6 +39,7 @@ def UploadView(request):
 		if form.is_valid():
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
+<<<<<<< HEAD
 				#Empty file_contents at first, then open and read file
 				newdoc = ExperimentFile(docfile=each, username=user, filetext = "boop")
 				newdoc.save()
@@ -43,6 +49,27 @@ def UploadView(request):
   				file_contents = f.read()
   				newdoc.filetext = file_contents
   				newdoc.save()
+=======
+				if (str(each).strip() == "config.json"):
+					print("GOT THE CONFIG FILE");
+					s = each.read().decode('utf-8')
+					j = json.loads(s);
+					exps = Experiment.objects.filter(name=j["experimentId"], researcher_id=j["userID"]);
+					e = None;
+					if len(exps) == 0:
+						e = Experiment(name=j["experimentId"], researcher_id=j["userID"]);
+						print("--Created new experiment--")
+					else:
+						print("--Modified config of old experiment--");
+						e = exps[0];
+					
+					e.data = json.dumps(j);
+					e.save();
+				else:
+					newdoc = ExperimentFile(docfile=each, username=user)
+					newdoc.save()
+				#print(each)
+>>>>>>> 2ecdf8c633c0f806d514884057eff1ed87bec1f2
 
 			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UploadView'))
 	#For non-post request:
