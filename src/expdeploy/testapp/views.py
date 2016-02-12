@@ -4,11 +4,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.conf import settings
+from django.conf import settings 
 
 from .models import ExperimentFile
 from .forms import UploadForm
 
+import os
 import json
 import sys
 
@@ -26,6 +27,8 @@ def UploadView(request):
 				try: 
 					plain_filename = str(each).split('/')[-1]
 					duplicate = ExperimentFile.objects.filter(username=user).get(original_filename=plain_filename)
+					#remove physical file
+					os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
 					duplicate.delete()
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
