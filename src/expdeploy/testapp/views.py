@@ -22,7 +22,14 @@ def UploadView(request):
 		if form.is_valid():
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
-				#Empty file_contents at first, then open and read file
+				# if instance of file for this user exists already, delete old instance.
+				try: 
+					plain_filename = str(each).split('/')[-1]
+					duplicate = ExperimentFile.objects.filter(username=user).get(original_filename=plain_filename)
+					duplicate.delete()
+				except ExperimentFile.DoesNotExist:
+					duplicate = None
+				#create new ExperimentFile object
 				newdoc = ExperimentFile(original_filename=each, docfile=each,username=user, filetext="tmptxt")
 				newdoc.save()
 				
