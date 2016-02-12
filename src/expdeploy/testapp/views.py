@@ -1,27 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render_to_response
-
-# views.py
-"""
-from django.views.generic.edit import FormView
-from .forms import UploadForm
-from .models import ExperimentFile
-class UploadView(FormView):
-    template_name = 'uploadpage.html'
-    form_class = UploadForm
-    success_url = '/done/'
-    def form_valid(self, form):
-    	#create ExperimentFiel instance for each file uploaded.
-    	user = form.cleaned_data['username']
-        for each in form.cleaned_data['attachments']:
-            ExperimentFile.objects.create(docfile=each, username = user)
-        return super(UploadView, self).form_valid(form)
-        """
 from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from .models import ExperimentFile
 from .forms import UploadForm
@@ -40,7 +23,7 @@ def UploadView(request):
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
 				#Empty file_contents at first, then open and read file
-				newdoc = ExperimentFile(docfile=each, username=user, filetext = "boop")
+				newdoc = ExperimentFile(original_filename=each, docfile=each,username=user, filetext="tmptxt")
 				newdoc.save()
 				
 				#Open document to read contents and save to filetext field
@@ -63,9 +46,10 @@ def UploadView(request):
 					
 					e.data = json.dumps(j);
 					e.save();
-				else:
-					newdoc = ExperimentFile(docfile=each, username=user)
-					newdoc.save()
+				#else:
+					#ask hamed about this bit later.
+					#newdoc = ExperimentFile(docfile=each, username=user)
+					#newdoc.save()
 				#print(each)
 
 			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UploadView'))
@@ -80,11 +64,14 @@ def UploadView(request):
 	)
 
 def ExperimentView(request, username):
-	#When dynamic urls added: need username based on url. see: HttpRequest.path
+	file_objects = ExperimentFile.objects.filter(username = username)
 	filedict = { '1234567890' : None}
-	for each in ExperimentFile.objects.all():
+	index_file = str(file_objects.get(original_filename = "index.html"))
+	index_file = index_file.split("/")[-1]
+	for each in file_objects:
 		filedict[each.docfile] = each.filetext
 	#testfile = ExperimentFile.objects.get(docfile ="testapp/webfiles/hello.js").filetext
-	return render_to_response('index.html',
+
+	return render_to_response(index_file,
 		{'testfiles': filedict,  'username': username}
 	)
