@@ -39,7 +39,6 @@ def UploadView(request):
 		if form.is_valid():
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
-<<<<<<< HEAD
 				#Empty file_contents at first, then open and read file
 				newdoc = ExperimentFile(docfile=each, username=user, filetext = "boop")
 				newdoc.save()
@@ -49,7 +48,6 @@ def UploadView(request):
   				file_contents = f.read()
   				newdoc.filetext = file_contents
   				newdoc.save()
-=======
 				if (str(each).strip() == "config.json"):
 					print("GOT THE CONFIG FILE");
 					s = each.read().decode('utf-8')
@@ -69,7 +67,6 @@ def UploadView(request):
 					newdoc = ExperimentFile(docfile=each, username=user)
 					newdoc.save()
 				#print(each)
->>>>>>> 2ecdf8c633c0f806d514884057eff1ed87bec1f2
 
 			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UploadView'))
 	#For non-post request:
