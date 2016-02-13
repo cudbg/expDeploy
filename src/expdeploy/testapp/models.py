@@ -21,4 +21,4 @@ class ExperimentFile(models.Model):
 	filetext = models.TextField()
 
 	def __str__(self):
-		return str(self.docfile)
+		return str(self.original_filename)

@@ -33,7 +33,7 @@ def UploadView(request):
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
 				#create new ExperimentFile object
-				newdoc = ExperimentFile(original_filename=each, docfile=each,username=user, filetext="tmptxt")
+				newdoc = ExperimentFile(original_filename=each, docfile=each, username=user, filetext="tmptxt")
 				newdoc.save()
 				
 				#Open document to read contents and save to filetext field
@@ -74,13 +74,18 @@ def UploadView(request):
 	)
 
 def ExperimentView(request, username):
+
 	file_objects = ExperimentFile.objects.filter(username = username)
 	filedict = { '1234567890' : None}
-	index_file = str(file_objects.get(original_filename = "index.html"))
+
+	#store users index.html
+	index_file = file_objects.get(original_filename = "index.html")
+	index_file = str(index_file.docfile)
 	index_file = index_file.split("/")[-1]
 	#populate dictionary
 	for each in file_objects:
 		filedict[each.docfile] = each.filetext
+		filedict[each.original_filename] = each.docfile
 
 	return render_to_response(index_file,
 		{'testfiles': filedict,  'username': username}
