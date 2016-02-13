@@ -23,6 +23,8 @@ def UploadView(request):
 		if form.is_valid():
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
+				#Empty file_contents at first, then open and read file
+				newdoc = ExperimentFile(docfile=each, username=user, filename=str(each).strip())
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
@@ -41,21 +43,24 @@ def UploadView(request):
   				file_contents = f.read()
   				newdoc.filetext = file_contents
   				newdoc.save()
-				if (str(each).strip() == "config.json"):
-					print("GOT THE CONFIG FILE");
-					s = each.read().decode('utf-8')
-					j = json.loads(s);
-					exps = Experiment.objects.filter(name=j["experimentId"], researcher_id=j["userID"]);
-					e = None;
-					if len(exps) == 0:
-						e = Experiment(name=j["experimentId"], researcher_id=j["userID"]);
-						print("--Created new experiment--")
-					else:
-						print("--Modified config of old experiment--");
-						e = exps[0];
+				# if (str(each).strip() == "config.json"):
+				# 	print("GOT THE CONFIG FILE");
+				# 	s = each.read().decode('utf-8')
+				# 	j = json.loads(s);
+				# 	exps = Experiment.objects.filter(name=j["experimentId"], researcher_id=j["userID"]);
+				# 	e = None;
+				# 	if len(exps) == 0:
+				# 		e = Experiment(name=j["experimentId"], researcher_id=j["userID"]);
+				# 		print("--Created new experiment--")
+				# 	else:
+				# 		print("--Modified config of old experiment--");
+				# 		e = exps[0];
 					
-					e.data = json.dumps(j);
-					e.save();
+				# 	e.data = json.dumps(j);
+				# 	e.save();
+
+				e.data = json.dumps(j);
+				e.save();
 				#else:
 					#ask hamed about this bit later.
 					#newdoc = ExperimentFile(docfile=each, username=user)

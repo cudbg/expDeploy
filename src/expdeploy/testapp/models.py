@@ -10,7 +10,7 @@ def uuid_file_name(instance, filename):
 	instance.filename = filename
 	filetype = filename.split('.')[-1]
 	filename = "%s.%s" % (str(uuid4()), filetype)
-	return os.path.join('testapp/webfiles/', filename)
+	return os.path.join('testapp/templates/', filename)
 
 
 class ExperimentFile(models.Model):

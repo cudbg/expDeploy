@@ -69,7 +69,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
                 os.path.join(BASE_DIR,  'expdeploy', 'testapp', 'templates'),
-                os.path.join(BASE_DIR,  'expdeploy', 'testapp', 'webfiles'),
+                #os.path.join(BASE_DIR,  'expdeploy', 'testapp', 'webfiles'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
