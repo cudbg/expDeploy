@@ -23,8 +23,6 @@ def UploadView(request):
 		if form.is_valid():
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
-				#Empty file_contents at first, then open and read file
-				newdoc = ExperimentFile(docfile=each, username=user, filename=str(each).strip())
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
