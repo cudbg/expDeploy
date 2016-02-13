@@ -56,9 +56,6 @@ def UploadView(request):
 					
 				# 	e.data = json.dumps(j);
 				# 	e.save();
-
-				e.data = json.dumps(j);
-				e.save();
 				#else:
 					#ask hamed about this bit later.
 					#newdoc = ExperimentFile(docfile=each, username=user)
