@@ -29,9 +29,7 @@ response:
 
 Get Experiment Example:
 http://localhost:8000/api/experiment?experimentId=Experiment1&userId=hn2284
-http://localhost:8000/api/experiment?experimentId=Experiment1&userId=hn2284&task=ButtonTask
-
-
+http://localhost:8000/api/task?researcher=hn2284&experiment=Experiment1&task=VotingTask&wid=W8745453&n=5
 
 Info for setup
 

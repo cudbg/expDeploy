@@ -7,7 +7,7 @@ class ExperimentFile(models.Model):
 	#can send html and static files to separate locations later
     docfile = models.FileField(upload_to='testapp/webfiles')
     username = models.CharField(max_length=120, blank=True, null=True)
-    filetext = models.TextField()
+    filename = models.CharField(max_length=120, blank=True, null=True)
 
     #def __str__(self):
     #	return self.docfile

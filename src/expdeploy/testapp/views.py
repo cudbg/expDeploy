@@ -40,7 +40,7 @@ def UploadView(request):
 			user = form.cleaned_data['username']
 			for each in request.FILES.getlist("attachments"):
 				#Empty file_contents at first, then open and read file
-				newdoc = ExperimentFile(docfile=each, username=user, filetext = "boop")
+				newdoc = ExperimentFile(docfile=each, username=user, filename=str(each).strip())
 				newdoc.save()
 				
 				#Open document to read contents and save to filetext field
@@ -48,24 +48,22 @@ def UploadView(request):
   				file_contents = f.read()
   				newdoc.filetext = file_contents
   				newdoc.save()
-				if (str(each).strip() == "config.json"):
-					print("GOT THE CONFIG FILE");
-					s = each.read().decode('utf-8')
-					j = json.loads(s);
-					exps = Experiment.objects.filter(name=j["experimentId"], researcher_id=j["userID"]);
-					e = None;
-					if len(exps) == 0:
-						e = Experiment(name=j["experimentId"], researcher_id=j["userID"]);
-						print("--Created new experiment--")
-					else:
-						print("--Modified config of old experiment--");
-						e = exps[0];
+				# if (str(each).strip() == "config.json"):
+				# 	print("GOT THE CONFIG FILE");
+				# 	s = each.read().decode('utf-8')
+				# 	j = json.loads(s);
+				# 	exps = Experiment.objects.filter(name=j["experimentId"], researcher_id=j["userID"]);
+				# 	e = None;
+				# 	if len(exps) == 0:
+				# 		e = Experiment(name=j["experimentId"], researcher_id=j["userID"]);
+				# 		print("--Created new experiment--")
+				# 	else:
+				# 		print("--Modified config of old experiment--");
+				# 		e = exps[0];
 					
-					e.data = json.dumps(j);
-					e.save();
-				else:
-					newdoc = ExperimentFile(docfile=each, username=user)
-					newdoc.save()
+				# 	e.data = json.dumps(j);
+				# 	e.save();
+					
 				#print(each)
 
 			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UploadView'))
