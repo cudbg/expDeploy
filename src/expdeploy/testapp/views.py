@@ -78,9 +78,9 @@ def ExperimentView(request, username):
 	filedict = { '1234567890' : None}
 	index_file = str(file_objects.get(original_filename = "index.html"))
 	index_file = index_file.split("/")[-1]
+	#populate dictionary
 	for each in file_objects:
 		filedict[each.docfile] = each.filetext
-	#testfile = ExperimentFile.objects.get(docfile ="testapp/webfiles/hello.js").filetext
 
 	return render_to_response(index_file,
 		{'testfiles': filedict,  'username': username}
