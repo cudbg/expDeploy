@@ -1,0 +1,19 @@
+
+<head>
+    <title> test upload </title>
+</head>
+
+<body>
+    <p> {{username}} </p>
+	<p> fresh page take four </p>
+    {% load lookup %}
+    <script>
+        {% autoescape off %}
+            {% lookup testfiles "hello.js" %}
+        {% endautoescape %}
+
+    </script>
+                
+</body>
+
+
