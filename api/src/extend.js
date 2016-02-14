@@ -31,3 +31,4 @@
         return constructor;
       }
       /* End extend helper */
+

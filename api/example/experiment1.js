@@ -1,28 +1,32 @@
-//Here we are actually creating the experiment itself, and setting the parameters
-var ButtonTask = extend.call(window.PlanOut.Experiment, {
-  setup: function() {
-  },
-  assign: function(params, args) {
-      params.set('text', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now', 'Just Do It', 'Make Account', 'Create Account', 'Welcome'], 'unit': args.userId }));
-      params.set('color1', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['#0059FF', '#FFA500','#1abc9c','#9b59b6','#e74c3c','#c0392b','#16a085','#2ecc71'], 'unit': args.userId }))
-      params.set('color2', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['#0059FF', '#FFA500','#1abc9c','#9b59b6','#e74c3c','#c0392b','#16a085','#2ecc71'], 'unit': args.userId }))
-      params.set('color3', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['#0059FF', '#FFA500','#1abc9c','#9b59b6','#e74c3c','#c0392b','#16a085','#2ecc71'], 'unit': args.userId }))
 
-  },
-  configureLogger: function() {
-    return;
-  },
-  log: function(stuff) {
-    return;
-  },
-  getParamNames: function() {
-      return this.getDefaultParamNames();
-  },
-  previouslyLogged: function() {
-      return this._exposureLogged;
+
+
+callback = function () {
+setupExperiment({
+  name:"Experiment1",
+  task:"VotingTask",
+  wid:"W1930190",
+  researcher:"hn2284",
+  viewTask: function (params) {
+    var btn = document.createElement("BUTTON");
+    btn.style.background = params["button_color"];
+    var txt = document.createTextNode(params["button_text"]);  
+    btn.appendChild(txt);  
+     document.body.appendChild(btn); 
+
+    btn.addEventListener("click", function(){
+        logData("ButtonTask",{"color":params["button_color"],"text":params["button_text"]})
+    });
   }
-});
+})
+}
 
+
+window.addEventListener("load", callback);
+
+
+
+/*
 
 var userId = "hn2284";
 var researcherId = "hn2284@columbia.edu"
@@ -67,3 +71,4 @@ setup(function (){
 })
 
 
+*/

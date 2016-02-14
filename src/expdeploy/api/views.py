@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 from .models import Experiment
+from .models import Tasks
+
 from planout.ops.random import *
 from expdeploy.testapp.models import ExperimentFile
 import importlib;
@@ -68,13 +70,13 @@ def task(request):
 
 	expsBackwards = reversed(exps);
 	for exp in expsBackwards:
-		if (exp.filename == (expId + ".py")):
+		if (exp.original_filename == (expId + ".py")):
 			Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
 			params = []
 			for i in range(0,n):
 				exp = Task(userid=wid+str(i));
 				params.append(exp.get_params())
-			return HttpResponse("{params:" + str(params) + "}")
+			return HttpResponse('{"params":' + str(params) + "}")
 
 def index(request):
     return HttpResponse("Hello, world. You're at the api index.")
