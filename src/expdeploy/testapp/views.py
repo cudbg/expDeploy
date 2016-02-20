@@ -8,12 +8,38 @@ from django.conf import settings
 
 from .models import ExperimentFile
 from .forms import UploadForm
+from django.contrib.auth.models import User
+from .forms import UserForm
 
 import os
 import json
 import sys
 
 from expdeploy.api.models import Experiment
+
+def UserProfileView(request):
+	return render_to_response('userprofile.html')
+
+def CreateUser(request):
+	if request.method == 'POST':
+		form = UserForm(request.POST)
+		#create user object
+		if form.is_valid():
+			accountname = form.cleaned_data['accountname']
+			email = form.cleaned_data['email']
+			password = form.cleaned_data['password']
+
+			user = User.objects.create_user(accountname,email,password)		
+			user.save()		
+		#return to user page
+		return HttpResponseRedirect(reverse('expdeploy.testapp.views.UserProfileView'))
+	else:
+		#create user form
+		form = UserForm()
+		return render_to_response('createuser.html',
+			{'userform': form},
+			context_instance = RequestContext(request)
+		)
 
 def UploadView(request):
 	#Upload files for post request
@@ -28,7 +54,10 @@ def UploadView(request):
 					plain_filename = str(each).split('/')[-1]
 					duplicate = ExperimentFile.objects.filter(username=user).get(original_filename=plain_filename)
 					#remove physical file
-					#os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
+					try:
+						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
+					except OSError:
+						pass
 					duplicate.delete()
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
