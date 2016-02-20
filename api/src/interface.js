@@ -14,7 +14,7 @@ var n = "";
 /*
 CONFIG
 */
-var serverurl = "http://localhost:8000"
+var serverurl = "http://192.241.179.74:8001"
 
 function logData(task_name,d) {
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
