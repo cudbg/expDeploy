@@ -5,3 +5,4 @@ db.sqlite3
 db.sqlite3
 
 src/expdeploy/testapp/webfiles/index.html
+src/expdeploy/testapp/templates/*
