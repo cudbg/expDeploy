@@ -5,3 +5,10 @@ db.sqlite3
 db.sqlite3
 
 src/expdeploy/testapp/webfiles/index.html
+#ignore templates except for those created by us
+src/expdeploy/testapp/templates/*
+!src/expdeploy/testapp/templates/uploadpage.html
+!src/expdeploy/testapp/templates/createuser.html
+!src/expdeploy/testapp/templates/userprofile.html
+
+
