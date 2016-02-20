@@ -28,7 +28,7 @@ def UploadView(request):
 					plain_filename = str(each).split('/')[-1]
 					duplicate = ExperimentFile.objects.filter(username=user).get(original_filename=plain_filename)
 					#remove physical file
-					os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
+					#os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
 					duplicate.delete()
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
@@ -81,6 +81,7 @@ def ExperimentView(request, username):
 	#populate dictionary
 	for each in file_objects:
 		filedict[each.docfile] = each.filetext
+		filedict[each.original_filename] = each.docfile
 
 	return render_to_response(index_file,
 		{'testfiles': filedict,  'username': username}
