@@ -28,7 +28,6 @@ def CreateUserView(request):
 			accountname = form.cleaned_data['accountname']
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
-
 			user = User.objects.create_user(accountname,email,password)		
 			user.save()		
 		#return to user page
