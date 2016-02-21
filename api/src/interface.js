@@ -11,10 +11,16 @@ var wid = "";
 var task = "";
 var researcher = "";
 var n = "";
+
+var viewTask;
+var clearTask;
 /*
 CONFIG
 */
-var serverurl = "http://192.241.179.74:8000"
+//var serverurl = "http://192.241.179.74:8000"
+var serverurl = "http://localhost:8000"
+
+tasks = [];
 
 function logData(task_name,d) {
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
@@ -36,13 +42,31 @@ function logData(task_name,d) {
 
 
 
+
+function nextTask() {
+
+	clearTask();
+
+	if (tasks.length == 0) {
+		console.log("No tasks left")
+		return;
+	}
+
+	entry = tasks[0];
+	viewTask(entry)
+	tasks.shift();
+}
+
+
+
 function setupExperiment(options) {
 
 	n = options.name;
 	task = options.task;
 	wid = options.wid;
 	researcher = options.researcher;
-
+	viewTask = options.viewTask;
+	clearTask = options.clearTask;
 
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=blah&n=5", false ); // false for synchronous request
@@ -53,10 +77,12 @@ function setupExperiment(options) {
    	console.log(obj["params"]);
 
    	obj["params"].forEach(function(entry) {
-   		   		 console.log("hello");
 
-   		 options.viewTask(entry)
+   		tasks.push(entry);
+   		
 	});
+
+   	nextTask();
    	
 
 }

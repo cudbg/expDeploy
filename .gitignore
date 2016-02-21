@@ -2,7 +2,8 @@ node_modules/
 documents/
 db.sqlite3
 *.pyc
-db.sqlite3
+src/db.sqlite3
+*.pyc 
 
 src/expdeploy/testapp/webfiles/index.html
 #ignore templates except for those created by us

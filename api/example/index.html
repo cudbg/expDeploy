@@ -1,7 +1,7 @@
 <html>
   <head>
 
-{% load lookup %}
+    {% load lookup %}
 
     <title>Example Experiment Implementation</title>
     <script>
@@ -9,9 +9,11 @@
     	{% lookup testfiles "api.js" %}
     	{% lookup testfiles "experiment1.js" %}
     {% endautoescape %}
+
+    
     </script>
-  <!--  <script type="text/javascript" src="api.js"></script>
-    <script type="text/javascript" src="experiment1.js"></script>-->
+  <script type="text/javascript" src="api.js"></script>
+    <script type="text/javascript" src="experiment1.js"></script>
   </head>
 
   <body>
