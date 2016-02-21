@@ -20,7 +20,7 @@ from expdeploy.api.models import Experiment
 def UserProfileView(request):
 	return render_to_response('userprofile.html')
 
-def CreateUser(request):
+def CreateUserView(request):
 	if request.method == 'POST':
 		form = UserForm(request.POST)
 		#create user object
@@ -32,13 +32,12 @@ def CreateUser(request):
 			user = User.objects.create_user(accountname,email,password)		
 			user.save()		
 		#return to user page
-		return HttpResponseRedirect(reverse('expdeploy.testapp.views.UserProfileView'))
+		return HttpResponseRedirect(reverse('expdeploy.testapp.views.CreateUserView'))
 	else:
 		#create user form
 		form = UserForm()
 		return render_to_response('createuser.html',
 			{'userform': form},
-			context_instance = RequestContext(request)
 		)
 
 def UploadView(request):
@@ -48,11 +47,12 @@ def UploadView(request):
 		#Create ExperimentFile instance for each uploaded file.
 		if form.is_valid():
 			user = form.cleaned_data['username']
+			experiment = form.cleaned_data['experiment']
 			for each in request.FILES.getlist("attachments"):
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
-					duplicate = ExperimentFile.objects.filter(username=user).get(original_filename=plain_filename)
+					duplicate = ExperimentFile.objects.filter(username=user).filter(experiment=experiment).get(original_filename=plain_filename)
 					#remove physical file
 					try:
 						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
@@ -62,7 +62,7 @@ def UploadView(request):
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
 				#create new ExperimentFile object
-				newdoc = ExperimentFile(original_filename=each, docfile=each,username=user, filetext="tmptxt")
+				newdoc = ExperimentFile(experiment=experiment, original_filename=each, docfile=each,username=user, filetext="tmptxt")
 				newdoc.save()
 				
 				#Open document to read contents and save to filetext field

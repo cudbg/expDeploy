@@ -15,6 +15,7 @@ def uuid_file_name(instance, filename):
 
 class ExperimentFile(models.Model):
 	#original_filename stored as charfield.
+	experiment = models.CharField(max_length=120, blank=True, null=True)
 	original_filename = models.CharField(max_length = 128)
 	docfile = models.FileField(upload_to=uuid_file_name)
 	username = models.CharField(max_length=120, blank=True, null=True)
