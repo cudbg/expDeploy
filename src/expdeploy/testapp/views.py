@@ -17,8 +17,27 @@ import sys
 
 from expdeploy.api.models import Experiment
 
-def UserProfileView(request):
-	return render_to_response('userprofile.html')
+def UserProfileView(request, username):
+	#list of experiments
+	file_objects = ExperimentFile.objects.filter(username=username)
+	experiments = []
+	for each in file_objects:
+		experiments.append(each.experiment)
+	experiments = list(set(experiments))
+
+	#assign each experiment with related files in filedict
+	filedict = {}
+	for experiment in experiments:
+		experiment_files = file_objects.filter(experiment=experiment)
+		file_list = []
+		for each in experiment_files:
+			file_list.append(each)
+		filedict[experiment] = file_list 
+
+	#dictionary listing files in experiment
+	return render_to_response('userprofile.html',
+		{'username':username, 'experiments': experiments, 'filedict': filedict}
+		)
 
 def CreateUserView(request):
 	if request.method == 'POST':
@@ -38,6 +57,20 @@ def CreateUserView(request):
 		return render_to_response('createuser.html',
 			{'userform': form},
 		)
+
+def ExperimentView(request, username):
+	file_objects = ExperimentFile.objects.filter(username = username)
+	filedict = { '1234567890' : None}
+	index_file = str(file_objects.get(original_filename = "index.html"))
+	index_file = index_file.split("/")[-1]
+	#populate dictionary
+	for each in file_objects:
+		filedict[each.docfile] = each.filetext
+		filedict[each.original_filename] = each.docfile
+
+	return render_to_response(index_file,
+		{'testfiles': filedict,  'username': username}
+	)
 
 def UploadView(request):
 	#Upload files for post request
@@ -99,18 +132,4 @@ def UploadView(request):
 	return render_to_response('uploadpage.html',
 		{'uploadform': form},
 		context_instance = RequestContext(request)
-	)
-
-def ExperimentView(request, username):
-	file_objects = ExperimentFile.objects.filter(username = username)
-	filedict = { '1234567890' : None}
-	index_file = str(file_objects.get(original_filename = "index.html"))
-	index_file = index_file.split("/")[-1]
-	#populate dictionary
-	for each in file_objects:
-		filedict[each.docfile] = each.filetext
-		filedict[each.original_filename] = each.docfile
-
-	return render_to_response(index_file,
-		{'testfiles': filedict,  'username': username}
 	)

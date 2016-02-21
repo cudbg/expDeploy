@@ -3,5 +3,20 @@
 	<title> User Profile </title>
 </head>
 <body>
-	<p> temp </p>
+	<b><h2> {{username}} </h2></b>
+	<p><h4> Experiments</h4> </p>
+
+		{% for experiment, files in filedict.items %}
+			<li> {{experiment}} 
+				<ul>
+				{% for file in files %}
+					<li> {{file.original_filename}} </li>
+						<ul>
+							<li>raw: <a href="{{ file.docfile.url }}">{{file.docfile}}</a></li>
+						</ul>
+				{% endfor %}
+				</ul>
+			</li>
+		{% endfor %}
+
 </body>
