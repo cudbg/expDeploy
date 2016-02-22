@@ -22,8 +22,11 @@ from expdeploy.api.models import Experiment
 
 def LoginView(request):
 	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
+		#login
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password']
 		user = authenticate(username=username, password=password)
 
 		if user is not None:
@@ -45,8 +48,8 @@ def LoginView(request):
 def UserProfileView(request):
 	if request.user.is_authenticated: 
 		username = request.user
-	else: 
-		return render('profileerror.html')
+	#if username.is_anonymous:
+	#	return render_to_response('profileerror.html')
 
 	#list of experiments
 	file_objects = ExperimentFile.objects.filter(username=username)
@@ -115,7 +118,8 @@ def UploadView(request):
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
-					duplicate = ExperimentFile.objects.filter(username=user).filter(experiment=experiment).get(original_filename=plain_filename)
+					duplicate = ExperimentFile.objects.filter(username=user).\
+						filter(experiment=experiment).get(original_filename=plain_filename)
 					#remove physical file
 					try:
 						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
@@ -125,7 +129,8 @@ def UploadView(request):
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
 				#create new ExperimentFile object
-				newdoc = ExperimentFile(experiment=experiment, original_filename=each, docfile=each,username=user, filetext="tmptxt")
+				newdoc = ExperimentFile(experiment=experiment, original_filename=each,\
+					docfile=each,username=user, filetext="tmptxt")
 				newdoc.save()
 				
 				#Open document to read contents and save to filetext field
@@ -154,7 +159,7 @@ def UploadView(request):
 					#newdoc.save()
 				#print(each)
 
-			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UploadView'))
+			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UserProfileView'))
 	#For non-post request:
 	else :
 		form = UploadForm()

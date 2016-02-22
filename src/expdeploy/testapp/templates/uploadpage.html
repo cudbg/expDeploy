@@ -4,7 +4,7 @@
 </head>
 
 <body>
-	<form action="/testapp/" method="post" enctype="multipart/form-data">
+	<form action="/testapp/upload/" method="post" enctype="multipart/form-data">
             
             {% csrf_token %}
             {{ uploadform.as_p}}
