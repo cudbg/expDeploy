@@ -1,7 +1,11 @@
 <html>
 <head> <title>Account Error</title> </head>
 <body> 
-	<p> Sorry, the username you chose is already in use. Please pick a different name. </p>
+	<p> Sorry, this account could not be created. Possible reasons: </p>
+	<ul>
+		<li> This username is already in use. </li>
+		<li> The e-mail associated with your account must have a .edu extension </li>
+	</ul>
 	<form action="/testapp/createuser/" method="post">
             <p><input type="submit" value="Try Again"/></p>
     </form>

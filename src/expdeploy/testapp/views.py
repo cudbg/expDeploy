@@ -83,6 +83,9 @@ def CreateUserView(request):
 			accountname = form.cleaned_data['accountname']
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
+			emailextension = email.split(".")[-1]
+			if not emailextension == "edu":
+				return render_to_response('createaccounterror.html')
 			#check username doesnt exist already
 			match = ExperimentFile.objects.filter(username=accountname)
 			if not match:
