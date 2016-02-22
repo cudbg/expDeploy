@@ -2,6 +2,8 @@
 
 
 callback = function () {
+
+
 setupExperiment({
   name:"Experiment1",
   task:"VotingTask",
@@ -14,11 +16,29 @@ setupExperiment({
     btn.appendChild(txt);  
      document.body.appendChild(btn); 
 
+     var btn2 = document.createElement("BUTTON");
+    btn2.style.background = params["button_color"];
+    var txt2 = document.createTextNode(params["button_text2"]);  
+    btn2.appendChild(txt2);  
+     document.body.appendChild(btn2); 
+
     btn.addEventListener("click", function(){
         logData("ButtonTask",{"color":params["button_color"],"text":params["button_text"]})
+        nextTask();
     });
+    btn2.addEventListener("click", function(){
+        logData("ButtonTask",{"color":params["button_color"],"text":params["button_text2"]})
+        nextTask();
+    });
+  },
+  clearTask: function() {
+    document.body.innerHTML = ''; 
   }
 })
+
+
+
+
 }
 
 
