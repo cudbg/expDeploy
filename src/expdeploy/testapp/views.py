@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth import authenticate, login, logout
 from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -7,8 +8,10 @@ from django.core.urlresolvers import reverse
 from django.conf import settings 
 
 from .models import ExperimentFile
-from .forms import UploadForm
 from django.contrib.auth.models import User
+
+from .forms import LoginForm
+from .forms import UploadForm
 from .forms import UserForm
 
 import os
@@ -17,7 +20,40 @@ import sys
 
 #from expdeploy.api.models import Experiment
 
-def UserProfileView(request, username):
+def LoginView(request):
+	if request.method == 'POST':
+		#login
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password']
+		user = authenticate(username=username, password=password)
+
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				return HttpResponseRedirect(reverse(
+					'expdeploy.testapp.views.UserProfileView'))
+		#return loginerror is user in not active.	
+		return render_to_response('loginerror.html')
+	else:
+		form = LoginForm()
+		user = request.user
+		return render_to_response('login.html',
+			{'loginform': form, 'user': user},
+		)
+
+
+def LogoutView(request):
+	logout(request)
+	return HttpResponseRedirect(reverse('expdeploy.testapp.views.LoginView'))
+
+def UserProfileView(request):
+	if request.user.is_authenticated: 
+		username = request.user
+	#if username.is_anonymous:
+	#	return render_to_response('profileerror.html')
+
 	#list of experiments
 	file_objects = ExperimentFile.objects.filter(username=username)
 	experiments = []
@@ -47,10 +83,20 @@ def CreateUserView(request):
 			accountname = form.cleaned_data['accountname']
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
-			user = User.objects.create_user(accountname,email,password)		
-			user.save()		
+			emailextension = email.split(".")[-1]
+			if not emailextension == "edu":
+				return render_to_response('createaccounterror.html')
+			#check username doesnt exist already
+			match = ExperimentFile.objects.filter(username=accountname)
+			if not match:
+				user = User.objects.create_user(accountname,email,password)		
+			 	user.save()		
+			else: 
+			 	return render_to_response('createaccounterror.html')
+
 		#return to user page
-		return HttpResponseRedirect(reverse('expdeploy.testapp.views.CreateUserView'))
+		return HttpResponseRedirect(reverse(
+			'expdeploy.testapp.views.CreateUserView'))
 	else:
 		#create user form
 		form = UserForm()
@@ -58,8 +104,9 @@ def CreateUserView(request):
 			{'userform': form},
 		)
 
-def ExperimentView(request, username):
+def ExperimentView(request, username, experiment):
 	file_objects = ExperimentFile.objects.filter(username = username)
+	file_objects = file_objects.filter(experiment = experiment)
 	filedict = { '1234567890' : None}
 	index_file = str(file_objects.get(original_filename = "index.html"))
 	index_file = index_file.split("/")[-1]
@@ -84,7 +131,8 @@ def UploadView(request):
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
-					duplicate = ExperimentFile.objects.filter(username=user).filter(experiment=experiment).get(original_filename=plain_filename)
+					duplicate = ExperimentFile.objects.filter(username=user).\
+						filter(experiment=experiment).get(original_filename=plain_filename)
 					#remove physical file
 					try:
 						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
@@ -94,7 +142,8 @@ def UploadView(request):
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
 				#create new ExperimentFile object
-				newdoc = ExperimentFile(experiment=experiment, original_filename=each, docfile=each,username=user, filetext="tmptxt")
+				newdoc = ExperimentFile(experiment=experiment, original_filename=each,\
+					docfile=each,username=user, filetext="tmptxt")
 				newdoc.save()
 				
 				#Open document to read contents and save to filetext field
@@ -123,7 +172,7 @@ def UploadView(request):
 					#newdoc.save()
 				#print(each)
 
-			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UploadView'))
+			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UserProfileView'))
 	#For non-post request:
 	else :
 		form = UploadForm()

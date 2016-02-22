@@ -3,8 +3,10 @@
 	<title> User Profile </title>
 </head>
 <body>
+
+	<!-- list experiments and experiment files -->
 	<b><h2> {{username}} </h2></b>
-	<p><h4> Experiments</h4> </p>
+	<b><h4> Experiments</h4> </b>
 
 		{% for experiment, files in filedict.items %}
 			<li> {{experiment}} 
@@ -19,4 +21,11 @@
 			</li>
 		{% endfor %}
 
+	<!-- logout -->
+	<br></br>
+    <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+    	<p><input type="submit" value ="logout"></p>
+    </form>
+
 </body>
+</html>

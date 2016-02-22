@@ -15,11 +15,19 @@ http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssign
 
 James:
 Usability 
--See list of experiments
--See list of files for each experiment
--See results
+-current user tagged at top of page
+-Link to experiments on user profile page
+-Delete experiment option on user profile page
+-See results of experiments
+-change experiment upload form to not need user field
+-make possible that experiment names have space in them
+-Many to one model for experiment
+-restrict access to user if not logged in
+-make it all pretty
+-drag files onto webpage for upload
+-hook up to MTurk
 
--Add User accounts, restrict to users with .edu
+-Extendable template so researcher does not see autoescape tags
 
 
 Crowdflower, MTurk, ClickWorker

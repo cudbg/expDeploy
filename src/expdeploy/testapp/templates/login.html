@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title> test upload </title>
+</head>
+
+<body>
+
+	<!-- login form -->
+	<form action="/testapp/" method="POST" enctype="multipart/form-data">
+            
+            {% csrf_token %}
+            {{ loginform.as_p}}
+
+            <p><input type="submit" value="Login"/></p>
+    </form>
+
+    <a href="/testapp/createuser/">
+    	Don't have an account? Create one here.
+    </a>
+</body>
+
+</html>
