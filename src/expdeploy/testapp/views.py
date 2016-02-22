@@ -35,7 +35,7 @@ def LoginView(request):
 				return HttpResponseRedirect(reverse(
 					'expdeploy.testapp.views.UserProfileView'))
 		#return loginerror is user in not active.	
-		return render('loginerror.html')
+		return render_to_response('loginerror.html')
 	else:
 		form = LoginForm()
 		user = request.user
