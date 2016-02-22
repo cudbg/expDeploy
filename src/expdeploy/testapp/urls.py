@@ -5,6 +5,7 @@ urlpatterns = patterns(
     'expdeploy.testapp.views',
 
     url(r'^$', 'LoginView', name='login'),
+    #url(r'^login/error/$', 'LoginError', name='login_error'),
     url(r'^logout/$', 'LogoutView', name='logout'),
 
     #upload and experiment views
