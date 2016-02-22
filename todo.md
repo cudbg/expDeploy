@@ -14,6 +14,7 @@ Usability
 -See results of experiments
 -change experiment upload form to not need user field
 -only .edu email addresses allowed
+-make possible that experiment names have space in them
 
 -Extendable template so researcher does not see autoescape tags
 
