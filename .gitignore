@@ -14,5 +14,6 @@ src/expdeploy/testapp/templates/*
 !src/expdeploy/testapp/templates/login.html
 !src/expdeploy/testapp/templates/profileerror.html
 !src/expdeploy/testapp/templates/loginerror.html
+!src/expdeploy/testapp/templates/createaccounterror.html
 
 
