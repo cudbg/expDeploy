@@ -15,7 +15,7 @@ import os
 import json
 import sys
 
-from expdeploy.api.models import Experiment
+#from expdeploy.api.models import Experiment
 
 def UserProfileView(request, username):
 	#list of experiments

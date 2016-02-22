@@ -1,6 +1,13 @@
+
+Hamed
+-Model experiments and create relationships between them
+-Switch CharField to TextField, change {} to null
+-Integrate with MTurk
+psiTurk
+
 Hamed:
--API to load data from completed tasks
--Resume feature / persistent tasks for each worker
+✔ API to load data from completed tasks
+✔ Resume feature / persistent tasks for each worker
 ✔ Task done --> Saved --> New Task Loaded 
 ✔ Look at MTURK API for WorkerID/How it sends 
 http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssignmentOperation.html

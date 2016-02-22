@@ -7,13 +7,14 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 
-var wid = "";
+var wid = "W28444355454739";
 var task = "";
 var researcher = "";
 var n = "";
 
 var viewTask;
 var clearTask;
+var currentId = "";
 /*
 CONFIG
 */
@@ -32,7 +33,8 @@ function logData(task_name,d) {
 		worker_id: wid,
 		experiment_name: n,
 		researcher_id: researcher,
-		task_name: task
+		task_name: task,
+		task_id: currentId
 	}
 
 	console.log(JSON.stringify(postData));
@@ -53,6 +55,7 @@ function nextTask() {
 	}
 
 	entry = tasks[0];
+	currentId = tasks[0]["identifier"];
 	viewTask(entry)
 	tasks.shift();
 }
@@ -69,7 +72,7 @@ function setupExperiment(options) {
 	clearTask = options.clearTask;
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=blah&n=5", false ); // false for synchronous request
+    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5", false ); // false for synchronous request
     xmlHttp.send( null );
     resp = xmlHttp.responseText.replaceAll("'",'"');
 
