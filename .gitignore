@@ -11,5 +11,8 @@ src/expdeploy/testapp/templates/*
 !src/expdeploy/testapp/templates/uploadpage.html
 !src/expdeploy/testapp/templates/createuser.html
 !src/expdeploy/testapp/templates/userprofile.html
+!src/expdeploy/testapp/templates/login.html
+!src/expdeploy/testapp/templates/profileerror.html
+!src/expdeploy/testapp/templates/loginerror.html
 
 
