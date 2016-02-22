@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth import authenticate, login
 from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -7,8 +8,10 @@ from django.core.urlresolvers import reverse
 from django.conf import settings 
 
 from .models import ExperimentFile
-from .forms import UploadForm
 from django.contrib.auth.models import User
+
+from .forms import LoginForm
+from .forms import UploadForm
 from .forms import UserForm
 
 import os
@@ -17,7 +20,34 @@ import sys
 
 from expdeploy.api.models import Experiment
 
-def UserProfileView(request, username):
+def LoginView(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				return HttpResponseRedirect(reverse(
+					'expdeploy.testapp.views.UserProfileView'))
+		#return loginerror is user in not active.	
+		return render('loginerror.html')
+	else:
+		form = LoginForm()
+		return render_to_response('login.html',
+			{'loginform': form},
+		)
+
+
+#def LogoutView(request):
+
+def UserProfileView(request):
+	if request.user.is_authenticated: 
+		username = request.user
+	else: 
+		return render('profileerror.html')
+
 	#list of experiments
 	file_objects = ExperimentFile.objects.filter(username=username)
 	experiments = []
@@ -50,7 +80,8 @@ def CreateUserView(request):
 			user = User.objects.create_user(accountname,email,password)		
 			user.save()		
 		#return to user page
-		return HttpResponseRedirect(reverse('expdeploy.testapp.views.CreateUserView'))
+		return HttpResponseRedirect(reverse(
+			'expdeploy.testapp.views.CreateUserView'))
 	else:
 		#create user form
 		form = UserForm()

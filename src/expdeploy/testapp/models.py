@@ -12,7 +12,6 @@ def uuid_file_name(instance, filename):
 	filename = "%s.%s" % (str(uuid4()), filetype)
 	return os.path.join('testapp/templates/', filename)
 
-
 class ExperimentFile(models.Model):
 	#original_filename stored as charfield.
 	experiment = models.CharField(max_length=120, blank=True, null=True)

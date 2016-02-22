@@ -13,3 +13,6 @@ class UserForm(forms.Form):
 	email = forms.EmailField(max_length=254) #.edu restriction later
 	password = forms.CharField(widget=forms.PasswordInput())
 
+class LoginForm(forms.Form):
+	accountname = forms.CharField(max_length=120)
+	password = forms.CharField(widget=forms.PasswordInput())
