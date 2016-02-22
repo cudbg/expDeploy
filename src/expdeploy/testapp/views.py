@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -38,12 +38,15 @@ def LoginView(request):
 		return render('loginerror.html')
 	else:
 		form = LoginForm()
+		user = request.user
 		return render_to_response('login.html',
-			{'loginform': form},
+			{'loginform': form, 'user': user},
 		)
 
 
-#def LogoutView(request):
+def LogoutView(request):
+	logout(request)
+	return HttpResponseRedirect(reverse('expdeploy.testapp.views.LoginView'))
 
 def UserProfileView(request):
 	if request.user.is_authenticated: 
@@ -80,8 +83,14 @@ def CreateUserView(request):
 			accountname = form.cleaned_data['accountname']
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
-			user = User.objects.create_user(accountname,email,password)		
-			user.save()		
+			#check username doesnt exist already
+			match = ExperimentFile.objects.filter(username=accountname)
+			if not match:
+				user = User.objects.create_user(accountname,email,password)		
+			 	user.save()		
+			else: 
+			 	return render_to_response('createaccounterror.html')
+
 		#return to user page
 		return HttpResponseRedirect(reverse(
 			'expdeploy.testapp.views.CreateUserView'))
@@ -92,8 +101,9 @@ def CreateUserView(request):
 			{'userform': form},
 		)
 
-def ExperimentView(request, username):
+def ExperimentView(request, username, experiment):
 	file_objects = ExperimentFile.objects.filter(username = username)
+	file_objects = file_objects.filter(experiment = experiment)
 	filedict = { '1234567890' : None}
 	index_file = str(file_objects.get(original_filename = "index.html"))
 	index_file = index_file.split("/")[-1]

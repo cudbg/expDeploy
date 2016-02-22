@@ -3,6 +3,8 @@
 	<title> User Profile </title>
 </head>
 <body>
+
+	<!-- list experiments and experiment files -->
 	<b><h2> {{username}} </h2></b>
 	<b><h4> Experiments</h4> </b>
 
@@ -18,6 +20,12 @@
 				</ul>
 			</li>
 		{% endfor %}
+
+	<!-- logout -->
+	<br></br>
+    <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+    	<p><input type="submit" value ="logout"></p>
+    </form>
 
 </body>
 </html>
