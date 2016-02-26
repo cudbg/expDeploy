@@ -7,5 +7,5 @@ def lookup(dictionary, key):
 	return dictionary.get(uuid_filename, '')
 
 @register.simple_tag
-def experiment_lookup(dictionary, key):
+def explink(dictionary, key):
 	return dictionary.get(key)

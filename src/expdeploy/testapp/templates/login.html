@@ -4,6 +4,11 @@
 </head>
 
 <body>
+    {% if current_user %}
+        <p> Currently logged in: {{user}} </p>
+    {% else %}
+        <p> No user is currently logged in </p>
+    {% endif %}
 
 	<!-- login form -->
 	<form action="/testapp/" method="POST" enctype="multipart/form-data">
@@ -17,6 +22,15 @@
     <a href="/testapp/createuser/">
     	Don't have an account? Create one here.
     </a>
+
+
+    <br></br>
+
+    {% if current_user %}
+        <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+            <p><input type="submit" value ="logout"></p>
+        </form>
+    {% endif %}
 </body>
 
 </html>

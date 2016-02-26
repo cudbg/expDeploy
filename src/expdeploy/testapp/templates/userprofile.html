@@ -7,9 +7,12 @@
 	<!-- list experiments and experiment files -->
 	<b><h2> {{username}} </h2></b>
 	<b><h4> Experiments</h4> </b>
-
+	<!-- wwwwhaaaaaaaat -->
+	{% load lookup %}
 		{% for experiment, files in filedict.items %}
 			<li> {{experiment}} 
+			<!-- link experiment -->
+				<a href = "{% explink linkdict experiment %}"> Link: {% explink linkdict experiment %} </a>
 				<ul>
 				{% for file in files %}
 					<li> {{file.original_filename}} </li>

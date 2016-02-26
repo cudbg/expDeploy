@@ -7,6 +7,8 @@ urlpatterns = patterns(
     url(r'^$', 'LoginView', name='login'),
     #url(r'^login/error/$', 'LoginError', name='login_error'),
     url(r'^logout/$', 'LogoutView', name='logout'),
+    url(r'^error/$', 'ErrorView', name='error'),
+
 
     #upload and experiment views
     url(r'^upload/$', 'UploadView', name='upload'),

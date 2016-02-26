@@ -39,20 +39,26 @@ def LoginView(request):
 	else:
 		form = LoginForm()
 		user = request.user
-		return render_to_response('login.html',
-			{'loginform': form, 'user': user},
-		)
 
+		current_user = True
+		if user.is_authenticated:
+		 	current_user = False
+		return render_to_response('login.html',
+			{'loginform': form, 'user': user, "current_user": current_user},
+		)
 
 def LogoutView(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('expdeploy.testapp.views.LoginView'))
 
+def ErrorView(request):
+	return HttpResponseRedirect(reverse('expdeploy.testapp.views.LoginView'))
+
 def UserProfileView(request):
 	if request.user.is_authenticated: 
 		username = request.user
-	#if username.is_anonymous:
-	#	return render_to_response('profileerror.html')
+	if request.user.id is None:
+		return render_to_response('profileerror.html')
 
 	#list of experiments
 	file_objects = ExperimentFile.objects.filter(username=username)
@@ -70,9 +76,18 @@ def UserProfileView(request):
 			file_list.append(each)
 		filedict[experiment] = file_list 
 
+	#create experiment links in dict form
+	linkdict = {}
+	for experiment in experiments:
+		#add experimenturl to first item in file_list
+		usr = str(username)
+		linkdict[experiment] = "/testapp/experiment/"+usr+"/"+experiment+"/"
+		#file_list.append("/testapp/experiment/"+usr+"/"+experiment+"/")
+
 	#dictionary listing files in experiment
 	return render_to_response('userprofile.html',
-		{'username':username, 'experiments': experiments, 'filedict': filedict}
+		{'username':username, 'experiments': experiments, 'filedict': filedict,
+		'linkdict': linkdict,}
 		)
 
 def CreateUserView(request):
