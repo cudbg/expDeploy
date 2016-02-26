@@ -8,12 +8,19 @@ src/db.sqlite3
 src/expdeploy/testapp/webfiles/index.html
 #ignore templates except for those created by us
 src/expdeploy/testapp/templates/*
-!src/expdeploy/testapp/templates/uploadpage.html
-!src/expdeploy/testapp/templates/createuser.html
-!src/expdeploy/testapp/templates/userprofile.html
-!src/expdeploy/testapp/templates/login.html
-!src/expdeploy/testapp/templates/profileerror.html
-!src/expdeploy/testapp/templates/loginerror.html
+!src/expdeploy/testapp/templates/base.html
 !src/expdeploy/testapp/templates/createaccounterror.html
+!src/expdeploy/testapp/templates/createuser.html
+!src/expdeploy/testapp/templates/login.html
+!src/expdeploy/testapp/templates/loginerror.html
+!src/expdeploy/testapp/templates/logouterror.html
+!src/expdeploy/testapp/templates/profileerror.html
+!src/expdeploy/testapp/templates/uploadpage.html
+!src/expdeploy/testapp/templates/userprofile.html
+
+
+
+
+
 
 
