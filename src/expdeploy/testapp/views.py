@@ -41,7 +41,7 @@ def LoginView(request):
 		user = request.user
 
 		current_user = True
-		if user.is_authenticated:
+		if not user.is_authenticated:
 		 	current_user = False
 		return render_to_response('login.html',
 			{'loginform': form, 'user': user, "current_user": current_user},
@@ -115,8 +115,12 @@ def CreateUserView(request):
 	else:
 		#create user form
 		form = UserForm()
+		user = request.user
+		current_user = True
+		if not user.is_authenticated:
+		 	current_user = False
 		return render_to_response('createuser.html',
-			{'userform': form},
+			{'userform': form, 'current_user': current_user, 'user': user},
 		)
 
 def ExperimentView(request, username, experiment):
@@ -135,14 +139,21 @@ def ExperimentView(request, username, experiment):
 	)
 
 def UploadView(request):
+	#user
+	if request.user.is_authenticated: 
+			user = str(request.user)
+	else: 
+			user = None
+	if request.user.id is None:
+		return render_to_response('profileerror.html')
+
 	#Upload files for post request
 	if request.method == 'POST':
 		form = UploadForm(request.POST, request.FILES)
 		#Create ExperimentFile instance for each uploaded file.
 		if form.is_valid():
-			user = form.cleaned_data['username']
 			experiment = form.cleaned_data['experiment']
-			for each in request.FILES.getlist("attachments"):
+			for each in request.FILES.getlist('attachments'):
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
@@ -194,6 +205,6 @@ def UploadView(request):
 
 	#No loading documents for list page
 	return render_to_response('uploadpage.html',
-		{'uploadform': form},
+		{'uploadform': form, 'username': user},
 		context_instance = RequestContext(request)
 	)
