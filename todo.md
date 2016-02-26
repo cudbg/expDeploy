@@ -1,6 +1,13 @@
+
+Hamed
+-Model experiments and create relationships between them
+-Switch CharField to TextField, change {} to null
+-Integrate with MTurk
+psiTurk
+
 Hamed:
--API to load data from completed tasks
--Resume feature / persistent tasks for each worker
+✔ API to load data from completed tasks
+✔ Resume feature / persistent tasks for each worker
 ✔ Task done --> Saved --> New Task Loaded 
 ✔ Look at MTURK API for WorkerID/How it sends 
 http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssignmentOperation.html
@@ -13,8 +20,12 @@ Usability
 -Delete experiment option on user profile page
 -See results of experiments
 -change experiment upload form to not need user field
--only .edu email addresses allowed
 -make possible that experiment names have space in them
+-Many to one model for experiment
+-restrict access to user if not logged in
+-make it all pretty
+-drag files onto webpage for upload
+-hook up to MTurk
 
 -Extendable template so researcher does not see autoescape tags
 

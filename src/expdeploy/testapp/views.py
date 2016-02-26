@@ -18,7 +18,7 @@ import os
 import json
 import sys
 
-from expdeploy.api.models import Experiment
+#from expdeploy.api.models import Experiment
 
 def LoginView(request):
 	if request.method == 'POST':

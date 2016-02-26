@@ -7,7 +7,7 @@ callback = function () {
 setupExperiment({
   name:"Experiment1",
   task:"VotingTask",
-  wid:"W1930190",
+  wid:"W7239837sadas98237982379",
   researcher:"hn2284",
   viewTask: function (params) {
     var btn = document.createElement("BUTTON");
