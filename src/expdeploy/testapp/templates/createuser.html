@@ -12,6 +12,7 @@
     {% endif %}
 
 	<!-- create user form -->
+    <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
 	<form action="/testapp/createuser/" method="post" enctype="multipart/form-data">
             
             {% csrf_token %}

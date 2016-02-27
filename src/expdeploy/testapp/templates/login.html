@@ -1,14 +1,32 @@
 <html>
 <head>
-	<title> test upload </title>
+	<title> login </title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+
+
 </head>
 
 <body>
-    {% if current_user %}
-        <p> Currently logged in: {{user}} </p>
-    {% else %}
-        <p> No user is currently logged in </p>
-    {% endif %}
+    <div class="page-header">
+        <div id="current-user">
+        {% if current_user %}
+            <p> Currently logged in: {{user}} </p>
+        {% else %}
+            <p> No user is currently logged in </p>
+        {% endif %}
+        </div>
+
+        <div id="logout-button">
+        {% if current_user %}
+            <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+                <p><input type="submit" value ="logout"></p>
+            </form>
+        {% endif %}
+        </div>
+
+    </div>
 
 	<!-- login form -->
 	<form action="/testapp/" method="POST" enctype="multipart/form-data">
@@ -26,11 +44,6 @@
 
     <br></br>
 
-    {% if current_user %}
-        <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
-            <p><input type="submit" value ="logout"></p>
-        </form>
-    {% endif %}
 </body>
 
 </html>

@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings 
 
 from .models import ExperimentFile
+from .models import ExperimentModel
 from django.contrib.auth.models import User
 
 from .forms import LoginForm
@@ -61,20 +62,23 @@ def UserProfileView(request):
 		return render_to_response('profileerror.html')
 
 	#list of experiments
-	file_objects = ExperimentFile.objects.filter(username=username)
+	experiment_objects = ExperimentModel.objects.filter(username=username)
 	experiments = []
-	for each in file_objects:
-		experiments.append(each.experiment)
+	for each in experiment_objects:
+		experiments.append(each.name)
+	#make sure no duplicates
 	experiments = list(set(experiments))
 
 	#assign each experiment with related files in filedict
 	filedict = {}
-	for experiment in experiments:
-		experiment_files = file_objects.filter(experiment=experiment)
+	#file_objects = ExperimentFile.objects.filter(username=username)
+	for each in experiments:
 		file_list = []
-		for each in experiment_files:
-			file_list.append(each)
-		filedict[experiment] = file_list 
+		current_exp = experiment_objects.get(name=each)
+		#add all files associated with experiment
+		for file in current_exp.experimentfile_set.all():
+			file_list.append(file)
+		filedict[each] = file_list
 
 	#create experiment links in dict form
 	linkdict = {}
@@ -103,15 +107,20 @@ def CreateUserView(request):
 				return render_to_response('createaccounterror.html')
 			#check username doesnt exist already
 			match = ExperimentFile.objects.filter(username=accountname)
-			if not match:
+			if not match.exists():
 				user = User.objects.create_user(accountname,email,password)		
 			 	user.save()		
 			else: 
 			 	return render_to_response('createaccounterror.html')
+		#logout previous user. login new user and send them to profile
+		logout(request)
+		user = authenticate(username=accountname, password=password)
 
-		#return to user page
-		return HttpResponseRedirect(reverse(
-			'expdeploy.testapp.views.CreateUserView'))
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				return HttpResponseRedirect(reverse(
+					'expdeploy.testapp.views.UserProfileView'))
 	else:
 		#create user form
 		form = UserForm()
@@ -124,9 +133,9 @@ def CreateUserView(request):
 		)
 
 def ExperimentView(request, username, experiment):
-	file_objects = ExperimentFile.objects.filter(username = username)
-	file_objects = file_objects.filter(experiment = experiment)
-	filedict = { '1234567890' : None}
+	current_exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+	file_objects = current_exp.experimentfile_set.all()
+	filedict = {}
 	index_file = str(file_objects.get(original_filename = "index.html"))
 	index_file = index_file.split("/")[-1]
 	#populate dictionary
@@ -152,13 +161,24 @@ def UploadView(request):
 		form = UploadForm(request.POST, request.FILES)
 		#Create ExperimentFile instance for each uploaded file.
 		if form.is_valid():
+			#get experiment
 			experiment = form.cleaned_data['experiment']
+			#if experiment already exists, use it. If not, make a new one.
+
+			#check if experiment already exists
+			temp = ExperimentModel.objects.filter(username=user).filter(name=experiment)
+			if not temp:
+			 	exp = ExperimentModel(name=experiment, username=user)
+				exp.save()
+			else: 
+				exp = ExperimentModel.objects.filter(username=user).get(name=experiment)
+
 			for each in request.FILES.getlist('attachments'):
 				# if instance of file for this user exists already, delete old instance.
 				try: 
 					plain_filename = str(each).split('/')[-1]
 					duplicate = ExperimentFile.objects.filter(username=user).\
-						filter(experiment=experiment).get(original_filename=plain_filename)
+						filter(experiment=exp).get(original_filename=plain_filename)
 					#remove physical file
 					try:
 						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
@@ -168,9 +188,10 @@ def UploadView(request):
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
 				#create new ExperimentFile object
-				newdoc = ExperimentFile(experiment=experiment, original_filename=each,\
+				newdoc = ExperimentFile(original_filename=each,\
 					docfile=each,username=user, filetext="tmptxt")
 				newdoc.save()
+				newdoc.experiment.add(exp)
 				
 				#Open document to read contents and save to filetext field
 				f = open(newdoc.docfile.path, "r")
