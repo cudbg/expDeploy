@@ -1,17 +1,56 @@
 .page-header{
 	margin-top:0;
-	height:100;
+	height:120;
 	background-color: #9BDDFF;
+	border-radius: 10px;
+}
+
+body{
+	background-color: #ffffcc;
 }
 
 #current-user{
+	font-family: "Verdana";
+	font-size: 20px;
 	margin-top: 15;
 	float:left;
 	margin-left: 20;
 }
+
 #logout-button{
-	margin-top: 15;
+	font-family: "Verdana";
+	margin-top: 85;
+	font-size:15px;
 	float:right;
 	margin-right: 30;
 
+}
+
+#form-box{
+	font-family: "Verdana";
+	margin: auto;
+    width: 60%;
+    border: 3px solid #9BDDFF;
+    padding: 10px;
+    margin-bottom:15;
+}
+
+#profile-user{
+	font-family: "Verdana";
+	font-size: 40px;
+	margin-top: 15;
+	float:left;
+	margin-left: 20;
+}
+
+#margin-left{
+	font-family: "Verdana";
+	margin-left: 15;
+}
+
+#view-profile{
+	font-family: "Verdana";
+	margin-bottom: 3;
+	margin-left:5;
+	font-size:15px;
 }

@@ -1,34 +1,50 @@
 <html>
 <head>
 	<title> test upload </title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
 
-	{% if current_user %}
-        <p> Currently logged in: {{user}} </p>
-    {% else %}
-        <p> No user is currently logged in </p>
-    {% endif %}
+	 <div class="page-header">
+        <div id="current-user">
+        {% if current_user %}
+            <p> Currently logged in: {{user}} </p>
+            <div id="view-profile">
+                <form action="/testapp/userprofile/" method="post" enctype="    multipart/form-data">
+                    <p><input type="submit" value ="View Profile"></p>
+                </form>
+            </div>
+        {% else %}
+            <p> No user is currently logged in </p>
+        {% endif %}
+        </div>
 
-	<!-- create user form -->
-    <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
-	<form action="/testapp/createuser/" method="post" enctype="multipart/form-data">
-            
-            {% csrf_token %}
-            {{ userform.as_p}}
+        <div id="logout-button">
+        {% if current_user %}
+            <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+                <p><input type="submit" value ="Logout"></p>
+            </form>
+        {% endif %}
+        </div>
 
-            <p><input type="submit" value="Submit"/></p>
-    </form>
+    </div>
 
+    <div id="form-box">
+    	<!-- create user form -->
+        <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
+        <p> Creating an account while logged in while log you out! </p>
+    	<form action="/testapp/createuser/" method="post" enctype="multipart/form-data">
+                
+                {% csrf_token %}
+                {{ userform.as_p}}
 
-    <br></br>
-
-    {% if current_user %}
-        <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
-            <p><input type="submit" value ="logout"></p>
+                <p><input type="submit" value="Submit"/></p>
         </form>
-    {% endif %}
+    </div>
+
 </body>
 
 </html>

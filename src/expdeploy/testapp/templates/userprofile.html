@@ -1,16 +1,36 @@
 <html>
 <head> 
 	<title> User Profile </title>
+	{% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 
+	<div class="page-header">
+        <div id="profile-user">
+
+            <p> {{username}} </p>
+        
+        </div>
+
+        <div id="logout-button">
+    
+        <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+            <p><input type="submit" value ="Logout"></p>
+        </form>
+   
+        </div>
+
+    </div>
+
+    <div id="form-box">
 	<!-- list experiments and experiment files -->
-	<b><h2> {{username}} </h2></b>
 	<b><h4> Experiments</h4> </b>
 	<!-- wwwwhaaaaaaaat -->
 	<!-- {% load lookup %} -->
 		{% for experiment, files in filedict.items %}
-			<li> {{experiment}} 
+			<li> <strong> {{experiment}} </strong> 
 			<!-- link experiment -->
 				<p> &nbsp;&nbsp;&nbsp;&nbsp; Link:
 				<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
@@ -24,16 +44,15 @@
 				</ul>
 			</li>
 		{% endfor %}
+	</div>
 
+	<div id="margin-left">
 	<!-- create new experiment -->
 	<br></br>
     <form action="/testapp/upload/" method="post" enctype="multipart/form-data">
     	<p><input type="submit" value ="Upload New Experiment"></p>
     </form>
-	<!-- logout -->
-	<br></br>
-    <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
-    	<p><input type="submit" value ="logout"></p>
-    </form>
+    </div>
+	
 </body>
 </html>

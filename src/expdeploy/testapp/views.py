@@ -42,7 +42,7 @@ def LoginView(request):
 		user = request.user
 
 		current_user = True
-		if not user.is_authenticated:
+		if user.id == None:
 		 	current_user = False
 		return render_to_response('login.html',
 			{'loginform': form, 'user': user, "current_user": current_user},
@@ -126,7 +126,7 @@ def CreateUserView(request):
 		form = UserForm()
 		user = request.user
 		current_user = True
-		if not user.is_authenticated:
+		if user.id == None:
 		 	current_user = False
 		return render_to_response('createuser.html',
 			{'userform': form, 'current_user': current_user, 'user': user},

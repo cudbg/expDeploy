@@ -1,32 +1,50 @@
 <html>
 <head>
 	<title> test upload </title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
     
-    <p> Currently logged in: {{user}}
-    <form action="/testapp/userprofile/" method="post" enctype="multipart/form-data">
-        <input type="submit" value="View Profile"/>
-    </form>
-    </p> 
+    <div class="page-header">
+        <div id="profile-user">
 
-    <p><h2> Upload experiment </h2></p>
-    <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces. The homepage must be "index.html". </p>
-	<!-- upload form -->
-	<form action="/testapp/upload/" method="post" enctype="multipart/form-data">
-            
-        {% csrf_token %}
-        {{ uploadform.as_p}}
+            <p> {{user}} </p>
+            <div id="view-profile">
+                <form action="/testapp/userprofile/" method="post" enctype="    multipart/form-data">
+                    <p><input type="submit" value ="View Profile"></p>
+                </form>
+            </div>
+        
+        </div>
 
-        <p><input type="submit" value="Upload"/></p>
-    </form>
+        <div id="logout-button">
+    
+            <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+                <p><input type="submit" value ="Logout"></p>
+            </form>
+       
+        </div>
 
-    <!-- logout -->
-    <br></br>
-    <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
-    	<p><input type="submit" value ="logout"></p>
-    </form> 
+    </div>
+
+    <div id="margin-left">
+    <div id="form-box">
+        <p><h2> Upload experiment </h2></p>
+        <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces. The homepage must be "index.html". </p>
+    	<!-- upload form -->
+    	<form action="/testapp/upload/" method="post" enctype="multipart/form-data">
+                
+            {% csrf_token %}
+            {{ uploadform.as_p}}
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+
+    </div>
+    </div>
 </body>
 
 </html>
