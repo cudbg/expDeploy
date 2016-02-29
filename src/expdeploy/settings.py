@@ -35,6 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'corsheaders',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -46,6 +47,7 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -61,6 +63,8 @@ MIDDLEWARE_CLASSES = (
    #  'django.middleware.clickjacking.XFrameOptionsMiddleware',
    #  'expdeploy.api',
 )
+
+CORS_ORIGIN_ALLOW_ALL = True  
 
 ROOT_URLCONF = 'expdeploy.urls'
 
