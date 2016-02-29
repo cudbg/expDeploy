@@ -6,6 +6,15 @@ from uuid import uuid4
 import os
 
 #arbitrary name generating function
+from django.contrib.auth.models import User
+
+
+class Researcher(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    aws_key_id = models.CharField(max_length=250)
+    aws_secret_key = models.CharField(max_length=250)
+
+
 def uuid_file_name(instance, filename):
 	instance.filename = filename
 	filetype = filename.split('.')[-1]
@@ -21,7 +30,7 @@ class ExperimentModel(models.Model):
 
 class ExperimentFile(models.Model):
 	#original_filename stored as charfield.
-	experiment = models.ManyToManyField(ExperimentModel)
+	experiment = models.ForeignKey(ExperimentModel)
 	#experimentname = models.CharField(max_length=120, blank=True, null=True)
 	original_filename = models.CharField(max_length = 128)
 	docfile = models.FileField(upload_to=uuid_file_name)

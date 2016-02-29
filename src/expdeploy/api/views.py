@@ -6,9 +6,55 @@ from .models import WorkerTask
 
 from planout.ops.random import *
 from expdeploy.testapp.models import ExperimentFile
+from expdeploy.testapp.models import Researcher
+
 import importlib;
 import random
 import string
+import boto.mturk.connection
+ 
+
+
+
+def mturk(request):
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	
+	researcher = Researcher.objects.filter(user__username=usrId)[0];
+	key = researcher.aws_key_id;
+	secret_key = researcher.aws_secret_key;
+	sandbox_host = 'mechanicalturk.sandbox.amazonaws.com'
+	real_host = 'mechanicalturk.amazonaws.com'
+	
+	mturk = boto.mturk.connection.MTurkConnection(
+	    aws_access_key_id = key,
+	    aws_secret_access_key = secret_key,
+	    host = sandbox_host,
+	    debug = 1 # debug = 2 prints out all requests.
+	)
+	 
+	print boto.Version 
+	print mturk.get_account_balance() 
+
+
+	url = "https://www.yahoo.com"
+	title = expId
+	description = "The more verbose description of the job!"
+	keywords = ["cats", "dogs", "rabbits"]
+	frame_height = 500 # the height of the iframe holding the external hit
+	amount = .05
+	 
+	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
+	 
+	create_hit_result = mturk.create_hit(
+	    title = title,
+	    description = description,
+	    keywords = keywords,
+	    question = questionform,
+	    reward = boto.mturk.price.Price( amount = amount),
+	    response_groups = ( 'Minimal', 'HITDetail' ), # I don't know what response groups are
+	)
+	return HttpResponse("Successfully posted to MTurk");
 
 
 
@@ -17,10 +63,12 @@ def result(request):
 	taskname = request.GET.get('task', '');
 	usrId = request.GET.get('researcher', '');
 	print(usrId)
-	find_tasks = WorkerTask.objects.filter(experiment=expId, name=taskname, researcher=usrId);
+	#TODO: Filter by experiment name
+	find_tasks = WorkerTask.objects.filter(experiment__name=expId,name=taskname, researcher=usrId);
 
 	data = []
 	for task in find_tasks:
+		print("SSS" + task.experiment.name)
 		d = byteify(json.loads(task.results));
 		data.append(d);
 	print(data);
@@ -32,13 +80,19 @@ def log(request):
 		body = json.loads(body_unicode)
 		#print(body["task_id"]);
 
-		find_tasks = WorkerTask.objects.filter(experiment=body["experiment_name"], wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
+		#TODO: Filter by experiment name
+
+		find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
 		print(find_tasks);
 
 		task = find_tasks[0]
 
+		if (task.results == "null"):
+			task.results = "{}";
+
 		d = json.loads(task.results)
 		d[len(d)] = body["data"];
+
 		task.results = json.dumps(d);
 		task.save()
 
@@ -106,9 +160,11 @@ def task(request):
 		if (exp.original_filename == (expId + ".py")):
 			print("test 2");
 
-
+			EX = exp.experiment
+			print("n2222"+EX.name);
+			
 			return_tasks = []
-			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=expId);
+			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
 			print(find_tasks);
 			if (len(find_tasks) == 0):
 				Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
@@ -120,7 +176,7 @@ def task(request):
 
 					task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 
-					NewTask = WorkerTask(name=taskName, wid=wid, experiment=expId, identifier=task_id, researcher=usrId)
+					NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
 					param = exp.get_params()
 					param["identifier"] = task_id;
 
@@ -134,7 +190,6 @@ def task(request):
 			for workertask in find_tasks:
 				return_tasks.append(workertask);
 
-
 			params_list = []
 
 			response = "";
@@ -142,7 +197,7 @@ def task(request):
 			for task in return_tasks:
 				params = task.params
 				params_json = byteify(json.loads(params));
-				if (task.results == "{}"):
+				if (task.results == "null"):
 					params_list.append(params_json);
 					print(params_json);
 

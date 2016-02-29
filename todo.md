@@ -1,7 +1,7 @@
 
 Hamed
--Model experiments and create relationships between them
--Switch CharField to TextField, change {} to null
+✔ Model experiments and create relationships between them
+✔ Switch CharField to TextField, change {} to null
 -Integrate with MTurk
 psiTurk
 

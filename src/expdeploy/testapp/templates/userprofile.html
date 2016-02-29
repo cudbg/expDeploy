@@ -43,6 +43,17 @@
 				{% endfor %}
 				</ul>
 			</li>
+
+
+			<form action="/api/mturk" method="get">
+
+			  <input type="hidden" value="{{experiment}}" name="experiment" id = "bleh" />
+
+			  <input type="hidden" value="{{username}}" name="researcher" id = "bleh2" />
+
+			    <input type="submit" value="Post to MTurk" />
+			</form>
+
 		{% endfor %}
 	</div>
 

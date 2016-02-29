@@ -10,6 +10,7 @@ from django.conf import settings
 from .models import ExperimentFile
 from .models import ExperimentModel
 from django.contrib.auth.models import User
+from .models import Researcher
 
 from .forms import LoginForm
 from .forms import UploadForm
@@ -102,6 +103,8 @@ def CreateUserView(request):
 			accountname = form.cleaned_data['accountname']
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
+			key_id = form.cleaned_data['key_id']
+			secret_key = form.cleaned_data['secret_key']
 			emailextension = email.split(".")[-1]
 			if not emailextension == "edu":
 				return render_to_response('createaccounterror.html')
@@ -109,7 +112,9 @@ def CreateUserView(request):
 			match = ExperimentFile.objects.filter(username=accountname)
 			if not match.exists():
 				user = User.objects.create_user(accountname,email,password)		
-			 	user.save()		
+			 	user.save()
+			 	researcher = Researcher(user=user, aws_key_id=key_id, aws_secret_key=secret_key);
+			 	researcher.save();		
 			else: 
 			 	return render_to_response('createaccounterror.html')
 		#logout previous user. login new user and send them to profile
@@ -171,7 +176,7 @@ def UploadView(request):
 			 	exp = ExperimentModel(name=experiment, username=user)
 				exp.save()
 			else: 
-				exp = ExperimentModel.objects.filter(username=user).get(name=experiment)
+				exp = ExperimentModel.objects.filter(username=user,name=experiment)[0]
 
 			for each in request.FILES.getlist('attachments'):
 				# if instance of file for this user exists already, delete old instance.
@@ -190,8 +195,11 @@ def UploadView(request):
 				#create new ExperimentFile object
 				newdoc = ExperimentFile(original_filename=each,\
 					docfile=each,username=user, filetext="tmptxt")
+
+
+				newdoc.experiment = exp
+
 				newdoc.save()
-				newdoc.experiment.add(exp)
 				
 				#Open document to read contents and save to filetext field
 				f = open(newdoc.docfile.path, "r")
