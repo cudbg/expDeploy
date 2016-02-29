@@ -20,5 +20,6 @@ Usability
 -make possible that experiment names have space in them
 -drag files onto webpage for upload
 -hook up to MTurk
+-add a second password entry for creating a new account
 
 Crowdflower, MTurk, ClickWorker
