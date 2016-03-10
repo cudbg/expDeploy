@@ -2,10 +2,9 @@ from django.conf.urls import patterns, url
 from .views import UploadView
 
 urlpatterns = patterns(
-    'expdeploy.testapp.views',
+    'expdeploy.gpaas.views',
 
     url(r'^$', 'LoginView', name='login'),
-    #url(r'^login/error/$', 'LoginError', name='login_error'),
     url(r'^logout/$', 'LogoutView', name='logout'),
     url(r'^error/$', 'ErrorView', name='error'),
 

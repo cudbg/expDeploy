@@ -5,8 +5,8 @@ import json
 from .models import WorkerTask
 
 from planout.ops.random import *
-from expdeploy.testapp.models import ExperimentFile
-from expdeploy.testapp.models import Researcher
+from expdeploy.gpaas.models import ExperimentFile
+from expdeploy.gpaas.models import Researcher
 
 import importlib;
 import random

@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'expdeploy.fileloader',
-    'expdeploy.testapp',
+    'expdeploy.gpaas',
     'expdeploy.api',
 )
 
@@ -72,8 +72,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
-                os.path.join(BASE_DIR,  'expdeploy', 'testapp', 'templates'),
-                #os.path.join(BASE_DIR,  'expdeploy', 'testapp', 'webfiles'),
+                os.path.join(BASE_DIR,  'expdeploy', 'gpaas', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

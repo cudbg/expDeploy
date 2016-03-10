@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from expdeploy.testapp.models import ExperimentFile
-from expdeploy.testapp.models import ExperimentModel
+from expdeploy.gpaas.models import ExperimentFile
+from expdeploy.gpaas.models import ExperimentModel
 
 #register models
 

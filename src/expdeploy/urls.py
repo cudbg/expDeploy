@@ -7,9 +7,9 @@ from django.contrib import admin
 
 urlpatterns = [
 
-	url(r'^$', RedirectView.as_view(url='/testapp/', permanent=False)),
+	url(r'^$', RedirectView.as_view(url='/gpaas/', permanent=False)),
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^api/', include('expdeploy.api.urls')),
-	url(r'^testapp/', include('expdeploy.testapp.urls')),
-	
+	url(r'^gpaas/', include('expdeploy.gpaas.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

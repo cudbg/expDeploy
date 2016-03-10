@@ -1,19 +1,20 @@
 <html>
 <head>
-	<title> test upload </title>
+	<title> login </title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+
+
 </head>
 
 <body>
-
-	 <div class="page-header">
+    <div class="page-header">
         <div id="current-user">
         {% if current_user %}
             <p> Currently logged in: {{user}} </p>
             <div id="view-profile">
-                <form action="/testapp/userprofile/" method="post" enctype="    multipart/form-data">
+                <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
                     <p><input type="submit" value ="View Profile"></p>
                 </form>
             </div>
@@ -24,7 +25,7 @@
 
         <div id="logout-button">
         {% if current_user %}
-            <form action="/testapp/logout/" method="post" enctype="multipart/form-data">
+            <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
                 <p><input type="submit" value ="Logout"></p>
             </form>
         {% endif %}
@@ -32,18 +33,25 @@
 
     </div>
 
-    <div id="form-box">
-    	<!-- create user form -->
-        <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
-        <p> Creating an account while logged in while log you out! </p>
-    	<form action="/testapp/createuser/" method="post" enctype="multipart/form-data">
-                
-                {% csrf_token %}
-                {{ userform.as_p}}
+    <div id ="form-box">
+	<!-- login form -->
+	<form action="/gpaas/" method="POST" enctype="multipart/form-data">
+            
+            {% csrf_token %}
+            {{ loginform.as_p}}
 
-                <p><input type="submit" value="Submit"/></p>
-        </form>
+            <p><input type="submit" value="Login"/></p>
+    </form>
     </div>
+
+    <div id="margin-left">
+    <a href="/gpaas/createuser/">
+    	Don't have an account? Create one here.
+    </a>
+    </div>
+
+
+    <br></br>
 
 </body>
 

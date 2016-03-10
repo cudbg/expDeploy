@@ -35,7 +35,7 @@ def LoginView(request):
 			if user.is_active:
 				login(request, user)
 				return HttpResponseRedirect(reverse(
-					'expdeploy.testapp.views.UserProfileView'))
+					'expdeploy.gpaas.views.UserProfileView'))
 		#return loginerror is user in not active.	
 		return render_to_response('loginerror.html')
 	else:
@@ -51,10 +51,10 @@ def LoginView(request):
 
 def LogoutView(request):
 	logout(request)
-	return HttpResponseRedirect(reverse('expdeploy.testapp.views.LoginView'))
+	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
 
 def ErrorView(request):
-	return HttpResponseRedirect(reverse('expdeploy.testapp.views.LoginView'))
+	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
 
 def UserProfileView(request):
 	if request.user.is_authenticated: 
@@ -86,8 +86,7 @@ def UserProfileView(request):
 	for experiment in experiments:
 		#add experimenturl to first item in file_list
 		usr = str(username)
-		linkdict[experiment] = "/testapp/experiment/"+usr+"/"+experiment+"/"
-		#file_list.append("/testapp/experiment/"+usr+"/"+experiment+"/")
+		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
 
 	#dictionary listing files in experiment
 	return render_to_response('userprofile.html',
@@ -125,7 +124,7 @@ def CreateUserView(request):
 			if user.is_active:
 				login(request, user)
 				return HttpResponseRedirect(reverse(
-					'expdeploy.testapp.views.UserProfileView'))
+					'expdeploy.gpaas.views.UserProfileView'))
 	else:
 		#create user form
 		form = UserForm()
@@ -227,7 +226,7 @@ def UploadView(request):
 					#newdoc.save()
 				#print(each)
 
-			return HttpResponseRedirect(reverse('expdeploy.testapp.views.UserProfileView'))
+			return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
 	#For non-post request:
 	else :
 		form = UploadForm()

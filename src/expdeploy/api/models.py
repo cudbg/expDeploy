@@ -1,6 +1,6 @@
 from django.db import models
-from expdeploy.testapp.models import ExperimentFile
-from expdeploy.testapp.models import ExperimentModel
+from expdeploy.gpaas.models import ExperimentFile
+from expdeploy.gpaas.models import ExperimentModel
 
 from jsonfield import JSONField
 import collections;
