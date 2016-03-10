@@ -14,7 +14,6 @@ class Researcher(models.Model):
     aws_key_id = models.CharField(max_length=250)
     aws_secret_key = models.CharField(max_length=250)
 
-
 def uuid_file_name(instance, filename):
 	instance.filename = filename
 	filetype = filename.split('.')[-1]
@@ -29,13 +28,12 @@ class ExperimentModel(models.Model):
 		return str(self.name)
 
 class ExperimentFile(models.Model):
-	#original_filename stored as charfield.
-	experiment = models.ForeignKey(ExperimentModel)
-	#experimentname = models.CharField(max_length=120, blank=True, null=True)
-	original_filename = models.CharField(max_length = 128)
 	docfile = models.FileField(upload_to=uuid_file_name)
-	username = models.CharField(max_length=120, blank=True, null=True)
+	experiment = models.ForeignKey(ExperimentModel)
 	filetext = models.TextField()
+	original_filename = models.CharField(max_length = 128)
+	username = models.CharField(max_length=120, blank=True, null=True)
+	
 
 	def __str__(self):
 		return str(self.docfile)

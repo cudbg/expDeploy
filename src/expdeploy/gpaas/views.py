@@ -22,78 +22,6 @@ import sys
 
 #from expdeploy.api.models import Experiment
 
-def LoginView(request):
-	if request.method == 'POST':
-		#login
-		form = LoginForm(request.POST)
-		if form.is_valid():
-			username = form.cleaned_data['username']
-			password = form.cleaned_data['password']
-		user = authenticate(username=username, password=password)
-
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				return HttpResponseRedirect(reverse(
-					'expdeploy.gpaas.views.UserProfileView'))
-		#return loginerror is user in not active.	
-		return render_to_response('loginerror.html')
-	else:
-		form = LoginForm()
-		user = request.user
-
-		current_user = True
-		if user.id == None:
-		 	current_user = False
-		return render_to_response('login.html',
-			{'loginform': form, 'user': user, "current_user": current_user},
-		)
-
-def LogoutView(request):
-	logout(request)
-	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
-
-def ErrorView(request):
-	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
-
-def UserProfileView(request):
-	if request.user.is_authenticated: 
-		username = request.user
-	if request.user.id is None:
-		return render_to_response('profileerror.html')
-
-	#list of experiments
-	experiment_objects = ExperimentModel.objects.filter(username=username)
-	experiments = []
-	for each in experiment_objects:
-		experiments.append(each.name)
-	#make sure no duplicates
-	experiments = list(set(experiments))
-
-	#assign each experiment with related files in filedict
-	filedict = {}
-	#file_objects = ExperimentFile.objects.filter(username=username)
-	for each in experiments:
-		file_list = []
-		current_exp = experiment_objects.get(name=each)
-		#add all files associated with experiment
-		for file in current_exp.experimentfile_set.all():
-			file_list.append(file)
-		filedict[each] = file_list
-
-	#create experiment links in dict form
-	linkdict = {}
-	for experiment in experiments:
-		#add experimenturl to first item in file_list
-		usr = str(username)
-		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
-
-	#dictionary listing files in experiment
-	return render_to_response('userprofile.html',
-		{'username':username, 'experiments': experiments, 'filedict': filedict,
-		'linkdict': linkdict,}
-		)
-
 def CreateUserView(request):
 	if request.method == 'POST':
 		form = UserForm(request.POST)
@@ -136,6 +64,11 @@ def CreateUserView(request):
 			{'userform': form, 'current_user': current_user, 'user': user},
 		)
 
+
+def ErrorView(request):
+	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
+
+
 def ExperimentView(request, username, experiment):
 	current_exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 	file_objects = current_exp.experimentfile_set.all()
@@ -150,6 +83,40 @@ def ExperimentView(request, username, experiment):
 	return render_to_response(index_file,
 		{'testfiles': filedict,  'username': username}
 	)
+
+
+def LoginView(request):
+	if request.method == 'POST':
+		#login
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password']
+		user = authenticate(username=username, password=password)
+
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				return HttpResponseRedirect(reverse(
+					'expdeploy.gpaas.views.UserProfileView'))
+		#return loginerror is user in not active.	
+		return render_to_response('loginerror.html')
+	else:
+		form = LoginForm()
+		user = request.user
+
+		current_user = True
+		if user.id == None:
+		 	current_user = False
+		return render_to_response('login.html',
+			{'loginform': form, 'user': user, "current_user": current_user},
+		)
+
+
+def LogoutView(request):
+	logout(request)
+	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
+
 
 def UploadView(request):
 	#user
@@ -236,3 +203,42 @@ def UploadView(request):
 		{'uploadform': form, 'username': user},
 		context_instance = RequestContext(request)
 	)
+
+
+def UserProfileView(request):
+	if request.user.is_authenticated: 
+		username = request.user
+	if request.user.id is None:
+		return render_to_response('profileerror.html')
+
+	#list of experiments
+	experiment_objects = ExperimentModel.objects.filter(username=username)
+	experiments = []
+	for each in experiment_objects:
+		experiments.append(each.name)
+	#make sure no duplicates
+	experiments = list(set(experiments))
+
+	#assign each experiment with related files in filedict
+	filedict = {}
+	#file_objects = ExperimentFile.objects.filter(username=username)
+	for each in experiments:
+		file_list = []
+		current_exp = experiment_objects.get(name=each)
+		#add all files associated with experiment
+		for file in current_exp.experimentfile_set.all():
+			file_list.append(file)
+		filedict[each] = file_list
+
+	#create experiment links in dict form
+	linkdict = {}
+	for experiment in experiments:
+		#add experimenturl to first item in file_list
+		usr = str(username)
+		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
+
+	#dictionary listing files in experiment
+	return render_to_response('userprofile.html',
+		{'username':username, 'experiments': experiments, 'filedict': filedict,
+		'linkdict': linkdict,}
+		)
