@@ -9,13 +9,7 @@ urlpatterns = [
 	url(r'^api/', include('expdeploy.api.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
-    #SOME JANK
-    url(r'^fileloader/list/', RedirectView.as_view(url = "/testapp/", permanent = True)),
-    url(r'^fileloader/', include('expdeploy.fileloader.urls')),
-    url(r'^$', RedirectView.as_view(url='/myapp/list/', permanent=False)),
-    url(r'^myapp/list/', RedirectView.as_view(url = "/fileloader/list/", permanent = True)),
-    
-
+    url(r'^$', RedirectView.as_view(url='/testapp/', permanent=False)),
     url(r'^testapp/', include('expdeploy.testapp.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
