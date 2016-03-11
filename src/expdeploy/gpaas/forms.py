@@ -9,6 +9,23 @@ class ExperimentForm(forms.Form):
 	hit_description = forms.CharField(max_length=120, required=True)
 	hit_payment = forms.FloatField(required=True)
 	hit_keywords = forms.CharField(max_length=120, required=True)
+	sandbox = forms.BooleanField(required=True)
+	number_of_hits = forms.IntegerField(required=True);
+
+class HitDescriptionForm(forms.Form):
+	hit_description = forms.CharField(max_length=120, required=True)
+
+class HitPaymentForm(forms.Form):
+	hit_payment = forms.FloatField(required=True)
+
+class HitKeywordsForm(forms.Form):
+	hit_keywords = forms.CharField(max_length=120, required=True)
+
+class SandboxForm(forms.Form):
+	sandbox = forms.BooleanField(required=True)
+
+class TaskNumberForm(forms.Form):
+	number_of_hits = forms.IntegerField(required=True);
 
 class UploadForm(forms.Form):
 	attachments = MultiFileField(min_num = 1, max_num=10, max_file_size=1024*1024*5)

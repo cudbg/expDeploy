@@ -15,5 +15,12 @@ urlpatterns = patterns(
     url(r'^$', 'LoginView', name='login'),
     url(r'^logout/$', 'LogoutView', name='logout'),
     url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/$', 'UploadFileView', name='upload'),
+
+    url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/hitdescription/$', 'EditHitDescriptionView', name='hit_description'),
+    url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/hitpayment/$', 'EditHitPaymentView', name='hit_payment'),
+    url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
+    url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/sandbox/$', 'EditSandboxView', name='sandbox'),
+    url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
+
     url(r'^userprofile/$', 'UserProfileView', name='user_profile'),
 )

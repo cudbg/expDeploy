@@ -16,6 +16,7 @@ from .forms import LoginForm
 from .forms import UploadForm
 from .forms import UserForm
 from .forms import ExperimentForm
+from .forms import HitDescriptionForm, HitPaymentForm, HitKeywordsForm, SandboxForm, TaskNumberForm
 
 import os
 import json
@@ -105,6 +106,65 @@ def CreateUserView(request):
 		)
 
 
+def EditHitDescriptionView(request, username, experiment):
+	if request.method == 'POST':
+		form = HitDescriptionForm(request.POST)
+		if form.is_valid():
+			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+			exp.hit_description = form.cleaned_data['hit_description']
+			exp.save()
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+	else:
+		return render_to_response('uploaderror.html')
+
+
+def EditHitKeywordView(request, username, experiment):
+	if request.method == 'POST':
+		form = HitKeywordsForm(request.POST)
+		if form.is_valid():
+			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+			exp.hit_keywords = form.cleaned_data['hit_keywords']
+			exp.save()
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+	else:
+		return render_to_response('uploaderror.html')
+
+
+def EditHitPaymentView(request, username, experiment):
+	if request.method == 'POST':
+		form = HitPaymentForm(request.POST)
+		if form.is_valid():
+			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+			exp.hit_payment = form.cleaned_data['hit_payment']
+			exp.save()
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+	else:
+		return render_to_response('uploaderror.html')
+
+
+def EditSandboxView(request, username, experiment):
+	if request.method == 'POST':
+		form = SandboxForm(request.POST)
+		if form.is_valid():
+			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+			exp.sandbox = form.cleaned_data['sandbox']
+			exp.save()
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+	else:
+		return render_to_response('uploaderror.html')
+
+
+def EditTaskNumberView(request, username, experiment):
+	if request.method == 'POST':
+		form = TaskNumberForm(request.POST)
+		if form.is_valid():
+			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+			exp.tasknumber = form.cleaned_data['number_of_hits']
+			exp.save()
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+	else:
+		return render_to_response('uploaderror.html')
+
 def ErrorView(request):
 	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
 
@@ -177,6 +237,18 @@ def UploadFileView(request, username, experiment):
 
 	#url
 	thisurl = "/gpaas/upload/" + username + "/" + experiment + "/"
+	hit_description_url="/gpaas/upload/"+username+"/"+experiment+"/hitdescription/"
+	hit_payment_url="/gpaas/upload/"+username+"/"+experiment+"/hitpayment/"
+	hit_keywords_url="/gpaas/upload/"+username+"/"+experiment+"/hitkeywords/"
+	sandbox_url="/gpaas/upload/"+username+"/"+experiment+"/sandbox/"
+	tasknumber_url="/gpaas/upload/"+username+"/"+experiment+"/tasknumber/"
+
+	#forms
+	hit_description_form = HitDescriptionForm()
+	hit_payment_form = HitPaymentForm()
+	hit_keywords_form = HitKeywordsForm()
+	sandbox_form = SandboxForm()
+	tasknumber_form = TaskNumberForm()
 
 	#list of experiments
 	experiment_object = ExperimentModel.objects.filter(username=username).get(name=experiment)
@@ -234,8 +306,14 @@ def UploadFileView(request, username, experiment):
 
 	#No loading documents for list page
 	return render_to_response('uploadpage.html',
-		{'uploadform': form, 'username': user, 'thisurl': thisurl, 'experiments': experiment,
-		'filedict': filedict,'linkdict': linkdict,},
+		{'uploadform': form, 'username': user, 'experiments': experiment,
+		'filedict': filedict,'linkdict': linkdict, 'thisurl': thisurl,
+		 'hit_description_url': hit_description_url, 'hit_payment_url': hit_payment_url,
+		 'hit_keywords_url': hit_keywords_url, 'sandbox_url': sandbox_url, 
+		 'tasknumber_url': tasknumber_url,
+		 'hit_description_form': hit_description_form, 'hit_payment_form': hit_payment_form,
+		 'hit_keywords_form': hit_keywords_form, 'sandbox_form': sandbox_form, 
+		 'tasknumber_form':tasknumber_form},
 		context_instance = RequestContext(request)
 	)
 

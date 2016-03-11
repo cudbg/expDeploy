@@ -53,7 +53,7 @@
 
     <div id="margin-left">
     <div id="form-box">
-        <p><h2> Upload experiment </h2></p>
+        <p><h2> Upload files </h2></p>
         <p>  The homepage must be "index.html". </p>
     	<!-- upload form -->
     	<form action="{{thisurl}}" method="post" enctype="multipart/form-data">
@@ -63,9 +63,61 @@
 
             <p><input type="submit" value="Upload"/></p>
         </form>
+    </div>
+    </div>
+
+
+    <div id="margin-left">
+    <div id="form-box">
+        <p><h4> Edit Hit Description </h4></p>
+        <form action="{{hit_description_url}}" method="post" enctype="multipart/form-data">
+                
+            {% csrf_token %}
+            {{ hit_description_form }}
+
+            <p><input type="submit" value="Update Hit Description"/></p>
+        </form>
+
+        <p><h4> Edit Hit Payment </h4></p>
+        <form action="{{hit_payment_url}}" method="post" enctype="multipart/form-data">
+                
+            {% csrf_token %}
+            {{ hit_payment_form }}
+
+            <p><input type="submit" value="Update Hit Payment"/></p>
+        </form>
+
+        <p><h4> Edit Hit Keywords </h4></p>
+        <form action="{{hit_keywords_url}}" method="post" enctype="multipart/form-data">
+                
+            {% csrf_token %}
+            {{ hit_keywords_form }}
+
+            <p><input type="submit" value="Update Hit Keywords"/></p>
+        </form>
+
+        <p><h4> Sandbox </h4></p>
+        <form action="{{sandbox_url}}" method="post" enctype="multipart/form-data">
+                
+            {% csrf_token %}
+            {{ sandbox_form }}
+
+            <p><input type="submit" value="Update Sandbox Status"/></p>
+        </form>
+
+        <p><h4> Edit Number of Tasks </h4></p>
+        <!-- form -->
+        <form action="{{tasknumber_url}}" method="post" enctype="multipart/form-data">
+                
+            {% csrf_token %}
+            {{ tasknumber_form }}
+
+            <p><input type="submit" value="Update Tasknumber"/></p>
+        </form>
 
     </div>
     </div>
+
+
 </body>
-
 </html>
