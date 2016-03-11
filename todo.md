@@ -1,3 +1,9 @@
+-Model everything so you can check status. Collect browser information, resolution, timing, timestamp
+-Panic/Delete button
+-Download CSV
+-Task $, Assignment $, task $ T/F for paid inside of the Task model. 3 states (left, stop, complete all)
+
+
 HIT Settings
 -Added ability to customize description, keywords, sandbox, etc. to the model which then posts to MTurk
 SSL Certifcate
