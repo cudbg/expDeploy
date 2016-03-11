@@ -26,8 +26,8 @@ class ExperimentModel(models.Model):
 	hit_description = models.CharField(max_length=120)
 	hit_payment = models.FloatField(blank=0.1)
 	hit_keywords = models.CharField(max_length=120)
-	sandbox = models.NullBooleanField(null=True)
-	n = models.IntegerField(null=5);
+	sandbox = models.BooleanField(default=True)
+	n = models.IntegerField(default=5);
 
 
 	def __str__(self):
