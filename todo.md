@@ -1,4 +1,10 @@
-
+HIT Settings
+-Added ability to customize description, keywords, sandbox, etc. to the model which then posts to MTurk
+SSL Certifcate
+-Installed LetsEncrypt, but it doesn't work with bare IP address--we need a domain name eventually
+-Got SSL working with DJango, successfully loads experiments in browser
+API Reference
+-Wrote API Reference explaining the files that go into an experiment
 
 
 1. HIT Settings
@@ -9,10 +15,10 @@
 Hamed
 -Documentation page for uploading experiment
 -API reference
--Setup SSL certificate
+✔ Setup SSL certificate
 ✔ HIT settings (toggle sandbox, reward, assignment number, description, etc., name)
--Delete everything button
--Model all the states 
+	-Delete everything button
+	-Model all the states 
 	-Crowd worker, task, bonuses, crowdworker + tasks, timestamps
 
 

@@ -18,8 +18,8 @@ var currentId = "";
 /*
 CONFIG
 */
-//var serverurl = "http://192.241.179.74:8000"
-var serverurl = "http://localhost:8000"
+var serverurl = "https://192.241.179.74:8000"
+//var serverurl = "https://localhost:8000"
 
 tasks = [];
 
