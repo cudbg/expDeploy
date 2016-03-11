@@ -1,4 +1,22 @@
 
+
+
+1. HIT Settings
+2. API Reference
+3. SSL Certificate
+
+
+Hamed
+-Documentation page for uploading experiment
+-API reference
+-Setup SSL certificate
+✔ HIT settings (toggle sandbox, reward, assignment number, description, etc., name)
+-Delete everything button
+-Model all the states 
+	-Crowd worker, task, bonuses, crowdworker + tasks, timestamps
+
+
+
 Hamed
 ✔ Model experiments and create relationships between them
 ✔ Switch CharField to TextField, change {} to null

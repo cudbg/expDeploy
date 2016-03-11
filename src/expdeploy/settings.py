@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     #'expdeploy.fileloader',
     'expdeploy.gpaas',
     'expdeploy.api',
+    'sslserver'
 )
 
 MIDDLEWARE_CLASSES = (
