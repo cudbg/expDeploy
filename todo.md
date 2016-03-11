@@ -35,8 +35,6 @@ James:
 Usability 
 -Delete experiment option on user profile page
 -See results of experiments
--make possible that experiment names have space in them
--drag files onto webpage for upload
 -hook up to MTurk
 -add a second password entry for creating a new account
 
