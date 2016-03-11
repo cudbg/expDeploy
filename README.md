@@ -1,5 +1,10 @@
 # expDeploy
 
+## Intervis Crash Course
+
+### What is InterVis?
+Intervis is a platform that makes it easy for you to build, deploy, and analyze crowdsourced experiments, primarily on Amazon's Mechanical Turk. By implementing our API, deploying a crowdsourced experiment is as easy writing the experiment itself in HTML/JS, defining your variables in a python file, and uploading to our server. We take care of the deployment and data collection. Once your tasks are deployed and completed, Intervis will help you analyze your data. 
+
 API Endpoints
 
 
