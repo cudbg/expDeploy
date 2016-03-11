@@ -41,7 +41,7 @@ def mturk(request):
 	print mturk.get_account_balance() 
 
 
-	url = "https://192.241.179.74:8100"
+	url = request.GET.get('URL', '');
 	title = expId
 	description = exp.hit_description
 

@@ -52,9 +52,13 @@
 			<!-- post to MTurk -->
 			<form action="/api/mturk" method="get">
 
-			  <input type="hidden" value="{{experiment}}" name="experiment" id = "bleh" />
-			  <input type="hidden" value="{{description}}" name="description" id = "bleh3" />
-			  <input type="hidden" value="{{username}}" name="researcher" id = "bleh2" />
+
+
+			  <input type="hidden" value="{{file.docfile.url}}" name="URL" id = "id1" />
+
+			  <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+			  <input type="hidden" value="{{description}}" name="description" id = "id3" />
+			  <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
 
 			    <input type="submit" value="Post to MTurk" />
 			</form>
