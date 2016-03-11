@@ -7,6 +7,7 @@ from .models import WorkerTask
 from planout.ops.random import *
 from expdeploy.gpaas.models import ExperimentFile
 from expdeploy.gpaas.models import Researcher
+from expdeploy.gpaas.models import ExperimentModel
 
 import importlib;
 import random
@@ -19,17 +20,20 @@ import boto.mturk.connection
 def mturk(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
-	
 	researcher = Researcher.objects.filter(user__username=usrId)[0];
+	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+
 	key = researcher.aws_key_id;
 	secret_key = researcher.aws_secret_key;
-	sandbox_host = 'mechanicalturk.sandbox.amazonaws.com'
-	real_host = 'mechanicalturk.amazonaws.com'
+	host = 'mechanicalturk.sandbox.amazonaws.com'
+
+	if (exp.sandbox == False):
+		host = 'mechanicalturk.amazonaws.com'
 	
 	mturk = boto.mturk.connection.MTurkConnection(
 	    aws_access_key_id = key,
 	    aws_secret_access_key = secret_key,
-	    host = sandbox_host,
+	    host = host,
 	    debug = 1 # debug = 2 prints out all requests.
 	)
 	 
@@ -37,12 +41,20 @@ def mturk(request):
 	print mturk.get_account_balance() 
 
 
-	url = "https://www.yahoo.com"
+	url = request.GET.get('URL', '');
 	title = expId
-	description = "The more verbose description of the job!"
-	keywords = ["cats", "dogs", "rabbits"]
+	description = exp.hit_description
+
+
+	keys = exp.hit_keywords.split(',');
+	
+
+
+	keywords = []
+	for k in keys:
+		keywords.append(k.strip());
 	frame_height = 500 # the height of the iframe holding the external hit
-	amount = .05
+	amount = exp.hit_payment
 	 
 	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
 	 
@@ -52,8 +64,11 @@ def mturk(request):
 	    keywords = keywords,
 	    question = questionform,
 	    reward = boto.mturk.price.Price( amount = amount),
-	    response_groups = ( 'Minimal', 'HITDetail' ), # I don't know what response groups are
+	    max_assignments=exp.n,
+	    response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
 	)
+
+	print (create_hit_result)
 	return HttpResponse("Successfully posted to MTurk");
 
 

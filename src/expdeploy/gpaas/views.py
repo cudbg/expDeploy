@@ -38,12 +38,14 @@ def CreateExperimentView(request):
 		if form.is_valid():
 			#get experiment
 			experiment = form.cleaned_data['experiment']
-			#if experiment already exists, use it. If not, make a new one.
+			desc = form.cleaned_data['hit_description']
+			pay = form.cleaned_data['hit_payment']
+			key = form.cleaned_data['hit_keywords']
 
 			#check if experiment already exists
 			temp = ExperimentModel.objects.filter(username=user).filter(name=experiment)
 			if not temp:
-			 	exp = ExperimentModel(name=experiment, username=user)
+			 	exp = ExperimentModel(name=experiment, username=user, hit_description=desc, hit_payment=pay, hit_keywords=key)
 				exp.save()
 			else: 
 				exp = ExperimentModel.objects.filter(username=user,name=experiment)[0]

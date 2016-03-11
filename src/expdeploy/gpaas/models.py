@@ -23,6 +23,12 @@ def uuid_file_name(instance, filename):
 class ExperimentModel(models.Model):
 	name = models.CharField(max_length=120, blank=True, null=True)
 	username = models.CharField(max_length=120, blank=True, null=True)
+	hit_description = models.CharField(max_length=120)
+	hit_payment = models.FloatField(blank=0.1)
+	hit_keywords = models.CharField(max_length=120)
+	sandbox = models.BooleanField(default=True)
+	n = models.IntegerField(default=5);
+
 
 	def __str__(self):
 		return str(self.name)

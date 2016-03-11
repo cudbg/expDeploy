@@ -6,6 +6,9 @@ from .models import ExperimentFile
 
 class ExperimentForm(forms.Form):
 	experiment = forms.CharField(max_length=120, required=True)
+	hit_description = forms.CharField(max_length=120, required=True)
+	hit_payment = forms.FloatField(required=True)
+	hit_keywords = forms.CharField(max_length=120, required=True)
 
 class UploadForm(forms.Form):
 	attachments = MultiFileField(min_num = 1, max_num=10, max_file_size=1024*1024*5)

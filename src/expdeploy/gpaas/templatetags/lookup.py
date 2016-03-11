@@ -1,5 +1,6 @@
 from django import template
 register = template.Library()
+import socket
 
 @register.simple_tag
 def lookup(dictionary, key):
@@ -9,3 +10,7 @@ def lookup(dictionary, key):
 @register.simple_tag
 def explink(dictionary, key):
 	return dictionary.get(key)
+
+@register.simple_tag
+def expfullink(dictionary, key):
+	return "https://192.241.179.74:8000" + dictionary.get(key)

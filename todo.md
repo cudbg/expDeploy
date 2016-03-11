@@ -1,4 +1,22 @@
 
+
+
+1. HIT Settings
+2. API Reference
+3. SSL Certificate
+
+
+Hamed
+-Documentation page for uploading experiment
+-API reference
+-Setup SSL certificate
+✔ HIT settings (toggle sandbox, reward, assignment number, description, etc., name)
+-Delete everything button
+-Model all the states 
+	-Crowd worker, task, bonuses, crowdworker + tasks, timestamps
+
+
+
 Hamed
 ✔ Model experiments and create relationships between them
 ✔ Switch CharField to TextField, change {} to null
@@ -17,8 +35,6 @@ James:
 Usability 
 -Delete experiment option on user profile page
 -See results of experiments
--make possible that experiment names have space in them
--drag files onto webpage for upload
 -hook up to MTurk
 -add a second password entry for creating a new account
 
