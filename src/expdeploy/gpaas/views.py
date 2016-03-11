@@ -15,12 +15,50 @@ from .models import Researcher
 from .forms import LoginForm
 from .forms import UploadForm
 from .forms import UserForm
+from .forms import ExperimentForm
 
 import os
 import json
 import sys
 
-#from expdeploy.api.models import Experiment
+
+def CreateExperimentView(request):
+	#user
+	if request.user.is_authenticated: 
+			user = str(request.user)
+	else: 
+			user = None
+	if request.user.id is None:
+		return render_to_response('profileerror.html')
+
+	#Upload files for post request
+	if request.method == 'POST':
+		form = ExperimentForm(request.POST, request.FILES)
+		#Create ExperimentFile instance for each uploaded file.
+		if form.is_valid():
+			#get experiment
+			experiment = form.cleaned_data['experiment']
+			#if experiment already exists, use it. If not, make a new one.
+
+			#check if experiment already exists
+			temp = ExperimentModel.objects.filter(username=user).filter(name=experiment)
+			if not temp:
+			 	exp = ExperimentModel(name=experiment, username=user)
+				exp.save()
+			else: 
+				exp = ExperimentModel.objects.filter(username=user,name=experiment)[0]
+
+			return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+	#For non-post request:
+	else :
+		form = ExperimentForm()
+
+	#No loading documents for list page
+	return render_to_response('createexperiment.html',
+		{'experimentform': form, 'username': user},
+		context_instance = RequestContext(request)
+	)
+
 
 def CreateUserView(request):
 	if request.method == 'POST':
@@ -118,7 +156,134 @@ def LogoutView(request):
 	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
 
 
-def UploadView(request):
+def UploadFileView(request, username, experiment):
+
+	#user
+	if request.user.is_authenticated: 
+			user = str(request.user)
+	else: 
+			user = None
+	if request.user.id is None:
+		return render_to_response('profileerror.html')
+
+	#if experiment doesn't exist, return error page
+	temp = ExperimentModel.objects.filter(username=user).filter(name=experiment)
+	if not temp:
+		return render_to_response('uploaderror.html')
+	else: 
+		exp = ExperimentModel.objects.filter(username=user,name=experiment)[0]
+
+	#url
+	thisurl = "/gpaas/upload/" + username + "/" + experiment + "/"
+
+	#list of experiments
+	experiment_object = ExperimentModel.objects.filter(username=username).get(name=experiment)
+
+	#assign experiment with files
+	filedict = {}
+	file_list = []
+	#add all files associated with experiment
+	for file in experiment_object.experimentfile_set.all():
+		file_list.append(file)
+	filedict[experiment_object] = file_list
+
+	#create experiment links in dict form
+	linkdict = {}
+	usr = str(username)
+	linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
+
+	#Uploadfiles for post request
+	if request.method == 'POST':
+		form = UploadForm(request.POST, request.FILES)
+		#Create ExperimentFile instance for each uploaded file.
+		if form.is_valid():
+
+			for each in request.FILES.getlist('attachments'):
+				# if instance of file for this user exists already, delete old instance.
+				try: 
+					plain_filename = str(each).split('/')[-1]
+					duplicate = ExperimentFile.objects.filter(username=user).\
+						filter(experiment=exp).get(original_filename=plain_filename)
+					#remove physical file
+					try:
+						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
+					except OSError:
+						pass
+					duplicate.delete()
+				except ExperimentFile.DoesNotExist:
+					duplicate = None
+				#create new ExperimentFile object
+				newdoc = ExperimentFile(original_filename=each,\
+					docfile=each,username=user, filetext="tmptxt")
+
+				newdoc.experiment = exp
+				newdoc.save()
+				
+				#Open document to read contents and save to filetext field
+				f = open(newdoc.docfile.path, "r")
+  				file_contents = f.read()
+  				newdoc.filetext = file_contents
+  				newdoc.save()
+
+			return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+  			
+	else :
+		form = UploadForm()
+
+	#No loading documents for list page
+	return render_to_response('uploadpage.html',
+		{'uploadform': form, 'username': user, 'thisurl': thisurl, 'experiments': experiment,
+		'filedict': filedict,'linkdict': linkdict,},
+		context_instance = RequestContext(request)
+	)
+
+
+def UserProfileView(request):
+	if request.user.is_authenticated: 
+		username = request.user
+	if request.user.id is None:
+		return render_to_response('profileerror.html')
+
+	#list of experiments
+	experiment_objects = ExperimentModel.objects.filter(username=username)
+	experiments = []
+	for each in experiment_objects:
+		experiments.append(each.name)
+	#make sure no duplicates
+	experiments = list(set(experiments))
+
+	#assign each experiment with related files in filedict
+	filedict = {}
+	#file_objects = ExperimentFile.objects.filter(username=username)
+	for each in experiments:
+		file_list = []
+		current_exp = experiment_objects.get(name=each)
+		#add all files associated with experiment
+		for file in current_exp.experimentfile_set.all():
+			file_list.append(file)
+		filedict[each] = file_list
+
+	#create experiment links in dict form
+	linkdict = {}
+	for experiment in experiments:
+		#add experimenturl to first item in file_list
+		usr = str(username)
+		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
+
+	#edit links
+	editdict = {}
+	for experiment in experiments:
+		editdict[experiment] = "/gpaas/upload/"+str(username)+"/"+experiment+"/"
+
+	#dictionary listing files in experiment
+	return render_to_response('userprofile.html',
+		{'username':username, 'experiments': experiments, 'filedict': filedict,
+		'linkdict': linkdict, 'editdict': editdict,}
+		)
+
+
+
+def UploadView(request, experiment):
 	#user
 	if request.user.is_authenticated: 
 			user = str(request.user)
@@ -172,26 +337,6 @@ def UploadView(request):
   				file_contents = f.read()
   				newdoc.filetext = file_contents
   				newdoc.save()
-				# if (str(each).strip() == "config.json"):
-				# 	print("GOT THE CONFIG FILE");
-				# 	s = each.read().decode('utf-8')
-				# 	j = json.loads(s);
-				# 	exps = Experiment.objects.filter(name=j["experimentId"], researcher_id=j["userID"]);
-				# 	e = None;
-				# 	if len(exps) == 0:
-				# 		e = Experiment(name=j["experimentId"], researcher_id=j["userID"]);
-				# 		print("--Created new experiment--")
-				# 	else:
-				# 		print("--Modified config of old experiment--");
-				# 		e = exps[0];
-					
-				# 	e.data = json.dumps(j);
-				# 	e.save();
-				#else:
-					#ask hamed about this bit later.
-					#newdoc = ExperimentFile(docfile=each, username=user)
-					#newdoc.save()
-				#print(each)
 
 			return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
 	#For non-post request:
@@ -203,42 +348,3 @@ def UploadView(request):
 		{'uploadform': form, 'username': user},
 		context_instance = RequestContext(request)
 	)
-
-
-def UserProfileView(request):
-	if request.user.is_authenticated: 
-		username = request.user
-	if request.user.id is None:
-		return render_to_response('profileerror.html')
-
-	#list of experiments
-	experiment_objects = ExperimentModel.objects.filter(username=username)
-	experiments = []
-	for each in experiment_objects:
-		experiments.append(each.name)
-	#make sure no duplicates
-	experiments = list(set(experiments))
-
-	#assign each experiment with related files in filedict
-	filedict = {}
-	#file_objects = ExperimentFile.objects.filter(username=username)
-	for each in experiments:
-		file_list = []
-		current_exp = experiment_objects.get(name=each)
-		#add all files associated with experiment
-		for file in current_exp.experimentfile_set.all():
-			file_list.append(file)
-		filedict[each] = file_list
-
-	#create experiment links in dict form
-	linkdict = {}
-	for experiment in experiments:
-		#add experimenturl to first item in file_list
-		usr = str(username)
-		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
-
-	#dictionary listing files in experiment
-	return render_to_response('userprofile.html',
-		{'username':username, 'experiments': experiments, 'filedict': filedict,
-		'linkdict': linkdict,}
-		)

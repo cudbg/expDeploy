@@ -44,7 +44,12 @@
 				</ul>
 			</li>
 
+			<!-- Add file form -->
+			<form action= "{% explink editdict experiment %}" method="get">
+				<input type="submit" value="Edit Experiment"/>
+			</form>
 
+			<!-- post to MTurk -->
 			<form action="/api/mturk" method="get">
 
 			  <input type="hidden" value="{{experiment}}" name="experiment" id = "bleh" />
@@ -60,7 +65,7 @@
 	<div id="margin-left">
 	<!-- create new experiment -->
 	<br></br>
-    <form action="/gpaas/upload/" method="post" enctype="multipart/form-data">
+    <form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
     	<p><input type="submit" value ="Upload New Experiment"></p>
     </form>
     </div>
