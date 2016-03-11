@@ -5,10 +5,12 @@ callback = function () {
 
 
 setupExperiment({
+  
   name:"Experiment1",
   task:"VotingTask",
   wid:"W7239834242482379",
   researcher:"hn2284",
+
   viewTask: function (params) {
     var btn = document.createElement("BUTTON");
     btn.style.background = params["button_color"];
