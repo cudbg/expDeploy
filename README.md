@@ -36,6 +36,34 @@ Intervis uses the PlanOut API to structure it's experiment design. Notice how ea
 
 For a better idea of the different types of parameters that can be assigned, please look at the Planout Python reference manual.
 
+Now let's look at the index.html, which is the skeleton for the experiment itself.
+
+```HTML
+<html>
+  <head>
+
+    {% load lookup %}
+
+    <title>Example Experiment Implementation</title>
+
+    <script type="text/javascript" src="https://interviews.com/api.js"></script>
+
+    <script>
+	    {% autoescape off %}
+	    	{% lookup testfiles "experiment1.js" %}
+	    {% endautoescape %}
+    </script>
+ 
+  </head>
+
+  <body>
+    Which buttons do you want to click? <br>
+  </body>
+</html>
+
+```
+
+Notice how we use the load lookup and autoescape markup tags to allow the Experiment.html to reference other static files that are uploaded in the experiment (in this case our experiment1.js). We also include Intervis's own API, which the experiment1.js must reference. Any additional static files that the project is dependent on can be uploaded and referenced in the same manner. 
 
 
 API Endpoints
