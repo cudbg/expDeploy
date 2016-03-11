@@ -26,11 +26,10 @@
 
     <div id="form-box">
 	<!-- list experiments and experiment files -->
-	<b><h4> Experiments</h4> </b>
-	<!-- wwwwhaaaaaaaat -->
+	<b><h2> Experiments</h2> </b>
 	<!-- {% load lookup %} -->
 		{% for experiment, files in filedict.items %}
-			<li> <strong> {{experiment}} </strong> 
+			<li> <h3> {{experiment}} </h3> 
 			<!-- link experiment -->
 				<p> &nbsp;&nbsp;&nbsp;&nbsp; Link:
 				<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
