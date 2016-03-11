@@ -41,7 +41,7 @@ def mturk(request):
 	print mturk.get_account_balance() 
 
 
-	url = "https://www.yahoo.com"
+	url = "https://192.241.179.74:8100"
 	title = expId
 	description = exp.hit_description
 
