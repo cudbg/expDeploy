@@ -328,9 +328,13 @@ def UserProfileView(request):
 	experiment_objects = ExperimentModel.objects.filter(username=username)
 	experiments = []
 	for each in experiment_objects:
-		experiments.append(each.name)
+		experiments.append(each)
 	#make sure no duplicates
 	experiments = list(set(experiments))
+
+	publishdict = {}
+	for each in experiment_objects:
+		publishdict[each.name] = each.published
 
 	#assign each experiment with related files in filedict
 	filedict = {}
@@ -348,17 +352,17 @@ def UserProfileView(request):
 	for experiment in experiments:
 		#add experimenturl to first item in file_list
 		usr = str(username)
-		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
+		linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment.name+"/"
 
 	#edit links
 	editdict = {}
 	for experiment in experiments:
-		editdict[experiment] = "/gpaas/upload/"+str(username)+"/"+experiment+"/"
+		editdict[experiment] = "/gpaas/upload/"+str(username)+"/"+experiment.name+"/"
 
 	#dictionary listing files in experiment
 	return render_to_response('userprofile.html',
 		{'username':username, 'experiments': experiments, 'filedict': filedict,
-		'linkdict': linkdict, 'editdict': editdict,}
+		'linkdict': linkdict, 'editdict': editdict, 'publishdict':publishdict,'experiment_objects':experiment_objects}
 		)
 
 

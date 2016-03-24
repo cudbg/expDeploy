@@ -17,6 +17,39 @@ import datetime
 
 
 
+def removemturk(request):
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	researcher = Researcher.objects.filter(user__username=usrId)[0];
+	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+
+	key = researcher.aws_key_id;
+	secret_key = researcher.aws_secret_key;
+	host = 'mechanicalturk.sandbox.amazonaws.com'
+
+	if (exp.sandbox == False):
+		host = 'mechanicalturk.amazonaws.com'
+	
+	mturk = boto.mturk.connection.MTurkConnection(
+	    aws_access_key_id = key,
+	    aws_secret_access_key = secret_key,
+	    host = host,
+	    debug = 1 # debug = 2 prints out all requests.
+	)
+	 
+	print boto.Version 
+	print mturk.get_account_balance() 
+
+	 
+	disable = mturk.disable_hit(exp.hitID)
+	
+
+
+	exp.published = False
+	exp.save()
+	return HttpResponse("Successfully deleted from MTurk");
+
+
 def mturk(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
@@ -68,6 +101,11 @@ def mturk(request):
 	    response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
 	)
 
+
+	exp.hitID = create_hit_result[0].HITId
+
+	exp.published = True
+	exp.save()
 	print (create_hit_result)
 	return HttpResponse("Successfully posted to MTurk");
 

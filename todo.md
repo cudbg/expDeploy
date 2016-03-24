@@ -1,10 +1,20 @@
+Done:
+-Created "stop tasks" button for users that quit quickly
+-Track browser, resolution, start and complete for everything
+-Modeled different task statuses, track changes to them with timestamp
+-Delete button 
+
+TODO:
+-Download data as CSV
+-Move DJango from dev to production
+
+
 Experiment:
 HIT Published: True/False
 HIT info:
 
 
 
--Stop Button (at bottom of page)
 
 -Move DJango to productions
 
@@ -14,6 +24,9 @@ HIT info:
 -Download CSV
 -Task $, Assignment $, task $ T/F for paid inside of the Task model. 3 states (left, stop, complete all)
 -Move from dev to production
+
+
+
 
 HIT Settings
 -Added ability to customize description, keywords, sandbox, etc. to the model which then posts to MTurk

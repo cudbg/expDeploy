@@ -28,7 +28,9 @@ class ExperimentModel(models.Model):
 	hit_keywords = models.CharField(max_length=120)
 	sandbox = models.BooleanField(default=True)
 	n = models.IntegerField(default=5);
+	published = models.BooleanField(default=False);
 
+	hitID = models.CharField(max_length=120)
 
 	def __str__(self):
 		return str(self.name)
