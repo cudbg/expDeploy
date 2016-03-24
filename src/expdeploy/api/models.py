@@ -8,7 +8,7 @@ import collections;
 
 class WorkerTask (models.Model):
 	params = models.TextField(default="{}")
-	results = models.TextField(default="null")
+	results = models.TextField(default="{}")
 	experiment = models.ForeignKey(ExperimentModel)
 
 

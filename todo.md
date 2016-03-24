@@ -1,8 +1,24 @@
--Model everything so you can check status. Collect browser information, resolution, timing, timestamp
+Experiment:
+HIT Published: True/False
+HIT info:
+
+
+WorkerTask
+Status: "Waiting", "Completed", "Not Completed"
+Paid: True/False
+Status Change: DATE
+UserInfo: JSON
+
+-Stop Button (at bottom of page)
+
+-Move DJango to productions
+
+
+
 -Panic/Delete button
 -Download CSV
 -Task $, Assignment $, task $ T/F for paid inside of the Task model. 3 states (left, stop, complete all)
-
+-Move from dev to production
 
 HIT Settings
 -Added ability to customize description, keywords, sandbox, etc. to the model which then posts to MTurk
