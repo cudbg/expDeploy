@@ -32,7 +32,7 @@
 			<li> <h3> {{experiment.name}} </h3> 
 			<!-- link experiment -->
 				<p> &nbsp;&nbsp;&nbsp;&nbsp; Link:
-				<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment.name %} </a> </p>
+				<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
 				<ul>
 				{% for file in files %}
 					<li> {{file.original_filename}} </li>
