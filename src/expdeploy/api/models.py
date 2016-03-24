@@ -7,10 +7,14 @@ import collections;
 
 
 class WorkerTask (models.Model):
+
 	params = models.TextField(default="{}")
-	results = models.TextField(default="{}")
+	results = models.TextField(default='{"data":[], "metadata":[]}')
+	history = models.TextField(default='{"events":[] }')
 	experiment = models.ForeignKey(ExperimentModel)
 
+	currentStatus = models.CharField(max_length=100, default="Waiting")
+	paid = models.BooleanField(default=False)
 
 	researcher = models.CharField(max_length=200)
 	name = models.CharField(max_length=200)

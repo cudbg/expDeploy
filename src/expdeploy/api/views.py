@@ -8,12 +8,12 @@ from planout.ops.random import *
 from expdeploy.gpaas.models import ExperimentFile
 from expdeploy.gpaas.models import Researcher
 from expdeploy.gpaas.models import ExperimentModel
-
+from django.utils.dateformat import format
 import importlib;
 import random
 import string
 import boto.mturk.connection
- 
+import datetime
 
 
 
@@ -106,9 +106,21 @@ def log(request):
 			task.results = "{}";
 
 		d = json.loads(task.results)
-		d[len(d)] = body["data"];
+		d["data"].append(body["data"]);
 
 		task.results = json.dumps(d);
+
+		history = json.loads(task.history)
+		timestamp_string = format(datetime.datetime.now(), u'U')
+
+		task.currentStatus = "Complete"
+
+		event = {"type":"changeStatus","newStatus":"Complete","timestamp":timestamp_string}
+		history["events"].append(event)
+		
+		task.history = json.dumps(history)
+
+
 		task.save()
 
 
@@ -158,6 +170,65 @@ def experiment(request):
 		print(exps)
 		return HttpResponse(exps[0].data)
 
+def finishTasks(request):
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	taskName = request.GET.get('task', '');
+	wid = request.GET.get('wid', '');
+	print("test 1");
+
+	print("bleh")
+
+	exps = ExperimentFile.objects.filter(username=usrId);
+	if len(exps)==0:
+		return HttpResponse("No experiments with those specs found")
+
+	expsBackwards = reversed(exps);
+	for exp in expsBackwards:
+		if (exp.original_filename == (expId + ".py")):
+			print("test 2");
+
+			EX = exp.experiment
+			print("n2222"+EX.name);
+			
+			return_tasks = []
+			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
+			print(find_tasks);
+			
+				#return HttpResponse('{"params":' + str(params) + "}")
+			for workertask in find_tasks:
+				return_tasks.append(workertask);
+
+			params_list = []
+
+			print("THESE ARE THE STOPPED TASKS")
+			print(return_tasks)
+
+			response = "";
+
+			for task in return_tasks:
+				params = task.params
+				params_json = byteify(json.loads(params));
+
+				results = json.loads(task.results)
+				if (len(results["data"]) == 0):
+					task.currentStatus = "Stopped"
+					params_list.append(params_json);
+
+					history = json.loads(task.history)
+					timestamp_string = format(datetime.datetime.now(), u'U')
+
+
+					event = {"type":"changeStatus","newStatus":"Stopped","timestamp":timestamp_string}
+					history["events"].append(event)
+					
+					task.history = json.dumps(history)
+					task.save()
+					print('heh"')
+					print(params_json);
+
+			return HttpResponse('{"params":' + str(params_list) + "}")
+
 def task(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
@@ -195,10 +266,22 @@ def task(request):
 					param = exp.get_params()
 					param["identifier"] = task_id;
 
+					print(param)
 					NewTask.params = json.dumps(param);
 
+
+					history = json.loads(NewTask.history)
+					timestamp_string = format(datetime.datetime.now(), u'U')
+
+
+					event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+					history["events"].append(event)
+					
+					NewTask.history = json.dumps(history)
+
+					#print(NewTask.history)
 					NewTask.save();
-					print(NewTask.experiment)
+					#print(NewTask.experiment)
 					return_tasks.append(NewTask);
 
 				#return HttpResponse('{"params":' + str(params) + "}")
@@ -212,7 +295,9 @@ def task(request):
 			for task in return_tasks:
 				params = task.params
 				params_json = byteify(json.loads(params));
-				if (task.results == "null"):
+
+				results = json.loads(task.results)
+				if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
 					params_list.append(params_json);
 					print(params_json);
 

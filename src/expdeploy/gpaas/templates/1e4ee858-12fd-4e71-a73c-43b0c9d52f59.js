@@ -8,7 +8,7 @@ setupExperiment({
   
   name:"Experiment1",
   task:"VotingTask",
-  wid:"000",
+  wid:"A12",
   researcher:"hn2284",
 
   viewTask: function (params) {

@@ -8,7 +8,7 @@ setupExperiment({
   
   name:"Experiment1",
   task:"VotingTask",
-  wid:"000",
+  wid:"W7239834242482379",
   researcher:"hn2284",
 
   viewTask: function (params) {
@@ -16,13 +16,13 @@ setupExperiment({
     btn.style.background = params["button_color"];
     var txt = document.createTextNode(params["button_text"]);  
     btn.appendChild(txt);  
-     document.getElementById("b").appendChild(btn); 
+     document.body.appendChild(btn); 
 
      var btn2 = document.createElement("BUTTON");
     btn2.style.background = params["button_color"];
     var txt2 = document.createTextNode(params["button_text2"]);  
     btn2.appendChild(txt2);  
-     document.getElementById("b").appendChild(btn2); 
+     document.body.appendChild(btn2); 
 
     btn.addEventListener("click", function(){
         logData("ButtonTask",{"color":params["button_color"],"text":params["button_text"]})
@@ -34,7 +34,7 @@ setupExperiment({
     });
   },
   clearTask: function() {
-   document.getElementById("b").innerHTML = ''; 
+    document.body.innerHTML = ''; 
   }
 })
 

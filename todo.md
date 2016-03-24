@@ -3,11 +3,6 @@ HIT Published: True/False
 HIT info:
 
 
-WorkerTask
-Status: "Waiting", "Completed", "Not Completed"
-Paid: True/False
-Status Change: DATE
-UserInfo: JSON
 
 -Stop Button (at bottom of page)
 
