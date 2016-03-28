@@ -75,6 +75,19 @@
 
 			</form>
 
+
+
+
+			<form action="/api/export" method="get">
+
+				<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
+				<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+
+
+				<input type="submit" value="Download Data" />
+
+			</form>
+
 		{% endfor %}
 	</div>
 
