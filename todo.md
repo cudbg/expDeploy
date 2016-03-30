@@ -90,9 +90,18 @@ http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssign
 
 James:
 Usability 
--Delete experiment option on user profile page
--See results of experiments
--hook up to MTurk
--add a second password entry for creating a new account
+-Change database to postgresql
+-Put server into production deployment
+-Add payment! (accepttask() method from boto)
+-reminder: change back to necessary .edu extension (issue with my school account for AWS)
 
 Crowdflower, MTurk, ClickWorker
+
+List of dependencies for program: 
+pip install:
+	jsonfield
+	django-sslserver
+	django-cors-headers
+	planout
+	boto
+	django-multiupload
