@@ -5,19 +5,15 @@
 		-Qualficiation function
 		-Args for each call of ^
 		-Validation for ^
-		-Training is regular task, they 
+		-Training is regular task, they just give you the args list. (also show answer).
+
+*Distinguish between WorkerTask types
+✔Download as CSV
+*Reduce JSON useage:
+	-Many-To-1 Status
+	-Many-To-1 for Metadata
 
 
-
-just give you the args list. (also show answer).
-
--Distinguish between WorkerTask types
--Download as CSV
-
-
-Reduce JSON useage:
--Many-To-1 Status
--Many-To-1 for Metadata
 
 Done:
 -Created "stop tasks" button for users that quit quickly

@@ -5,20 +5,21 @@ db.sqlite3
 src/db.sqlite3
 *.pyc 
 
-src/expdeploy/testapp/webfiles/index.html
+src/VotingTask.log
+
 #ignore templates except for those created by us
-src/expdeploy/testapp/templates/*
-!src/expdeploy/testapp/templates/base.html
-!src/expdeploy/testapp/templates/createaccounterror.html
-!src/expdeploy/testapp/templates/createexperiment.html
-!src/expdeploy/testapp/templates/createuser.html
-!src/expdeploy/testapp/templates/login.html
-!src/expdeploy/testapp/templates/loginerror.html
-!src/expdeploy/testapp/templates/logouterror.html
-!src/expdeploy/testapp/templates/profileerror.html
-!src/expdeploy/testapp/templates/uploaderror.html
-!src/expdeploy/testapp/templates/uploadpage.html
-!src/expdeploy/testapp/templates/userprofile.html
+src/expdeploy/gpaas/templates/*
+!src/expdeploy/gpaas/templates/base.html
+!src/expdeploy/gpaas/templates/createaccounterror.html
+!src/expdeploy/gpaas/templates/createexperiment.html
+!src/expdeploy/gpaas/templates/createuser.html
+!src/expdeploy/gpaas/templates/login.html
+!src/expdeploy/gpaas/templates/loginerror.html
+!src/expdeploy/gpaas/templates/logouterror.html
+!src/expdeploy/gpaas/templates/profileerror.html
+!src/expdeploy/gpaas/templates/uploaderror.html
+!src/expdeploy/gpaas/templates/uploadpage.html
+!src/expdeploy/gpaas/templates/userprofile.html
 
 
 
