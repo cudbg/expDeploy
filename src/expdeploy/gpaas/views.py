@@ -77,14 +77,14 @@ def CreateUserView(request):
 			#if not emailextension == "edu":
 			#	return render_to_response('createaccounterror.html')
 			#check username doesnt exist already
-			match = ExperimentFile.objects.filter(username=accountname)
-			if not match.exists():
-				user = User.objects.create_user(accountname,email,password)		
-			 	user.save()
-			 	researcher = Researcher(user=user, aws_key_id=key_id, aws_secret_key=secret_key);
-			 	researcher.save();		
-			else: 
-			 	return render_to_response('createaccounterror.html')
+			#match = ExperimentFile.objects.filter(username=accountname)
+			#if not match.exists():
+			user = User.objects.create_user(accountname,email,password)		
+			user.save()
+			researcher = Researcher(user=user, aws_key_id=key_id, aws_secret_key=secret_key);
+			researcher.save();		
+			#else: 
+			# 	return render_to_response('createaccounterror.html')
 		#logout previous user. login new user and send them to profile
 		logout(request)
 		user = authenticate(username=accountname, password=password)
