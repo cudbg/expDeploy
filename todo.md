@@ -66,9 +66,8 @@ http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_GetAssign
 
 James:
 Usability 
--Change database to postgresql
 -Put server into production deployment
--Add payment! (accepttask() method from boto)
+-Resize droplet?
 -reminder: change back to necessary .edu extension (issue with my school account for AWS)
 
 Crowdflower, MTurk, ClickWorker
