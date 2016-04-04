@@ -47,7 +47,7 @@ Hamed
 	-Delete everything button
 	-Model all the states 
 	-Crowd worker, task, bonuses, crowdworker + tasks, timestamps
-
+-without replacement planout
 
 
 Hamed
