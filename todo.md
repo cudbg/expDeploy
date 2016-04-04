@@ -1,46 +1,26 @@
-*Recruitment workflow
-	Intro -> Qualification -> Training -> Tasks
-		-ask if needed
-	-They need to define:
-		-Qualficiation function
-		-Args for each call of ^
-		-Validation for ^
-		-Training is regular task, they just give you the args list. (also show answer).
+pg_dump --help
+*Create temp tables, then drop after
+*API call that takes function that returns true or false
+*List of calls for both training and qualification that take care of running each part
+*Assignment ID attached to either WorkerTask or Experiment deployment
+*Make server persistent
 
-*Distinguish between WorkerTask types
-✔Download as CSV
-*Reduce JSON useage:
-	-Many-To-1 Status
-	-Many-To-1 for Metadata
+DISCUSS: QUALIFICATION
+Qualification:
+-Needs to be done separately:
+	http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_CreateQualificationTypeOperation.html
+-Researcher has a separate interface similar to Experiment, to create Qualification. Uploads HTML, Javascript, Django?
+	-Do we need randomized parameter as this isn't really an experiment? 
+	-Alternatively, use Amazon's direct API/interface <- This may be better?
 
+Training Task:
+-Inside of experiment.py, identify a parameter that is the answer
+-showTask() -> showAnswer() -> clearTask()
 
+✔ Distinguish between WorkerTask types
+✔ Download as CSV + Zip File
+✔ Reduce JSON useage:
 
-Done:
--Created "stop tasks" button for users that quit quickly
--Track browser, resolution, start and complete for everything
--Modeled different task statuses, track changes to them with timestamp
--Delete button 
-
-TODO:
--Download data as CSV
--Move DJango from dev to production
-
-
-Experiment:
-HIT Published: True/False
-HIT info:
-
-
-
-
--Move DJango to productions
-
-
-
--Panic/Delete button
--Download CSV
--Task $, Assignment $, task $ T/F for paid inside of the Task model. 3 states (left, stop, complete all)
--Move from dev to production
 
 
 
@@ -101,3 +81,5 @@ pip install:
 	planout
 	boto
 	django-multiupload
+
+pg_ctl -D db/postgres -l logfile start

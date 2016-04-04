@@ -8,9 +8,9 @@ setupExperiment({
   
   name:"Experiment1",
   task:"VotingTask",
-  wid:"000",
+  wid:"hellooo",
 
-  researcher:"hn2284",
+  researcher:"admin",
 
   viewTask: function (params) {
     var btn = document.createElement("BUTTON");
