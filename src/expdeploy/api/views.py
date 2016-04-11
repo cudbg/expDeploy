@@ -400,8 +400,11 @@ def task(request):
 		return HttpResponse("No experiments with those specs found")
 
 	expsBackwards = reversed(exps);
+
+
+
 	for exp in expsBackwards:
-		if (exp.original_filename == (expId + ".py")):
+		if (exp.original_filename == (expId + ".json")):
 			print("test 2");
 
 			EX = exp.experiment
@@ -411,38 +414,37 @@ def task(request):
 			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
 			print(find_tasks);
 			if (len(find_tasks) == 0):
-				Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
-			
-				print("Creating new tasks right now");
 				
-				for i in range(0,n):
-					exp = Task(userid=wid+str(i));
+				data = json.loads(exp.docfile.read())
+				print(data["tasks"])
 
-					task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-
-					NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
-					param = exp.get_params()
-					param["identifier"] = task_id;
-
-					print(param)
-					NewTask.params = json.dumps(param);
-
-
-					history = json.loads(NewTask.history)
-					timestamp_string = format(datetime.datetime.now(), u'U')
+				for task in data["tasks"]:
+					if task["name"] == taskName:
+						for i in range(0,n):
+							param = {}
+							for p in task["params"]:
+								param[p["name"]] = random.choice(p["options"])
+							print(param)
 
 
-					event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
-					history["events"].append(event)
-					
-					NewTask.history = json.dumps(history)
+							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+							
+							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
+							param["identifier"] = task_id;
+							NewTask.params = json.dumps(param);
 
-					#print(NewTask.history)
-					NewTask.save();
-					#print(NewTask.experiment)
-					return_tasks.append(NewTask);
+							history = json.loads(NewTask.history)
+							timestamp_string = format(datetime.datetime.now(), u'U')
+							event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+							history["events"].append(event)
+							NewTask.history = json.dumps(history)
+							#print(NewTask.history)
+							NewTask.save();
+							#print(NewTask.experiment)
+							return_tasks.append(NewTask);
 
-				#return HttpResponse('{"params":' + str(params) + "}")
+
+			#return HttpResponse('{"params":' + str(params) + "}")
 			for workertask in find_tasks:
 				return_tasks.append(workertask);
 
@@ -461,7 +463,74 @@ def task(request):
 
 			return HttpResponse('{"params":' + str(params_list) + "}")
 
-			#return HttpResponse(return HttpResponse('{"params":' + str(params) + "}"), content_type='application/json; charset=utf-8')
+
+
+
+
+
+
+	# for exp in expsBackwards:
+	# 	if (exp.original_filename == (expId + ".py")):
+	# 		print("test 2");
+
+	# 		EX = exp.experiment
+	# 		print("n2222"+EX.name);
+			
+	# 		return_tasks = []
+	# 		find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
+	# 		print(find_tasks);
+	# 		if (len(find_tasks) == 0):
+	# 			Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
+			
+	# 			print("Creating new tasks right now");
+				
+	# 			for i in range(0,n):
+	# 				exp = Task(userid=wid+str(i));
+
+	# 				task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+
+	# 				NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
+	# 				param = exp.get_params()
+	# 				param["identifier"] = task_id;
+
+	# 				print(param)
+	# 				NewTask.params = json.dumps(param);
+
+
+	# 				history = json.loads(NewTask.history)
+	# 				timestamp_string = format(datetime.datetime.now(), u'U')
+
+
+	# 				event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+	# 				history["events"].append(event)
+					
+	# 				NewTask.history = json.dumps(history)
+
+	# 				#print(NewTask.history)
+	# 				NewTask.save();
+	# 				#print(NewTask.experiment)
+	# 				return_tasks.append(NewTask);
+
+	# 			#return HttpResponse('{"params":' + str(params) + "}")
+	# 		for workertask in find_tasks:
+	# 			return_tasks.append(workertask);
+
+	# 		params_list = []
+
+	# 		response = "";
+
+	# 		for task in return_tasks:
+	# 			params = task.params
+	# 			params_json = byteify(json.loads(params));
+
+	# 			results = json.loads(task.results)
+	# 			if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
+	# 				params_list.append(params_json);
+	# 				print(params_json);
+
+	# 		return HttpResponse('{"params":' + str(params_list) + "}")
+
+								#return HttpResponse(return HttpResponse('{"params":' + str(params) + "}"), content_type='application/json; charset=utf-8')
 
 def byteify(input):
     if isinstance(input, dict):
