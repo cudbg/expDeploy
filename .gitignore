@@ -4,6 +4,12 @@ db.sqlite3
 *.pyc
 src/db.sqlite3
 *.pyc 
+src/db/*/*/*/*/*
+src/db/*/*/*/*
+src/db/*/*/*
+src/db/*/*
+src/db/*
+
 
 src/VotingTask.log
 
@@ -27,3 +33,6 @@ src/expdeploy/gpaas/templates/*
 
 
 
+
+
+src/db/gpaasdb/base/1/3080

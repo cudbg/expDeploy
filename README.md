@@ -181,11 +181,12 @@ user.save()
 
 
 
-
+createdb gpaasdb
+initdb db/gpaasdb -E utf8
 initdb db/postgres -E utf8
-initdb db/postgres -E utf8pg_ctl -D db/postgres -l logfile start
-
 pg_ctl -D db/postgres -l logfile start
+psql -d gpaasdb
+
 CREATE USER gpaasteam with PASSWORD 'gpaas';
 ALTER ROLE gpaasteam SET client_encoding TO 'utf8';
 ALTER ROLE gpaasteam SET default_transaction_isolation TO 'read committed';
