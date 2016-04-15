@@ -13,6 +13,9 @@ src/db/*
 
 src/VotingTask.log
 
+src/expdeploy/testapp/templates/*
+src/expdeploy/testapp/*
+
 #ignore templates except for those created by us
 src/expdeploy/gpaas/templates/*
 !src/expdeploy/gpaas/templates/base.html
