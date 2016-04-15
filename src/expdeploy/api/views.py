@@ -3,6 +3,10 @@ from django.http import HttpResponse
 import json
 #from .models import Experiment
 from .models import WorkerTask
+from .models import HistoryEvent
+from .models import Metadata
+
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from planout.ops.random import *
 from expdeploy.gpaas.models import ExperimentFile
@@ -16,6 +20,7 @@ import boto.mturk.connection
 import datetime
 import csv
 from django.utils.encoding import smart_str
+from StringIO import StringIO
 
 def export(request):
 	expId = request.GET.get('experiment', '');
@@ -24,17 +29,29 @@ def export(request):
 	#TODO: Filter by experiment name
 	find_tasks = WorkerTask.objects.filter(experiment__name=expId, researcher=usrId);
 	data = []
+	metadata = []
+	histories = []
+
 	for task in find_tasks:
+		sss = task.historyevent_set.all() 
+		for his in sss:
+			histories.append(his)
+		metadata.append(task.metaData)
 		print("SSS" + task.experiment.name)
 		d = byteify(json.loads(task.results));
 		data.append(d);
 
-	response = HttpResponse(content_type='text/csv')
-	writer = csv.writer(response, csv.excel)
-	response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
+	print(histories)
+	
 
-	response['Content-Disposition'] = 'attachment; filename=export.csv'
-	writer = csv.writer(response, csv.excel)
+
+	s = StringIO()
+	myzip = ZipFile(s, "w",ZIP_DEFLATED)
+
+	
+	string_buffer = StringIO()
+
+	writer = csv.writer(string_buffer, csv.excel)
 	writer.writerow([
 		smart_str(u"ID"),
 		smart_str(u"Name"),
@@ -44,6 +61,7 @@ def export(request):
 		smart_str(u"Status"),
 		smart_str(u"Paid"),
 		smart_str(u"WID"),
+		smart_str(u"Metadata ID"),
 		])
 	for obj in find_tasks:
 		writer.writerow([
@@ -55,30 +73,56 @@ def export(request):
 			smart_str(obj.currentStatus),
 			smart_str(obj.paid),
 			smart_str(obj.wid),
+			smart_str(obj.metaData.pk),
 			])
-	return response
-
-	print(data);
-	return HttpResponse(data)
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+	myzip.writestr('data.csv', string_buffer.getvalue())
 
 
+	string_buffer = StringIO()
+	writer = csv.writer(string_buffer, csv.excel)
+	writer.writerow([
+		smart_str(u"ID"),
+		smart_str(u"User Agent"),
+		smart_str(u"Dimensions"),
+		smart_str(u"Start Timestamp"),
+		smart_str(u"End Timestamp")
+		])
+	for obj in metadata:
+		writer.writerow([
+			smart_str(obj.pk),
+			smart_str(obj.userAgent),
+			smart_str(obj.dimensions),
+			smart_str(obj.start),
+			smart_str(obj.end),
+			])
+	myzip.writestr('metadata.csv', string_buffer.getvalue())		
 
+	string_buffer = StringIO()
+	writer = csv.writer(string_buffer, csv.excel)
+	writer.writerow([
+		smart_str(u"ID"),
+		smart_str(u"Task ID"),
+		smart_str(u"New Status"),
+		smart_str(u"Event Type"),
+		smart_str(u"Timestamp")
+		])
+	for obj in histories:
+		writer.writerow([
+			smart_str(obj.pk),
+			smart_str(obj.workerTask.pk),
+			smart_str(obj.newStatus),
+			smart_str(obj.eventType),
+			smart_str(obj.timeStamp),
+			])
+	myzip.writestr('history.csv', string_buffer.getvalue())
 
+	myzip.close()
+	#return HttpResponse("bleh")
+
+	resp = HttpResponse(s.getvalue(), content_type = "application/x-zip-compressed")
+	resp['Content-Disposition'] = 'attachment; filename=%s' % "data.zip"
+
+	return resp
 
 def removemturk(request):
 	expId = request.GET.get('experiment', '');
@@ -207,6 +251,21 @@ def log(request):
 			task.results = "{}";
 
 		d = json.loads(task.results)
+
+		metaData = body["data"]["metaData"]
+
+
+
+		m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"])
+
+		m.save()
+
+		task.metaData= m
+
+
+
+		print(metaData)
+
 		d["data"].append(body["data"]);
 
 		task.results = json.dumps(d);
@@ -216,11 +275,9 @@ def log(request):
 
 		task.currentStatus = "Complete"
 
-		event = {"type":"changeStatus","newStatus":"Complete","timestamp":timestamp_string}
-		history["events"].append(event)
-		
-		task.history = json.dumps(history)
-
+		event = HistoryEvent(newStatus="Complete", timeStamp=int(timestamp_string))
+		event.workerTask = task
+		event.save()
 
 		task.save()
 
@@ -343,8 +400,11 @@ def task(request):
 		return HttpResponse("No experiments with those specs found")
 
 	expsBackwards = reversed(exps);
+
+
+
 	for exp in expsBackwards:
-		if (exp.original_filename == (expId + ".py")):
+		if (exp.original_filename == (expId + ".json")):
 			print("test 2");
 
 			EX = exp.experiment
@@ -354,38 +414,37 @@ def task(request):
 			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
 			print(find_tasks);
 			if (len(find_tasks) == 0):
-				Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
-			
-				print("Creating new tasks right now");
 				
-				for i in range(0,n):
-					exp = Task(userid=wid+str(i));
+				data = json.loads(exp.docfile.read())
+				print(data["tasks"])
 
-					task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-
-					NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
-					param = exp.get_params()
-					param["identifier"] = task_id;
-
-					print(param)
-					NewTask.params = json.dumps(param);
-
-
-					history = json.loads(NewTask.history)
-					timestamp_string = format(datetime.datetime.now(), u'U')
+				for task in data["tasks"]:
+					if task["name"] == taskName:
+						for i in range(0,n):
+							param = {}
+							for p in task["params"]:
+								param[p["name"]] = random.choice(p["options"])
+							print(param)
 
 
-					event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
-					history["events"].append(event)
-					
-					NewTask.history = json.dumps(history)
+							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+							
+							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
+							param["identifier"] = task_id;
+							NewTask.params = json.dumps(param);
 
-					#print(NewTask.history)
-					NewTask.save();
-					#print(NewTask.experiment)
-					return_tasks.append(NewTask);
+							history = json.loads(NewTask.history)
+							timestamp_string = format(datetime.datetime.now(), u'U')
+							event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+							history["events"].append(event)
+							NewTask.history = json.dumps(history)
+							#print(NewTask.history)
+							NewTask.save();
+							#print(NewTask.experiment)
+							return_tasks.append(NewTask);
 
-				#return HttpResponse('{"params":' + str(params) + "}")
+
+			#return HttpResponse('{"params":' + str(params) + "}")
 			for workertask in find_tasks:
 				return_tasks.append(workertask);
 
@@ -404,7 +463,74 @@ def task(request):
 
 			return HttpResponse('{"params":' + str(params_list) + "}")
 
-			#return HttpResponse(return HttpResponse('{"params":' + str(params) + "}"), content_type='application/json; charset=utf-8')
+
+
+
+
+
+
+	# for exp in expsBackwards:
+	# 	if (exp.original_filename == (expId + ".py")):
+	# 		print("test 2");
+
+	# 		EX = exp.experiment
+	# 		print("n2222"+EX.name);
+			
+	# 		return_tasks = []
+	# 		find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
+	# 		print(find_tasks);
+	# 		if (len(find_tasks) == 0):
+	# 			Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
+			
+	# 			print("Creating new tasks right now");
+				
+	# 			for i in range(0,n):
+	# 				exp = Task(userid=wid+str(i));
+
+	# 				task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+
+	# 				NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
+	# 				param = exp.get_params()
+	# 				param["identifier"] = task_id;
+
+	# 				print(param)
+	# 				NewTask.params = json.dumps(param);
+
+
+	# 				history = json.loads(NewTask.history)
+	# 				timestamp_string = format(datetime.datetime.now(), u'U')
+
+
+	# 				event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+	# 				history["events"].append(event)
+					
+	# 				NewTask.history = json.dumps(history)
+
+	# 				#print(NewTask.history)
+	# 				NewTask.save();
+	# 				#print(NewTask.experiment)
+	# 				return_tasks.append(NewTask);
+
+	# 			#return HttpResponse('{"params":' + str(params) + "}")
+	# 		for workertask in find_tasks:
+	# 			return_tasks.append(workertask);
+
+	# 		params_list = []
+
+	# 		response = "";
+
+	# 		for task in return_tasks:
+	# 			params = task.params
+	# 			params_json = byteify(json.loads(params));
+
+	# 			results = json.loads(task.results)
+	# 			if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
+	# 				params_list.append(params_json);
+	# 				print(params_json);
+
+	# 		return HttpResponse('{"params":' + str(params_list) + "}")
+
+								#return HttpResponse(return HttpResponse('{"params":' + str(params) + "}"), content_type='application/json; charset=utf-8')
 
 def byteify(input):
     if isinstance(input, dict):

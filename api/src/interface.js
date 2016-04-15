@@ -7,7 +7,7 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 
-var wid = "A123";
+var wid = "haskdhdsddfsf";
 var task = "";
 var researcher = "";
 var n = "";
@@ -21,8 +21,8 @@ var taskStart;
 /*
 CONFIG
 */
-var serverurl = "https://192.241.179.74:8000"
-//var serverurl = "https://localhost:8000"
+//var serverurl = "https://192.241.179.74:8000"
+var serverurl = "https://localhost:8000"
 
 tasks = [];
 

@@ -170,8 +170,25 @@ source Django/bin.activate
 
 Migrate DB:
 
-python manage.py sqlmigrate api 0001
 python manage.py makemigrations api
 python manage.py migrate
 
+from django.contrib.auth.models import User
+user = User.objects.get(username="hn2284")
+user.is_staff = True
+user.is_admin = True
+user.save()
 
+
+
+createdb gpaasdb
+initdb db/gpaasdb -E utf8
+initdb db/postgres -E utf8
+pg_ctl -D db/postgres -l logfile start
+psql -d gpaasdb
+
+CREATE USER gpaasteam with PASSWORD 'gpaas';
+ALTER ROLE gpaasteam SET client_encoding TO 'utf8';
+ALTER ROLE gpaasteam SET default_transaction_isolation TO 'read committed';
+ALTER ROLE gpaasteam SET timezone to 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE gpaasdb to gpaasteam

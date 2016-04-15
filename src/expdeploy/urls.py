@@ -13,3 +13,6 @@ urlpatterns = [
 	url(r'^gpaas/', include('expdeploy.gpaas.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+admin.autodiscover() 
