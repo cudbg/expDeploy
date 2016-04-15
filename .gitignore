@@ -11,7 +11,7 @@ src/db/*/*
 src/db/*
 
 
-src/VotingTask.log
+#src/VotingTask.log
 
 src/expdeploy/testapp/templates/*
 src/expdeploy/testapp/*
