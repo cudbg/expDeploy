@@ -26,7 +26,7 @@ SECRET_KEY = '-q@x+fbn4vl-+qs!*a=+(u%j1w76z_(7re-1*b+yb&a+rj=-&+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.241.179.74']
 
 
 # Application definition
@@ -104,7 +104,9 @@ WSGI_APPLICATION = 'expdeploy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+	#'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': 'db.sqlite3',
+	'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'gpaasdb',
 	'USER': 'gpaasteam',
 	'PASSWORD': 'gpaas',
