@@ -11,6 +11,8 @@ urlpatterns = patterns(
     #username and experiment name passed to view from url.
     url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/$',\
         'ExperimentView', name='experiment_page'),
+    url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/(?P<filename>[A-Za-z0-9\w.]+)/$',\
+        'FileHttpResponse', name='file_http_response'),
 
     url(r'^$', 'LoginView', name='login'),
     url(r'^logout/$', 'LogoutView', name='logout'),
