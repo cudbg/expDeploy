@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.241.179.74']
 
+#Set APPEND_SLASH to false
+APPEND_SLASH = False
+
 
 # Application definition
 
@@ -104,14 +107,14 @@ WSGI_APPLICATION = 'expdeploy.wsgi.application'
 
 DATABASES = {
     'default': {
-	#'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': 'db.sqlite3',
-	'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'gpaasdb',
-	'USER': 'gpaasteam',
-	'PASSWORD': 'gpaas',
-	'HOST': 'localhost',
-	'PORT': '',
+	'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': 'db.sqlite3',
+	# 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+ #    'NAME': 'gpaasdb',
+	# 'USER': 'gpaasteam',
+	# 'PASSWORD': 'gpaas',
+	# 'HOST': 'localhost',
+	# 'PORT': '',
     }
 }
 
