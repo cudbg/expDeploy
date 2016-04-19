@@ -12,6 +12,12 @@ urlpatterns = patterns(
     url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/$',\
         'ExperimentView', name='experiment_page'),
 
+    url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/(?P<filename>[A-Za-z0-9\w.]+)/$',\
+        'FileHttpResponse', name='file_http_response'),
+    url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/(?P<filename>[A-Za-z0-9\w.]+)$',\
+        'FileHttpResponse', name='file_http_response'),
+    
+
     url(r'^$', 'LoginView', name='login'),
     url(r'^logout/$', 'LogoutView', name='logout'),
     url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9]+)/$', 'UploadFileView', name='upload'),

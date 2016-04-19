@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth import authenticate, login, logout
 from django.core.files import File
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -184,6 +184,13 @@ def ExperimentView(request, username, experiment):
 		{'testfiles': filedict,  'username': username}
 	)
 
+def FileHttpResponse(request, username, experiment, filename):
+	#Get proper experiment and file
+	current_exp = current_exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+	file_object = current_exp.experimentfile_set.get(original_filename = filename)
+	static_content = file_object.filetext
+
+	return (HttpResponse(content=static_content))
 
 def LoginView(request):
 	if request.method == 'POST':
