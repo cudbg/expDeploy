@@ -8,7 +8,7 @@ setupExperiment({
   
   name:"Experiment1",
   task:"VotingTask",
-  wid:"hellooo",
+  wid:"fsfsfsfsf",
 
   researcher:"admin",
 
@@ -26,11 +26,11 @@ setupExperiment({
      document.getElementById("b").appendChild(btn2); 
 
     btn.addEventListener("click", function(){
-        logData("ButtonTask",{"color":params["button_color"],"text":params["button_text"]})
+        logData({"color":params["button_color"],"text":params["button_text"]})
         nextTask();
     });
     btn2.addEventListener("click", function(){
-        logData("ButtonTask",{"color":params["button_color"],"text":params["button_text2"]})
+        logData({"color":params["button_color"],"text":params["button_text2"]})
         nextTask();
     });
   },

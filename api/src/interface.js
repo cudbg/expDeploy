@@ -26,7 +26,7 @@ var serverurl = "https://localhost:8000"
 
 tasks = [];
 
-function logData(task_name,d) {
+function logData(d) {
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
 	xmlhttp.open("POST", serverurl + "/api/log/");
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -73,7 +73,7 @@ function nextTask() {
 
 	entry = tasks[0];
 	currentId = tasks[0]["identifier"];
-	viewTask(entry)
+	viewTask({params:entry,logData:logData,nextTask,nextTask})
 	tasks.shift();
 }
 
@@ -88,6 +88,23 @@ function endTasks() {
 
 
 function setupExperiment(options) {
+
+	options.qualificationTasks.forEach(function(entry) {
+
+    	e = (entry());
+    	if (e == false) {
+    		return
+    	}
+
+	});
+
+	options.trainingTasks.forEach(function(entry) {
+    	console.log(entry());
+    	if (entry == false) {
+    		return
+    	}
+
+	});
 
 	n = options.name;
 	task = options.task;
@@ -110,7 +127,13 @@ function setupExperiment(options) {
    		
 	});
 
-   	nextTask();
+   	//nextTask();
    	
 
 }
+
+function startExperiment(setup) {
+	setupExperiment(setup({logData:logData}))
+	return {run:nextTask}
+}
+

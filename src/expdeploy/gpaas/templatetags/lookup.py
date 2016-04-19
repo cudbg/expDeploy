@@ -19,4 +19,4 @@ def explink(dictionary, key):
 
 @register.simple_tag
 def expfullink(dictionary, key):
-	return "https://192.241.179.74:8001" + str(dictionary.get(key))
+	return "https://gpaas.xyz" + str(dictionary.get(key))
