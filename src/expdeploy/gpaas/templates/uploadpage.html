@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title> test upload </title>
+	<title> Edit Experiment </title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
@@ -34,10 +34,11 @@
     <div id = "form-box">
     {% for experiment, files in filedict.items %}
     <!-- {% load lookup %} -->
-            <li> <strong> {{experiment}} </strong> 
+            <li> <h2><strong> {{experiment}} </strong> </h2>
             <!-- link experiment -->
-                <p> &nbsp;&nbsp;&nbsp;&nbsp; Link:
-                <a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
+                <p style="padding-left: .5cm"> Link:
+                <!-- <a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p> -->
+                <a href = "{{ experiment_link }}"> {{ experiment_link }} </a> </p>
                 <ul>
                 {% for file in files %}
                     <li> {{file.original_filename}} </li>
@@ -56,7 +57,7 @@
         <p><h2> Upload files </h2></p>
         <p>  The homepage must be "index.html". </p>
     	<!-- upload form -->
-    	<form action="{{thisurl}}" method="post" enctype="multipart/form-data">
+    	<form action="{{thisurl}}" method="post" enctype="multipart/form-data" >
                 
             {% csrf_token %}
             {{ uploadform.as_p}}
@@ -69,50 +70,49 @@
 
     <div id="margin-left">
     <div id="form-box">
-        <p><h4> Edit Hit Description </h4></p>
         <form action="{{hit_description_url}}" method="post" enctype="multipart/form-data">
                 
             {% csrf_token %}
-            {{ hit_description_form }}
+            {{ hit_description_form.as_p }}
 
-            <p><input type="submit" value="Update Hit Description"/></p>
+            <p style="padding-left: .72cm"><input type="submit" value="Update Hit Description"/></p>
         </form>
+        <br></br>
 
-        <p><h4> Edit Hit Payment </h4></p>
         <form action="{{hit_payment_url}}" method="post" enctype="multipart/form-data">
                 
             {% csrf_token %}
-            {{ hit_payment_form }}
+            {{ hit_payment_form.as_p }}
 
-            <p><input type="submit" value="Update Hit Payment"/></p>
+            <p style="padding-left: .72cm"><input type="submit" value="Update Hit Payment"/></p>
         </form>
+        <br></br>
 
-        <p><h4> Edit Hit Keywords </h4></p>
         <form action="{{hit_keywords_url}}" method="post" enctype="multipart/form-data">
                 
             {% csrf_token %}
-            {{ hit_keywords_form }}
+            {{ hit_keywords_form.as_p }}
 
-            <p><input type="submit" value="Update Hit Keywords"/></p>
+            <p style="padding-left: .72cm"><input type="submit" value="Update Hit Keywords"/></p>
         </form>
+        <br></br>
 
-        <p><h4> Sandbox </h4></p>
         <form action="{{sandbox_url}}" method="post" enctype="multipart/form-data">
                 
             {% csrf_token %}
-            {{ sandbox_form }}
+            {{ sandbox_form.as_p }}
 
-            <p><input type="submit" value="Update Sandbox Status"/></p>
+            <p style="padding-left: .72cm"><input type="submit" value="Update Sandbox Status"/></p>
         </form>
-
-        <p><h4> Edit Number of Tasks </h4></p>
+        <br></br>
+        
         <!-- form -->
         <form action="{{tasknumber_url}}" method="post" enctype="multipart/form-data">
                 
             {% csrf_token %}
-            {{ tasknumber_form }}
+            {{ tasknumber_form.as_p }}
 
-            <p><input type="submit" value="Update Tasknumber"/></p>
+            <p style="padding-left: .72cm"><input type="submit" value="Update Tasknumber"/></p>
         </form>
 
     </div>

@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title> test upload </title>
+	<title> Create User </title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
@@ -35,7 +35,7 @@
     <div id="form-box">
     	<!-- create user form -->
         <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
-        <p> Creating an account while logged in while log you out! </p>
+        <p> Creating an account while logged in will log you out! </p>
     	<form action="/gpaas/createuser/" method="post" enctype="multipart/form-data">
                 
                 {% csrf_token %}

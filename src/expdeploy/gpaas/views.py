@@ -250,15 +250,15 @@ def UploadFileView(request, username, experiment):
 	sandbox_url="/gpaas/upload/"+username+"/"+experiment+"/sandbox/"
 	tasknumber_url="/gpaas/upload/"+username+"/"+experiment+"/tasknumber/"
 
-	#forms
-	hit_description_form = HitDescriptionForm()
-	hit_payment_form = HitPaymentForm()
-	hit_keywords_form = HitKeywordsForm()
-	sandbox_form = SandboxForm()
-	tasknumber_form = TaskNumberForm()
-
 	#list of experiments
 	experiment_object = ExperimentModel.objects.filter(username=username).get(name=experiment)
+
+	#forms
+	hit_description_form = HitDescriptionForm({'hit_description': experiment_object.hit_description})
+	hit_payment_form = HitPaymentForm({'hit_payment': experiment_object.hit_payment})
+	hit_keywords_form = HitKeywordsForm({'hit_keywords': experiment_object.hit_keywords})
+	sandbox_form = SandboxForm({'sandbox': experiment_object.sandbox})
+	tasknumber_form = TaskNumberForm({'number_of_hits': experiment_object.n})
 
 	#assign experiment with files
 	filedict = {}
@@ -269,9 +269,18 @@ def UploadFileView(request, username, experiment):
 	filedict[experiment_object] = file_list
 
 	#create experiment links in dict form
+	# linkdict = {}
+	# usr = str(username)
+	# linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
+
+	#create experiment links in dict form
+	# linkdict = {}
+	# for experiment in experiments:
+	# 	#add experimenturl to first item in file_list
+	# 	usr = str(username)
+	# 	linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment.name+"/"
 	linkdict = {}
-	usr = str(username)
-	linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment+"/"
+	experiment_link = "/gpaas/experiment/"+username+"/"+experiment+"/"
 
 	#Uploadfiles for post request
 	if request.method == 'POST':
@@ -314,13 +323,20 @@ def UploadFileView(request, username, experiment):
 	#No loading documents for list page
 	return render_to_response('uploadpage.html',
 		{'uploadform': form, 'username': user, 'experiments': experiment,
-		'filedict': filedict,'linkdict': linkdict, 'thisurl': thisurl,
-		 'hit_description_url': hit_description_url, 'hit_payment_url': hit_payment_url,
-		 'hit_keywords_url': hit_keywords_url, 'sandbox_url': sandbox_url, 
-		 'tasknumber_url': tasknumber_url,
-		 'hit_description_form': hit_description_form, 'hit_payment_form': hit_payment_form,
-		 'hit_keywords_form': hit_keywords_form, 'sandbox_form': sandbox_form, 
-		 'tasknumber_form':tasknumber_form},
+		'filedict': filedict,
+		'experiment_link': experiment_link,
+		'linkdict': linkdict, 
+		'thisurl': thisurl,
+		'hit_description_url': hit_description_url, 
+		'hit_payment_url': hit_payment_url,
+		'hit_keywords_url': hit_keywords_url, 
+		'sandbox_url': sandbox_url, 
+		'tasknumber_url': tasknumber_url,
+		'hit_description_form': hit_description_form,
+		'hit_payment_form': hit_payment_form,
+		'hit_keywords_form': hit_keywords_form, 
+		'sandbox_form': sandbox_form, 
+		'tasknumber_form':tasknumber_form,},
 		context_instance = RequestContext(request)
 	)
 
