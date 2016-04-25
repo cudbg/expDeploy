@@ -31,7 +31,7 @@
 		{% for experiment, files in filedict.items %}
 			<li> <h3> {{experiment.name}} </h3> 
 			<!-- link experiment -->
-				<p> &nbsp;&nbsp;&nbsp;&nbsp; Link:
+				<p style="padding-left: .5cm">Link:
 				<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
 				<ul>
 				{% for file in files %}
@@ -44,17 +44,17 @@
 			</li>
 
 			<!-- Add file form -->
-			<form action= "{% explink editdict experiment %}" method="get">
+			<form action= "{% explink editdict experiment %}" method="get" style="padding-left: .6cm">
 				<input type="submit" value="Edit Experiment"/>
 			</form>
 
 			<!-- post to MTurk -->
 		
 
-			  {% if experiment.published %}
-			   	<form action="/api/removemturk" method="get">
+			{% if experiment.published %}
+			   	<form action="/api/removemturk" method="get" style="padding-left: .6cm">
 			{% else %}
-			   <form action="/api/mturk" method="get">
+			   <form action="/api/mturk" method="get" style="padding-left: .6cm">
 			{% endif %}
 
 
@@ -67,7 +67,7 @@
 
 
 
-			  {% if experiment.published %}
+			{% if experiment.published %}
 			    <input type="submit" value="Remove from MTurk" />
 			{% else %}
 			    <input type="submit" value="Post to MTurk" />
@@ -78,7 +78,7 @@
 
 
 
-			<form action="/api/export" method="get">
+			<form action="/api/export" method="get" style="padding-left: .6cm">
 
 				<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
 				<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
