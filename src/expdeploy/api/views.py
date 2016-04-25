@@ -5,7 +5,7 @@ import json
 from .models import WorkerTask
 from .models import HistoryEvent
 from .models import Metadata
-
+from copy import copy
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from planout.ops.random import *
@@ -21,7 +21,7 @@ import datetime
 import csv
 from django.utils.encoding import smart_str
 from StringIO import StringIO
-
+from random import shuffle
 def export(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
@@ -392,6 +392,8 @@ def task(request):
 	usrId = request.GET.get('researcher', '');
 	taskName = request.GET.get('task', '');
 	wid = request.GET.get('wid', '');
+
+	print(wid)
 	n = int(request.GET.get('n', '1'));
 	print("test 1");
 
@@ -420,12 +422,28 @@ def task(request):
 
 				for task in data["tasks"]:
 					if task["name"] == taskName:
-						for i in range(0,n):
-							param = {}
-							for p in task["params"]:
-								param[p["name"]] = random.choice(p["options"])
-							print(param)
 
+						param = {}
+						gen = [{}]
+
+						for p in task["params"]:
+							if p["type"] == "UniformChoice":
+								gen2 = []
+								for inProgress in gen:
+									for choice in p["options"]:
+										modify = copy(inProgress)
+										modify[p["name"]] = choice
+										gen2.append(modify)
+								gen = gen2
+								#param[p["name"]] = random.choice(p["options"])
+
+						param = gen[0]
+
+						shuffle(gen)
+
+						for i in range(0,n):
+							
+							param = gen.pop()
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							

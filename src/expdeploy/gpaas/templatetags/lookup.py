@@ -20,3 +20,4 @@ def explink(dictionary, key):
 @register.simple_tag
 def expfullink(dictionary, key):
 	return "https://gpaas.xyz" + str(dictionary.get(key))
+
