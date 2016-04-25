@@ -11,6 +11,6 @@ urlpatterns = [
 	url(r'^finishTasks', views.finishTasks, name='end'),
 	url(r'^experiment', views.experiment, name='experiment'),
 	url(r'^log/', views.log, name='log'),
-	url(r'^export/', views.export, name='export'),
+	url(r'^export', views.export, name='export'),
     url(r'^$', views.index, name='index'),
 ]

@@ -8,6 +8,10 @@ import collections;
 
 class WorkerTask (models.Model):
 
+
+	hitId = models.TextField(default="")
+	assignmentId = models.TextField(default="")
+
 	params = models.TextField(default="{}")
 	results = models.TextField(default='{"data":[], "metadata":[]}')
 	history = models.TextField(default='{"events":[] }')
