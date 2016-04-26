@@ -1,6 +1,8 @@
 import "planout";
 import "extend";
 
+var gpaas = (function() {
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
@@ -18,6 +20,21 @@ var currentId = "";
 
 var taskStart;
 
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
 /*
 CONFIG
 */
@@ -26,7 +43,7 @@ var serverurl = "https://localhost:8000"
 
 tasks = [];
 
-function logData(d) {
+var logData = function (d) {
 	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
 	xmlhttp.open("POST", serverurl + "/api/log/");
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -59,7 +76,7 @@ function logData(d) {
 
 
 
-function nextTask() {
+var nextTask = function() {
 
 	clearTask();
 
@@ -79,7 +96,7 @@ function nextTask() {
 
 
 
-function endTasks() {
+var endTasks = function () {
 	clearTask()
 	var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", serverurl + "/api/finishTasks?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid , false ); // false for synchronous request
@@ -89,14 +106,23 @@ function endTasks() {
 
 function setupExperiment(options) {
 
+	failed = false
+
 	options.qualificationTasks.forEach(function(entry) {
 
     	e = (entry());
     	if (e == false) {
+    		failed = true
     		return
     	}
 
 	});
+
+	if (failed) {
+		
+		options.failQualification()
+		return
+	}
 
 	options.trainingTasks.forEach(function(entry) {
     	console.log(entry());
@@ -113,8 +139,10 @@ function setupExperiment(options) {
 	viewTask = options.viewTask;
 	clearTask = options.clearTask;
 
+	var hitID =  getUrlParameter("hitId")
+	var assignmentID =  getUrlParameter("assignmentId")
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5", false ); // false for synchronous request
+    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5" +"&hitId="+hitID+"&assignmentId="+assignmentID, false ); // false for synchronous request
     xmlHttp.send( null );
     resp = xmlHttp.responseText.replaceAll("'",'"');
 
@@ -132,8 +160,28 @@ function setupExperiment(options) {
 
 }
 
-function startExperiment(setup) {
+
+
+
+
+
+
+ return {
+    startExperiment: function (setup) {
 	setupExperiment(setup({logData:logData}))
 	return {run:nextTask}
-}
+	},
+	logData: logData,
+	nextTask: nextTask,
+	cancelTasks: finishTasks
+ }
+
+
+
+
+
+
+})()
+
+
 
