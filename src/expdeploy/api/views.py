@@ -22,6 +22,9 @@ import csv
 from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
+from django.db import connection
+
+
 def export(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
@@ -32,6 +35,13 @@ def export(request):
 	metadata = []
 	histories = []
 
+	for w in WorkerTask.objects.raw("SELECT * FROM api_workertask WHERE name = "+expId):
+		print(w.pk)
+
+	cursor = connection.cursor()
+	cursor.execute("DROP TABLE api_workertask_temp")
+	cursor.execute("SELECT * INTO api_workertask_temp FROM api_workertask WHERE name="+expId + " AND researcher="+usrId)
+
 	for task in find_tasks:
 		sss = task.historyevent_set.all() 
 		for his in sss:
@@ -41,88 +51,9 @@ def export(request):
 		d = byteify(json.loads(task.results));
 		data.append(d);
 
-	print(histories)
-	
+	return HttpResponse("hi")
 
 
-	s = StringIO()
-	myzip = ZipFile(s, "w",ZIP_DEFLATED)
-
-	
-	string_buffer = StringIO()
-
-	writer = csv.writer(string_buffer, csv.excel)
-	writer.writerow([
-		smart_str(u"ID"),
-		smart_str(u"Name"),
-		smart_str(u"Parameters"),
-		smart_str(u"Results"),
-		smart_str(u"History"),
-		smart_str(u"Status"),
-		smart_str(u"Paid"),
-		smart_str(u"WID"),
-		smart_str(u"Metadata ID"),
-		])
-	for obj in find_tasks:
-		writer.writerow([
-			smart_str(obj.pk),
-			smart_str(obj.name),
-			smart_str(obj.params),
-			smart_str(obj.results),
-			smart_str(obj.history),
-			smart_str(obj.currentStatus),
-			smart_str(obj.paid),
-			smart_str(obj.wid),
-			smart_str(obj.metaData.pk),
-			])
-	myzip.writestr('data.csv', string_buffer.getvalue())
-
-
-	string_buffer = StringIO()
-	writer = csv.writer(string_buffer, csv.excel)
-	writer.writerow([
-		smart_str(u"ID"),
-		smart_str(u"User Agent"),
-		smart_str(u"Dimensions"),
-		smart_str(u"Start Timestamp"),
-		smart_str(u"End Timestamp")
-		])
-	for obj in metadata:
-		writer.writerow([
-			smart_str(obj.pk),
-			smart_str(obj.userAgent),
-			smart_str(obj.dimensions),
-			smart_str(obj.start),
-			smart_str(obj.end),
-			])
-	myzip.writestr('metadata.csv', string_buffer.getvalue())		
-
-	string_buffer = StringIO()
-	writer = csv.writer(string_buffer, csv.excel)
-	writer.writerow([
-		smart_str(u"ID"),
-		smart_str(u"Task ID"),
-		smart_str(u"New Status"),
-		smart_str(u"Event Type"),
-		smart_str(u"Timestamp")
-		])
-	for obj in histories:
-		writer.writerow([
-			smart_str(obj.pk),
-			smart_str(obj.workerTask.pk),
-			smart_str(obj.newStatus),
-			smart_str(obj.eventType),
-			smart_str(obj.timeStamp),
-			])
-	myzip.writestr('history.csv', string_buffer.getvalue())
-
-	myzip.close()
-	#return HttpResponse("bleh")
-
-	resp = HttpResponse(s.getvalue(), content_type = "application/x-zip-compressed")
-	resp['Content-Disposition'] = 'attachment; filename=%s' % "data.zip"
-
-	return resp
 
 def removemturk(request):
 	expId = request.GET.get('experiment', '');
@@ -388,6 +319,8 @@ def finishTasks(request):
 			return HttpResponse('{"params":' + str(params_list) + "}")
 
 def task(request):
+	mturk_hitId = request.GET.get('hitId', '');
+	mturk_assignmentId = request.GET.get('assignmentId', '');
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
 	taskName = request.GET.get('task', '');
@@ -447,7 +380,7 @@ def task(request):
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
-							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
+							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
 							param["identifier"] = task_id;
 							NewTask.params = json.dumps(param);
 
