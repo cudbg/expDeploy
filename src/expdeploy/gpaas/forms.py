@@ -76,7 +76,7 @@ class TaskNumberForm(forms.Form):
 			errors_on_separate_row = True)
 
 class UploadForm(forms.Form):
-	attachments = MultiFileField(min_num = 1, max_num=10, max_file_size=1024*1024*5)
+	attachments = MultiFileField(min_num = 1, max_num=50, max_file_size=1024*1024*5)
 	class Meta:
 		model = ExperimentFile
 
