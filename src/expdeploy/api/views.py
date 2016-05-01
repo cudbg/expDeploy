@@ -321,6 +321,7 @@ def finishTasks(request):
 def task(request):
 	mturk_hitId = request.GET.get('hitId', '');
 	mturk_assignmentId = request.GET.get('assignmentId', '');
+	mturk_workerId = request.GET.get('workerId', '');
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
 	taskName = request.GET.get('task', '');
@@ -339,6 +340,8 @@ def task(request):
 
 
 	for exp in expsBackwards:
+
+		print(exp.original_filename)
 		if (exp.original_filename == (expId + ".json")):
 			print("test 2");
 
@@ -380,7 +383,7 @@ def task(request):
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
-							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
+							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,workerId=mturk_workerId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
 							param["identifier"] = task_id;
 							NewTask.params = json.dumps(param);
 

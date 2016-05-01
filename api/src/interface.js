@@ -15,7 +15,10 @@ var researcher = "";
 var n = "";
 
 var viewTask;
-var clearTask;
+var clearTask = function() {
+
+};
+
 var currentId = "";
 
 var taskStart;
@@ -39,7 +42,9 @@ var getUrlParameter = function getUrlParameter(sParam) {
 CONFIG
 */
 //var serverurl = "https://192.241.179.74:8000"
-var serverurl = "https://localhost:8000"
+//var serverurl = "https://localhost:8000"
+
+var serverurl = "https://gpaas.xyz"
 
 tasks = [];
 
@@ -98,6 +103,7 @@ var nextTask = function() {
 
 var endTasks = function () {
 	clearTask()
+	console.log("TASK CLEARED")
 	var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", serverurl + "/api/finishTasks?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid , false ); // false for synchronous request
     xmlHttp.send( null );
@@ -105,6 +111,18 @@ var endTasks = function () {
 
 
 function setupExperiment(options) {
+
+	n = options.name;
+	task = options.task;
+	wid = options.wid;
+	researcher = options.researcher;
+	viewTask = options.viewTask;
+	clearTask = options.clearTask;
+
+	var hitID =  getUrlParameter("hitId")
+	var assignmentID =  getUrlParameter("assignmentId")
+	var workerID =  getUrlParameter("workerId")
+
 
 	failed = false
 
@@ -132,17 +150,9 @@ function setupExperiment(options) {
 
 	});
 
-	n = options.name;
-	task = options.task;
-	wid = options.wid;
-	researcher = options.researcher;
-	viewTask = options.viewTask;
-	clearTask = options.clearTask;
 
-	var hitID =  getUrlParameter("hitId")
-	var assignmentID =  getUrlParameter("assignmentId")
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5" +"&hitId="+hitID+"&assignmentId="+assignmentID, false ); // false for synchronous request
+    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5" +"&hitId="+hitID+"&assignmentId="+assignmentID+"&workerId="+workerID, false ); // false for synchronous request
     xmlHttp.send( null );
     resp = xmlHttp.responseText.replaceAll("'",'"');
 
@@ -173,7 +183,7 @@ function setupExperiment(options) {
 	},
 	logData: logData,
 	nextTask: nextTask,
-	cancelTasks: finishTasks
+	cancelTasks: endTasks
  }
 
 

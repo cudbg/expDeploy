@@ -11,6 +11,7 @@ class WorkerTask (models.Model):
 
 	hitId = models.TextField(default="")
 	assignmentId = models.TextField(default="")
+	workerId = models.TextField(default="")
 
 	params = models.TextField(default="{}")
 	results = models.TextField(default='{"data":[], "metadata":[]}')
