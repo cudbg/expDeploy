@@ -34,18 +34,20 @@
     <div id="form-box">
         <p><h2> Create New Experiment </h2></p>
         <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces.</p>
-        <p> Need decription for Hit values, sandbox and n.
+        <p> Need decription for Hit values, sandbox and n. </p>
+        <p> Files can be uploaded after experiment creation on Edit Experiment page </p>
     	<!-- upload form -->
     	<form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
                 
             {% csrf_token %}
             {{ experimentform.as_p}}
 
-            <p><input type="submit" value="Start Experiment"/></p>
+            <p><input type="submit" class="btn btn-default" value="Create Experiment"/></p>
         </form>
 
     </div>
     </div>
+    <br></br>
 </body>
 
 </html>
