@@ -9,12 +9,12 @@
 <body>
     
     <div class="page-header">
-        <div id="profile-user">
+        <div id="current-user">
 
             <p> {{user}} </p>
             <div id="view-profile">
                 <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
-                    <p><input type="submit" value ="View Profile"></p>
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
                 </form>
             </div>
         
@@ -23,7 +23,7 @@
         <div id="logout-button">
     
             <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
-                <p><input type="submit" value ="Logout"></p>
+                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
             </form>
        
         </div>

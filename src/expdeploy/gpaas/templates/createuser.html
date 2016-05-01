@@ -14,18 +14,22 @@
             <p> Currently logged in: {{user}} </p>
             <div id="view-profile">
                 <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
-                    <p><input type="submit" value ="View Profile"></p>
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
                 </form>
             </div>
         {% else %}
             <p> No user is currently logged in </p>
+            <form action="/gpaas/error/" method="POST">
+            <p><input type="submit" class="btn btn-default" value="Back to login"/></p>
+    </form>
         {% endif %}
         </div>
+
 
         <div id="logout-button">
         {% if current_user %}
             <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
-                <p><input type="submit" value ="Logout"></p>
+                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
             </form>
         {% endif %}
         </div>
@@ -44,6 +48,8 @@
                 <p><input type="submit" value="Submit"/></p>
         </form>
     </div>
+
+    <br></br>
 
 </body>
 

@@ -1,12 +1,13 @@
 <html>
 <head> 
-	<title> User Profile </title>
+	<title> {{username}}'s Profile </title>
 	{% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
-
 	<div class="page-header">
         <div id="profile-user">
 
@@ -17,87 +18,97 @@
         <div id="logout-button">
     
         <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
-            <p><input type="submit" value ="Logout"></p>
+            <p><input type="submit" class="btn btn-default" value ="Logout"></p>
         </form>
    
         </div>
 
     </div>
 
-    <div id="form-box">
-	<!-- list experiments and experiment files -->
-	<b><h2> Experiments</h2> </b>
-	<!-- {% load lookup %} -->
-		{% for experiment, files in filedict.items %}
-			<li> <h3> {{experiment.name}} </h3> 
-			<!-- link experiment -->
-				<p style="padding-left: .5cm">Link:
-				<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
-				<ul>
-				{% for file in files %}
-					<li> {{file.original_filename}} </li>
-						<ul>
-							<li>raw: <a href="{{ file.docfile.url }}">{{file.docfile}}</a></li>
-						</ul>
-				{% endfor %}
-				</ul>
-			</li>
+    <!-- Do not remove the comment below this one. -->
+    <!-- {% load lookup %} -->
 
-			<!-- Add file form -->
-			<form action= "{% explink editdict experiment %}" method="get" style="padding-left: .6cm">
-				<input type="submit" value="Edit Experiment"/>
-			</form>
+    <!-- Pills for separate experiments -->
+    <div class="container">
+    	<div id="experiment-header">
+    		<b><h1> Experiments</h1> </b>
+    	</div>
+    	<div id="form-box"> 
+	    	<ul class="nav nav-pills">
+	    		{% for experiment, files in filedict.items %}
+	    			<li><a data-toggle="pill" href="#{{experiment.name}}">{{experiment.name}}</a></li>
+	    		{% endfor %}
+	    	</ul>
 
-			<!-- post to MTurk -->
-		
+	    	<div class="tab-content">
+			{% for experiment, files in filedict.items %}
+				<div id="{{experiment.name}}" class = "tab-pane fade">
+					<div id="margin-left">
+					<h3> {{experiment.name}} </h3> 
+					<!-- link experiment -->
+					<p style="padding-left: .5cm">Link:
+					<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
+					<ul>
+						{% for file in files %}
+							<li> {{file.original_filename}} </li>
+							<ul>
+								<li>raw: <a href="{{ file.docfile.url }}">{{file.docfile}}</a></li>
+							</ul>
+						{% endfor %}
+					</ul>
+					<!-- Add file form -->
+					<form action= "{% explink editdict experiment %}" method="get" style="padding-left: .6cm">
+						<input type="submit" class="btn btn-default" value="Edit Experiment"/>
+					</form>
 
-			{% if experiment.published %}
-			   	<form action="/api/removemturk" method="get" style="padding-left: .6cm">
-			{% else %}
-			   <form action="/api/mturk" method="get" style="padding-left: .6cm">
-			{% endif %}
+					<!-- post to MTurk -->
+					{% if experiment.published %}
+			   			<form action="/api/removemturk" method="get" style="padding-left: .6cm">
+					{% else %}
+			   			<form action="/api/mturk" method="get" style="padding-left: .6cm">
+					{% endif %}
 
+						<input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
+						<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
+						<input type="hidden" value="{{description}}" name="description" id = "id3" />
+						<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
 
-
-			  <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
-
-			  <input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
-			  <input type="hidden" value="{{description}}" name="description" id = "id3" />
-			  <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-
-
-
-			{% if experiment.published %}
-			    <input type="submit" value="Remove from MTurk" />
-			{% else %}
-			    <input type="submit" value="Post to MTurk" />
-			{% endif %}
-
-			</form>
-
-
-
-
-			<form action="/api/export" method="get" style="padding-left: .6cm">
-
-				<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
-				<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+						{% if experiment.published %}
+						    <input type="submit" class="btn btn-default" value="Remove from MTurk" />
+						{% else %}
+						    <input type="submit" class="btn btn-default" value="Post to MTurk" />
+						{% endif %}
+					</form>
 
 
-				<input type="submit" value="Download Data" />
 
-			</form>
 
-		{% endfor %}
+					<form action="/api/export" method="get" style="padding-left: .6cm">
+
+						<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
+						<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+
+
+						<input type="submit" class="btn btn-default" value="Download Data" />
+
+					</form>
+					</div>
+				</div>
+			{% endfor %}
+			</div>	
+		</div>
+
 	</div>
 
-	<div id="margin-left">
-	<!-- create new experiment -->
-	<br></br>
-    <form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
-    	<p><input type="submit" value ="Create New Experiment"></p>
-    </form>
+	<!-- Create New experiment button -->
+	<div id="margin-left-percentage">
+			<!-- create new experiment -->
+			<br></br>
+		    <form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
+		    	<p><input type="submit" class="btn btn-default" value ="Create New Experiment"></p>
+		    </form>
     </div>
-	
+     <br></br>
+		
 </body>
 </html>

@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title> login </title>
+    <title> login </title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
@@ -15,7 +15,7 @@
             <p> Currently logged in: {{user}} </p>
             <div id="view-profile">
                 <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
-                    <p><input type="submit" value ="View Profile"></p>
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
                 </form>
             </div>
         {% else %}
@@ -26,7 +26,7 @@
         <div id="logout-button">
         {% if current_user %}
             <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
-                <p><input type="submit" value ="Logout"></p>
+                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
             </form>
         {% endif %}
         </div>
@@ -34,19 +34,23 @@
     </div>
 
     <div id ="form-box">
-	<!-- login form -->
-	<form action="/gpaas/" method="POST" enctype="multipart/form-data">
+    {% if mismatch %}
+        <p> The username and password provided do not match an existing account </p>
+    {% endif %}
+    
+    <!-- login form -->
+    <form action="/gpaas/" method="POST" enctype="multipart/form-data">
             
             {% csrf_token %}
             {{ loginform.as_p}}
 
-            <p><input type="submit" value="Login"/></p>
+            <p><input type="submit" class="btn btn-info" value="Login"/></p>
     </form>
     </div>
 
     <div id="margin-left">
     <a href="/gpaas/createuser/">
-    	Don't have an account? Create one here.
+        Don't have an account? Create one here.
     </a>
     </div>
 

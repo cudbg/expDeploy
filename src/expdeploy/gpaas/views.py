@@ -113,7 +113,8 @@ def EditHitDescriptionView(request, username, experiment):
 			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 			exp.hit_description = form.cleaned_data['hit_description']
 			exp.save()
-		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UploadFileView',
+			kwargs={'username': username, 'experiment':experiment}))
 	else:
 		return render_to_response('uploaderror.html')
 
@@ -125,7 +126,8 @@ def EditHitKeywordView(request, username, experiment):
 			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 			exp.hit_keywords = form.cleaned_data['hit_keywords']
 			exp.save()
-		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UploadFileView',
+			kwargs={'username': username, 'experiment':experiment}))
 	else:
 		return render_to_response('uploaderror.html')
 
@@ -137,7 +139,8 @@ def EditHitPaymentView(request, username, experiment):
 			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 			exp.hit_payment = form.cleaned_data['hit_payment']
 			exp.save()
-		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UploadFileView',
+			kwargs={'username': username, 'experiment':experiment}))
 	else:
 		return render_to_response('uploaderror.html')
 
@@ -149,7 +152,8 @@ def EditSandboxView(request, username, experiment):
 			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 			exp.sandbox = form.cleaned_data['sandbox']
 			exp.save()
-		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UploadFileView',
+			kwargs={'username': username, 'experiment':experiment}))
 	else:
 		return render_to_response('uploaderror.html')
 
@@ -161,7 +165,8 @@ def EditTaskNumberView(request, username, experiment):
 			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 			exp.tasknumber = form.cleaned_data['number_of_hits']
 			exp.save()
-		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UploadFileView',
+			kwargs={'username': username, 'experiment':experiment}))
 	else:
 		return render_to_response('uploaderror.html')
 
@@ -206,8 +211,13 @@ def LoginView(request):
 				login(request, user)
 				return HttpResponseRedirect(reverse(
 					'expdeploy.gpaas.views.UserProfileView'))
+
+		mismatch = True
 		#return loginerror is user in not active.	
-		return render_to_response('loginerror.html')
+		return render_to_response('login.html',
+			{'loginform': form, 'user': None, "current_user": None,
+			"mismatch": mismatch},
+		)
 	else:
 		form = LoginForm()
 		user = request.user
@@ -215,8 +225,10 @@ def LoginView(request):
 		current_user = True
 		if user.id == None:
 		 	current_user = False
+		mismatch = False;
 		return render_to_response('login.html',
-			{'loginform': form, 'user': user, "current_user": current_user},
+			{'loginform': form, 'user': user, "current_user": current_user,
+			"mismatch": mismatch},
 		)
 
 
