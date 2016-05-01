@@ -3,7 +3,7 @@
     <title> login </title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'stylesheet2.css' %}" rel="stylesheet" type="text/css"/>
 
 
 </head>
@@ -37,7 +37,7 @@
     {% if mismatch %}
         <p> The username and password provided do not match an existing account </p>
     {% endif %}
-    
+
     <!-- login form -->
     <form action="/gpaas/" method="POST" enctype="multipart/form-data">
             
