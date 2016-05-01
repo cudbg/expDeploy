@@ -114,14 +114,13 @@ function setupExperiment(options) {
 
 	n = options.name;
 	task = options.task;
-	wid = options.wid;
 	researcher = options.researcher;
 	viewTask = options.viewTask;
 	clearTask = options.clearTask;
 
 	var hitID =  getUrlParameter("hitId")
 	var assignmentID =  getUrlParameter("assignmentId")
-	var workerID =  getUrlParameter("workerId")
+	wid =  getUrlParameter("workerId")
 
 
 	failed = false
@@ -152,7 +151,7 @@ function setupExperiment(options) {
 
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5" +"&hitId="+hitID+"&assignmentId="+assignmentID+"&workerId="+workerID, false ); // false for synchronous request
+    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5" +"&hitId="+hitID+"&assignmentId="+assignmentID, false ); // false for synchronous request
     xmlHttp.send( null );
     resp = xmlHttp.responseText.replaceAll("'",'"');
 
