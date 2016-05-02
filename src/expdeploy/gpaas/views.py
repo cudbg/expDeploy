@@ -228,10 +228,10 @@ def ExperimentView(request, username, experiment):
 
 def FileHttpResponse(request, username, experiment, filename):
 	#Get proper experiment and file
-	if filename=="api.js":
-		workpath = os.path.dirname(os.path.abspath(__file__)) #Returns the Path your .py file is in
-		c = open(os.path.join(workpath, 'api.js'), 'rb')
-		return (HttpResponse(content=c.read()))
+	# if filename=="api.js":
+	# 	workpath = os.path.dirname(os.path.abspath(__file__)) #Returns the Path your .py file is in
+	# 	c = open(os.path.join(workpath, 'api.js'), 'rb')
+	# 	return (HttpResponse(content=c.read()))
 	current_exp = current_exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 	file_object = current_exp.experimentfile_set.get(original_filename = filename)
 	static_content = file_object.filetext
