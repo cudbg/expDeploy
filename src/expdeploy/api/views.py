@@ -25,6 +25,31 @@ from random import shuffle
 from django.db import connection
 
 
+def results(request):
+	researcherId = request.GET.get('researcher', '');
+	find_tasks = WorkerTask.objects.filter(researcher=researcherId);
+	rows = []
+	print(find_tasks)
+	for workerTask in find_tasks:
+		new = True
+		for row in rows:
+			if row['task'].assignmentId == workerTask.assignmentId:
+				row['tasks']+=1
+				if workerTask.currentStatus == "Complete":
+					row['completed']+=1
+				new=False
+			break
+
+		if new == True:
+
+			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask }
+			if workerTask.currentStatus == "Complete":
+				assignmentRow['completed']+=1
+			rows.append(assignmentRow)
+	#{experiment id, task id, % of tasks completed, in progress or done, unpaid or paid, }
+	print(rows)
+	return HttpResponse(str(rows))
+
 def export(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
