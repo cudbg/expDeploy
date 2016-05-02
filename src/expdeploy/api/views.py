@@ -24,6 +24,51 @@ from StringIO import StringIO
 from random import shuffle
 from django.db import connection
 
+def payout(request):
+	assignmentId = request.GET.get('assignmentId', '');
+	completed = request.GET.get('completed', '');
+	assigned = request.GET.get('assigned', '');
+	usrId = request.GET.get('researcher', '');
+	expId = request.GET.get('exp', '');
+	wid = request.GET.get('wid', '');
+	bonus = (completed == assigned)
+
+	
+	researcher = Researcher.objects.filter(user__username=usrId)[0];
+	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+
+	key = researcher.aws_key_id;
+	secret_key = researcher.aws_secret_key;
+	host = 'mechanicalturk.sandbox.amazonaws.com'
+
+	if (exp.sandbox == False):
+		host = 'mechanicalturk.amazonaws.com'
+	
+	mturk = boto.mturk.connection.MTurkConnection(
+	    aws_access_key_id = key,
+	    aws_secret_access_key = secret_key,
+	    host = host,
+	    debug = 1 # debug = 2 prints out all requests.
+	)
+	 
+	print boto.Version 
+	print mturk.get_account_balance() 
+
+
+	assignmnet = mturk.get_assignment(assignmentId)
+
+	print(assignmnet.AssignmentStatus)
+
+	# p = mturk.get_price_as_price(0.05 * float(completed))
+	# if bonus:
+	# 	p = mturk.get_price_as_price(1.00 + 0.05 * float(completed))
+
+	# approve = mturk.approve_assignment(assignmentId)
+	
+	# bon = mturk.grant_bonus(wid, assignmentId, p, "0.05 per task + 1.00 if all completed")
+
+
+	return HttpResponse("Payment made")
 
 def results(request):
 	researcherId = request.GET.get('researcher', '');
@@ -37,14 +82,18 @@ def results(request):
 				row['tasks']+=1
 				if workerTask.currentStatus == "Complete":
 					row['completed']+=1
+				if workerTask.currentStatus == "Waiting":
+					row['waiting'] = True
 				new=False
 			break
 
 		if new == True:
 
-			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask }
+			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask, 'waiting':False}
 			if workerTask.currentStatus == "Complete":
 				assignmentRow['completed']+=1
+			if workerTask.currentStatus == "Waiting":
+				assignmentRow['waiting'] = True
 			rows.append(assignmentRow)
 	#{experiment id, task id, % of tasks completed, in progress or done, unpaid or paid, }
 	print(rows)

@@ -3,6 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+	url(r'^payout', views.payout, name='payout'),
 	url(r'^results', views.results, name='results'),
 	url(r'^removemturk', views.removemturk, name='removemturk'),
 	url(r'^mturk', views.mturk, name='mturk'),
