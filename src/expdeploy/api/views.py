@@ -37,14 +37,18 @@ def results(request):
 				row['tasks']+=1
 				if workerTask.currentStatus == "Complete":
 					row['completed']+=1
+				if workerTask.currentStatus == "Waiting":
+					row['waiting'] = True
 				new=False
 			break
 
 		if new == True:
 
-			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask }
+			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask, 'waiting':False}
 			if workerTask.currentStatus == "Complete":
 				assignmentRow['completed']+=1
+			if workerTask.currentStatus == "Waiting":
+				assignmentRow['waiting'] = True
 			rows.append(assignmentRow)
 	#{experiment id, task id, % of tasks completed, in progress or done, unpaid or paid, }
 	print(rows)

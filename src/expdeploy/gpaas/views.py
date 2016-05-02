@@ -22,6 +22,43 @@ import os
 import json
 import sys
 
+from expdeploy.api.models import WorkerTask
+
+
+def API(request):
+	return HttpResponse("API")
+
+def ViewResults(request):
+	#user
+	researcherId = request.GET.get('researcher', '');
+	find_tasks = WorkerTask.objects.filter(researcher=researcherId);
+	rows = []
+	print(find_tasks)
+	for workerTask in find_tasks:
+		new = True
+		for row in rows:
+			if row['task'].assignmentId == workerTask.assignmentId:
+				row['tasks']+=1
+				if workerTask.currentStatus == "Complete":
+					row['completed']+=1
+				if workerTask.currentStatus == "Waiting":
+					row['waiting'] = True
+				new=False
+			break
+
+		if new == True:
+
+			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask, 'waiting':False}
+			if workerTask.currentStatus == "Complete":
+				assignmentRow['completed']+=1
+			if workerTask.currentStatus == "Waiting":
+				assignmentRow['waiting'] = True
+			rows.append(assignmentRow)
+	#{experiment id, task id, % of tasks completed, in progress or done, unpaid or paid, }
+	print(rows)
+	return render_to_response('viewresults.html',{'rows':rows,'researcher':researcherId},context_instance = RequestContext(request))
+	#return HttpResponse("herez da results")
+
 
 def CreateExperimentView(request):
 	#user
@@ -191,6 +228,10 @@ def ExperimentView(request, username, experiment):
 
 def FileHttpResponse(request, username, experiment, filename):
 	#Get proper experiment and file
+	if filename=="api.js":
+		workpath = os.path.dirname(os.path.abspath(__file__)) #Returns the Path your .py file is in
+		c = open(os.path.join(workpath, 'api.js'), 'rb')
+		return (HttpResponse(content=c.read()))
 	current_exp = current_exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 	file_object = current_exp.experimentfile_set.get(original_filename = filename)
 	static_content = file_object.filetext

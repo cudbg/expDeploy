@@ -4,6 +4,8 @@ from .views import UploadView
 urlpatterns = patterns(
     'expdeploy.gpaas.views',
 
+    url(r'^viewresults', 'ViewResults', name='ViewResults'),
+
     url(r'^createuser/$', 'CreateUserView', name='create_user'),
     url(r'^createexperiment/$', 'CreateExperimentView'),
     url(r'^error/$', 'ErrorView', name='error'),
@@ -12,6 +14,7 @@ urlpatterns = patterns(
     url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/$',\
         'ExperimentView', name='experiment_page'),
 
+ 
     url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/(?P<filename>[A-Za-z0-9\w,-.]+)/$',\
         'FileHttpResponse', name='file_http_response'),
     url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/(?P<filename>[A-Za-z0-9\w.,-]+)$',\
