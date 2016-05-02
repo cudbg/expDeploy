@@ -54,13 +54,18 @@ def payout(request):
 	print boto.Version 
 	print mturk.get_account_balance() 
 
-	p = mturk.get_price_as_price(0.05 * float(completed))
-	if bonus:
-		p = mturk.get_price_as_price(1.00 + 0.05 * float(completed))
 
-	approve = mturk.approve_assignment(assignmentId)
+	assignmnet = mturk.get_assignment(assignmentId)
+
+	print(assignmnet.AssignmentStatus)
+
+	# p = mturk.get_price_as_price(0.05 * float(completed))
+	# if bonus:
+	# 	p = mturk.get_price_as_price(1.00 + 0.05 * float(completed))
+
+	# approve = mturk.approve_assignment(assignmentId)
 	
-	bon = mturk.grant_bonus(wid, assignmentId, p, "0.05 per task + 1.00 if all completed")
+	# bon = mturk.grant_bonus(wid, assignmentId, p, "0.05 per task + 1.00 if all completed")
 
 
 	return HttpResponse("Payment made")
