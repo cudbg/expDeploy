@@ -29,6 +29,7 @@ src/expdeploy/gpaas/templates/*
 !src/expdeploy/gpaas/templates/uploaderror.html
 !src/expdeploy/gpaas/templates/uploadpage.html
 !src/expdeploy/gpaas/templates/userprofile.html
+!src/expdeploy/gpaas/templates/viewresults.html
 
 
 
