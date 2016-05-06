@@ -16,6 +16,8 @@ src/db/*
 src/expdeploy/testapp/templates/*
 src/expdeploy/testapp/*
 
+src/expdeploy/api/migrations/*
+
 #ignore templates except for those created by us
 src/expdeploy/gpaas/templates/*
 !src/expdeploy/gpaas/templates/base.html
