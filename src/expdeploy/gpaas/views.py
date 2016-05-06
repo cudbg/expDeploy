@@ -22,43 +22,6 @@ import os
 import json
 import sys
 
-from expdeploy.api.models import WorkerTask
-
-
-def API(request):
-	return HttpResponse("API")
-
-def ViewResults(request):
-	#user
-	researcherId = request.GET.get('researcher', '');
-	find_tasks = WorkerTask.objects.filter(researcher=researcherId);
-	rows = []
-	print(find_tasks)
-	for workerTask in find_tasks:
-		new = True
-		for row in rows:
-			if row['task'].assignmentId == workerTask.assignmentId:
-				row['tasks']+=1
-				if workerTask.currentStatus == "Complete":
-					row['completed']+=1
-				if workerTask.currentStatus == "Waiting":
-					row['waiting'] = True
-				new=False
-			break
-
-		if new == True:
-
-			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask, 'waiting':False}
-			if workerTask.currentStatus == "Complete":
-				assignmentRow['completed']+=1
-			if workerTask.currentStatus == "Waiting":
-				assignmentRow['waiting'] = True
-			rows.append(assignmentRow)
-	#{experiment id, task id, % of tasks completed, in progress or done, unpaid or paid, }
-	print(rows)
-	return render_to_response('viewresults.html',{'rows':rows,'researcher':researcherId},context_instance = RequestContext(request))
-	#return HttpResponse("herez da results")
-
 
 def CreateExperimentView(request):
 	#user
@@ -77,13 +40,15 @@ def CreateExperimentView(request):
 			#get experiment
 			experiment = form.cleaned_data['experiment']
 			desc = form.cleaned_data['hit_description']
-			pay = form.cleaned_data['hit_payment']
+			payment = form.cleaned_data['per_task_payment']
+			bonus = form.cleaned_data['bonus_payment']
 			key = form.cleaned_data['hit_keywords']
 
 			#check if experiment already exists
 			temp = ExperimentModel.objects.filter(username=user).filter(name=experiment)
 			if not temp:
-			 	exp = ExperimentModel(name=experiment, username=user, hit_description=desc, hit_payment=pay, hit_keywords=key)
+			 	exp = ExperimentModel(name=experiment, username=user, hit_description=desc,
+			 		per_task_payment=payment, bonus_payment=bonus, hit_keywords=key)
 				exp.save()
 			else: 
 				exp = ExperimentModel.objects.filter(username=user,name=experiment)[0]
@@ -228,10 +193,6 @@ def ExperimentView(request, username, experiment):
 
 def FileHttpResponse(request, username, experiment, filename):
 	#Get proper experiment and file
-	# if filename=="api.js":
-	# 	workpath = os.path.dirname(os.path.abspath(__file__)) #Returns the Path your .py file is in
-	# 	c = open(os.path.join(workpath, 'api.js'), 'rb')
-	# 	return (HttpResponse(content=c.read()))
 	current_exp = current_exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
 	file_object = current_exp.experimentfile_set.get(original_filename = filename)
 	static_content = file_object.filetext
@@ -278,7 +239,7 @@ def LogoutView(request):
 	return HttpResponseRedirect(reverse('expdeploy.gpaas.views.LoginView'))
 
 
-def UploadFileView(request, username, experiment):
+def UploadFileView(request, username, experiment): #EditExperimentView
 
 	#user
 	if request.user.is_authenticated: 
@@ -308,7 +269,8 @@ def UploadFileView(request, username, experiment):
 
 	#forms
 	hit_description_form = HitDescriptionForm({'hit_description': experiment_object.hit_description})
-	hit_payment_form = HitPaymentForm({'hit_payment': experiment_object.hit_payment})
+	hit_payment_form = HitPaymentForm({'per_task_payment': experiment_object.per_task_payment,
+		'bonus_payment':experiment_object.bonus_payment})
 	hit_keywords_form = HitKeywordsForm({'hit_keywords': experiment_object.hit_keywords})
 	sandbox_form = SandboxForm({'sandbox': experiment_object.sandbox})
 	tasknumber_form = TaskNumberForm({'number_of_hits': experiment_object.n})

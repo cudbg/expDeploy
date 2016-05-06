@@ -7,7 +7,9 @@ from .models import ExperimentFile
 class ExperimentForm(forms.Form):
 	experiment = forms.CharField(max_length=120, required=True)
 	hit_description = forms.CharField(max_length=120, required=True)
-	hit_payment = forms.FloatField(required=True)
+	#hit_payment = forms.FloatField(required=True)
+	per_task_payment = forms.FloatField(required=True)
+	bonus_payment = forms.FloatField(required=True)
 	hit_keywords = forms.CharField(max_length=120, required=True)
 	sandbox = forms.BooleanField(required=True)
 	number_of_hits = forms.IntegerField(required=True);
@@ -32,7 +34,9 @@ class HitDescriptionForm(forms.Form):
 			errors_on_separate_row = True)
 
 class HitPaymentForm(forms.Form):
-	hit_payment = forms.FloatField(required=True)
+	#hit_payment = forms.FloatField(required=True)
+	per_task_payment = forms.FloatField(required=True)
+	bonus_payment = forms.FloatField(required=True)
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
