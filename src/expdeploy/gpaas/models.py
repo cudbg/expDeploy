@@ -31,7 +31,7 @@ class ExperimentModel(models.Model):
 	sandbox = models.BooleanField(default=True)
 	n = models.IntegerField(default=5);
 	published = models.BooleanField(default=False);
-
+	banned = models.TextField(default='{"ids":[]}')
 	hitID = models.CharField(max_length=120)
 
 	def __str__(self):

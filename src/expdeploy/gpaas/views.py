@@ -44,10 +44,9 @@ def ViewResults(request):
 				if workerTask.currentStatus == "Waiting":
 					row['waiting'] = True
 				new=False
-			break
 
 		if new == True:
-
+			print("----dkasjdklsadjasjkdhsakjd-----")
 			assignmentRow = {'tasks':1,'completed':0, 'task':workerTask, 'waiting':False}
 			if workerTask.currentStatus == "Complete":
 				assignmentRow['completed']+=1

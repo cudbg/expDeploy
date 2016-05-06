@@ -19,10 +19,21 @@ import string
 import boto.mturk.connection
 import datetime
 import csv
+import json
 from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
 from django.db import connection
+
+def ban(request):
+	usrId = request.GET.get('researcher', '');
+	expId = request.GET.get('experiment', '');	
+	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+	wids = json.loads(exp.banned)
+	wids["ids"].append(request.GET.get('wid', ''))
+	exp.banned = json.dumps(wids)
+	exp.save()
+	return (HttpResponse(str(exp.banned)))
 
 def payout(request):
 	assignmentId = request.GET.get('assignmentId', '');
@@ -400,6 +411,11 @@ def task(request):
 	taskName = request.GET.get('task', '');
 	wid = request.GET.get('wid', '');
 
+
+	
+	
+
+
 	print(wid)
 	n = int(request.GET.get('n', '1'));
 	print("test 1");
@@ -410,6 +426,11 @@ def task(request):
 
 	expsBackwards = reversed(exps);
 
+	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+	wids = json.loads(expModel.banned)["ids"]
+
+	if wid in wids:
+		return HttpResponse("Your WorkerID has been banned")
 
 
 	for exp in expsBackwards:

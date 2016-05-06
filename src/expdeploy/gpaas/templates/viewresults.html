@@ -55,7 +55,7 @@
 
                 {% if row.task.paid %}
                    <td>Paid</td>
-                {% else %}
+                {% elif not row.waiting %}
                      <td><a href="/api/payout?completed={{row.completed}}&wid={{row.task.wid}}&assigned={{row.tasks}}&assignmentId={{row.task.assignmentId}}&researcher={{row.task.researcher}}&exp={{row.task.experiment.name}}" class="btn btn-default">Pay</a></td>
 
                 {% endif %}

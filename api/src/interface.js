@@ -13,6 +13,7 @@ var wid = "haskdhdsddfsf";
 var task = "";
 var researcher = "";
 var n = "";
+var numberTasks = 5;
 
 var viewTask;
 var clearTask = function() {
@@ -42,9 +43,9 @@ var getUrlParameter = function getUrlParameter(sParam) {
 CONFIG
 */
 //var serverurl = "https://192.241.179.74:8000"
-//var serverurl = "https://localhost:8000"
+var serverurl = "https://localhost:8000"
 
-var serverurl = "https://gpaas.xyz"
+//var serverurl = "https://gpaas.xyz"
 
 tasks = [];
 
@@ -117,29 +118,37 @@ function setupExperiment(options) {
 	researcher = options.researcher;
 	viewTask = options.viewTask;
 	clearTask = options.clearTask;
+	numberTasks = options.numTasks
 
 	var hitID =  getUrlParameter("hitId")
 	var assignmentID =  getUrlParameter("assignmentId")
 	wid =  getUrlParameter("workerId")
 
+	if ("" + wid == "undefined") {
+		alert("You must accept the HIT in order to start!!!")
+		return
+	}
 
 	failed = false
 
 	options.qualificationTasks.forEach(function(entry) {
 
-    	e = (entry());
+    	e = entry()
+
     	if (e == false) {
+    		console.log("THIS IS WHERE I FAILED")
+    		//console.log(entry)
+    		console.log("BLEH")
     		failed = true
-    		return
     	}
 
 	});
 
 	if (failed) {
-		
 		options.failQualification()
-		return
 	}
+
+	if (failed == false) {
 
 	options.trainingTasks.forEach(function(entry) {
     	console.log(entry());
@@ -151,7 +160,7 @@ function setupExperiment(options) {
 
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=5" +"&hitId="+hitID+"&assignmentId="+assignmentID, false ); // false for synchronous request
+    xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=" + numberTasks +"&hitId="+hitID+"&assignmentId="+assignmentID, false ); // false for synchronous request
     xmlHttp.send( null );
     resp = xmlHttp.responseText.replaceAll("'",'"');
 
@@ -163,6 +172,17 @@ function setupExperiment(options) {
    		tasks.push(entry);
    		
 	});
+
+
+   }
+
+   else {
+   	$.get( serverurl + "/api/ban?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid , function( data ) {
+	 	console.log("BANNED")
+	});
+
+   	alert("Your Worker ID has been banned from completing this task")
+   }
 
    	//nextTask();
    	

@@ -1,4 +1,14 @@
 TODO:
+√ n - number of parameters
+√ Failing qualifications, banning of Worker IDs
+√ When start expriment gets called, say "accept this hit"
+-API to refresh page when HIT is compelted 
+-Error handling
+-config file textfield
+-Price per task, bonus for completion
+
+
+TODO:
 *Way to approve and pay for all completed worker tasks
 *Debug submission
 *Look at Django cursor database API, ? or %. Passing parameters into raw
