@@ -1,7 +1,7 @@
 TODO:
--Pass into options (tasks completed so far, money made so far)
--Pages for when you've completed everything, API to refresh page when HIT is compelted 
--Price per task, bonus for completion
+√ Pass into options (tasks completed so far, money made so far)
+~/√ Pages for when you've completed everything, API to refresh page when HIT is compelted 
+√ Price per task, bonus for completion
 
 -Error handling
 -config file textfield

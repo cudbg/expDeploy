@@ -48,9 +48,9 @@ var getUrlParameter = function getUrlParameter(sParam) {
 CONFIG
 */
 //var serverurl = "https://192.241.179.74:8000"
-var serverurl = "https://localhost:8000"
+//var serverurl = "https://localhost:8000"
 
-//var serverurl = "https://gpaas.xyz"
+var serverurl = "https://gpaas.xyz"
 
 tasks = [];
 
