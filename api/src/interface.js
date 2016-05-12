@@ -14,8 +14,10 @@ var task = "";
 var researcher = "";
 var n = "";
 var numberTasks = 5;
+var completed = 0
 
 var viewTask;
+var finish;
 var clearTask = function() {
 
 };
@@ -23,6 +25,9 @@ var clearTask = function() {
 var currentId = "";
 
 var taskStart;
+
+var perTaskPay = 0
+var bonusPay = 0
 
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -80,7 +85,20 @@ var logData = function (d) {
 
 
 
+var submit = function() {
 
+	console.log("...............sending post request.............")
+	$.ajax({
+       type: "POST",
+       url: "https://workersandbox.mturk.com/mturk/externalSubmit",
+       data: {assignmentId:getUrlParameter("assignmentId"),completed:"TRUE"}, // serializes the form's elements.
+       success: function(data)
+       {
+           alert(data); // show response from the php script.
+       }
+     });
+
+}
 
 var nextTask = function() {
 
@@ -91,13 +109,22 @@ var nextTask = function() {
 
 	if (tasks.length == 0) {
 		console.log("No tasks left")
+
+		if (completed > 0) {
+			finish({submit:submit})
+		}
+
 		return;
 	}
 
 	entry = tasks[0];
 	currentId = tasks[0]["identifier"];
-	viewTask({params:entry,logData:logData,nextTask,nextTask})
+	earned = completed * perTaskPay
+	viewTask({params:entry,logData:logData,nextTask:nextTask,tasksCompleted:completed,moneyEarned:earned})
 	tasks.shift();
+
+	completed++
+
 }
 
 
@@ -117,6 +144,7 @@ function setupExperiment(options) {
 	task = options.task;
 	researcher = options.researcher;
 	viewTask = options.viewTask;
+	finish = options.finish;
 	clearTask = options.clearTask;
 	numberTasks = options.numTasks
 
@@ -173,7 +201,11 @@ function setupExperiment(options) {
    		
 	});
 
+	perTaskPay = obj["pay"]
+	bonusPay = obj["bonus"]
 
+	completed = numberTasks - obj["params"].length
+	console.log('..........this is how many completed' + completed)
    }
 
    else {

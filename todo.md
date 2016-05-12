@@ -1,11 +1,10 @@
 TODO:
-√ n - number of parameters
-√ Failing qualifications, banning of Worker IDs
-√ When start expriment gets called, say "accept this hit"
--API to refresh page when HIT is compelted 
+-Pass into options (tasks completed so far, money made so far)
+-Pages for when you've completed everything, API to refresh page when HIT is compelted 
+-Price per task, bonus for completion
+
 -Error handling
 -config file textfield
--Price per task, bonus for completion
 
 
 TODO:

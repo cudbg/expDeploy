@@ -24,7 +24,7 @@ class ExperimentModel(models.Model):
 	name = models.CharField(max_length=120, blank=True, null=True)
 	username = models.CharField(max_length=120, blank=True, null=True)
 	hit_description = models.CharField(max_length=120)
-	#hit_payment = models.FloatField(blank=0.1)
+	#hit_payment = models.FloatField(blank=0.1,  null=True)
 	per_task_payment = models.FloatField(blank=0.1)
 	bonus_payment = models.FloatField(blank=0)
 	hit_keywords = models.CharField(max_length=120)
