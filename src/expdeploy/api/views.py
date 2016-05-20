@@ -70,13 +70,16 @@ def payout(request):
 
 	#print(assignmnet.AssignmentStatus)
 
-	p = mturk.get_price_as_price(0.05 * float(completed))
+	BONUS = exp.bonus_payment
+	PERTASK = exp.per_task_payment
+
+	p = mturk.get_price_as_price(PERTASK * float(completed))
 	if bonus:
-		p = mturk.get_price_as_price(1.00 + 0.05 * float(completed))
+		p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
 
 	approve = mturk.approve_assignment(assignmentId)
 	
-	bon = mturk.grant_bonus(wid, assignmentId, p, "0.05 per task + 1.00 if all completed")
+	bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
 
 
 	return HttpResponse("Payment made")
