@@ -88,15 +88,12 @@ var logData = function (d) {
 var submit = function() {
 
 	console.log("...............sending post request.............")
-	$.ajax({
-       type: "POST",
-       url: "https://workersandbox.mturk.com/mturk/externalSubmit",
-       data: {assignmentId:getUrlParameter("assignmentId"),completed:"TRUE"}, // serializes the form's elements.
-       success: function(data)
-       {
-           alert(data); // show response from the php script.
-       }
-     });
+
+	assignmentIDFOrm = getUrlParameter("assignmentId")
+	formString = '<form action="https://workersandbox.mturk.com/mturk/externalSubmit"><input type="hidden" name="status" value="COMPLETE"><input type="hidden" name="assignmentId" value="' +  assignmentIDFOrm +   '"></form>';
+
+	$(formString).appendTo('body').submit();
+
 
 }
 
@@ -135,6 +132,8 @@ var endTasks = function () {
 	var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", serverurl + "/api/finishTasks?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid , false ); // false for synchronous request
     xmlHttp.send( null );
+
+    submit()
 }
 
 
