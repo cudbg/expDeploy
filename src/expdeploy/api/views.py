@@ -81,6 +81,11 @@ def payout(request):
 	
 	bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
 
+	find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
+
+	for t in find_tasks:
+		t.paid = True
+		t.save()
 
 	return HttpResponse("Payment made")
 

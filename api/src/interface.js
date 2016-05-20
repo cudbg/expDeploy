@@ -90,7 +90,8 @@ var submit = function() {
 	console.log("...............sending post request.............")
 
 	assignmentIDFOrm = getUrlParameter("assignmentId")
-	formString = '<form action="https://workersandbox.mturk.com/mturk/externalSubmit"><input type="hidden" name="status" value="COMPLETE"><input type="hidden" name="assignmentId" value="' +  assignmentIDFOrm +   '"></form>';
+	action = getUrlParameter("turkSubmitTo") + "/mturk/externalSubmit"
+	formString = '<form action="' +  action   +   '"><input type="hidden" name="status" value="COMPLETE"><input type="hidden" name="assignmentId" value="' +  assignmentIDFOrm +   '"></form>';
 
 	$(formString).appendTo('body').submit();
 
