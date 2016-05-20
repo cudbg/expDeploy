@@ -192,3 +192,5 @@ ALTER ROLE gpaasteam SET client_encoding TO 'utf8';
 ALTER ROLE gpaasteam SET default_transaction_isolation TO 'read committed';
 ALTER ROLE gpaasteam SET timezone to 'UTC';
 GRANT ALL PRIVILEGES ON DATABASE gpaasdb to gpaasteam
+
+sudo service apache2 restart

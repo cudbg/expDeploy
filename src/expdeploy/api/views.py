@@ -68,7 +68,7 @@ def payout(request):
 
 	assignmnet = mturk.get_assignment(assignmentId)
 
-	print(assignmnet.AssignmentStatus)
+	#print(assignmnet.AssignmentStatus)
 
 	p = mturk.get_price_as_price(0.05 * float(completed))
 	if bonus:
