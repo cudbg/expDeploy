@@ -2,13 +2,13 @@
 <head>
 	<title> Create Experiment </title>
     {% load staticfiles %}
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'stylesheet2.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
     
-    <div class="page-header">
+    <div id="page-header">
         <div id="current-user">
 
             <p> {{user}} </p>
@@ -30,8 +30,8 @@
 
     </div>
 
-    <div id="margin-left">
-    <div id="form-box">
+    <div class="tab-space">
+    <div class="form-box">
         <p><h2> Create New Experiment </h2></p>
         <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces.</p>
         <p> Need decription for Hit values, sandbox and n. </p>
@@ -42,12 +42,11 @@
             {% csrf_token %}
             {{ experimentform.as_p}}
 
-            <p><input type="submit" class="btn btn-default" value="Create Experiment"/></p>
+            <p><input type="submit" class="btn btn-by" value="Create Experiment"/></p>
         </form>
 
     </div>
     </div>
-    <br></br>
 </body>
 
 </html>

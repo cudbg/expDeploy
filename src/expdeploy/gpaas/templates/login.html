@@ -2,14 +2,14 @@
 <head>
     <title> login </title>
     {% load staticfiles %}
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'stylesheet2.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 
 
 </head>
 
 <body>
-    <div class="page-header">
+    <div id="page-header">
         <div id="current-user">
         {% if current_user %}
             <p> Currently logged in: {{user}} </p>
@@ -33,7 +33,7 @@
 
     </div>
 
-    <div id ="form-box">
+    <div class ="form-box">
     {% if mismatch %}
         <p> The username and password provided do not match an existing account </p>
     {% endif %}
@@ -44,18 +44,17 @@
             {% csrf_token %}
             {{ loginform.as_p}}
 
-            <p><input type="submit" class="btn btn-info" value="Login"/></p>
+            <p><input type="submit" class="btn btn-by" value="Login"/></p>
     </form>
     </div>
 
-    <div id="margin-left">
+    <div class="tab-space">
     <a href="/gpaas/createuser/">
         Don't have an account? Create one here.
     </a>
     </div>
 
 
-    <br></br>
 
 </body>
 
