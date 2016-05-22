@@ -2,13 +2,13 @@
 <head> 
 	<title> {{username}}'s Profile </title>
 	{% load staticfiles %}
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'stylesheet2.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
     <script src="{% static 'jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-	<div class="page-header">
+	<div id="page-header">
         <div id="profile-user">
 
             <p> {{username}} </p>
@@ -29,11 +29,26 @@
     <!-- {% load lookup %} -->
 
     <!-- Pills for separate experiments -->
-    <div class="container">
+    <div class="container" style="max-width:750px;">
     	<div id="experiment-header">
     		<b><h1> Experiments</h1> </b>
+    		<div class = "row">
+	    		<div class = "col-sm-4">
+	    			<!-- create new experiment -->
+				    <form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
+				    	<p><input type="submit" class="btn btn-by" value ="Create New Experiment"></p>
+				    </form>
+	    		</div>
+	    		<div class = "col-sm-1">
+	    			<!-- Payments -->
+	    			<form action="/gpaas/viewresults?researcher={{username}}" method="post" enctype="multipart/form-data">
+				    	<p><input type="submit" class="btn btn-by" value ="Payments"></p>
+				    </form>
+	    		</div>
+	    	</div>
     	</div>
-    	<div id="form-box"> 
+    	
+    	<div class="form-box"> 
 	    	<ul class="nav nav-pills">
 	    		{% for experiment, files in filedict.items %}
 	    			<li><a data-toggle="pill" href="#{{experiment.name}}">{{experiment.name}}</a></li>
@@ -43,74 +58,66 @@
 	    	<div class="tab-content">
 			{% for experiment, files in filedict.items %}
 				<div id="{{experiment.name}}" class = "tab-pane fade">
-					<div id="margin-left">
-					<h3> {{experiment.name}} </h3> 
-					<!-- link experiment -->
-					<p style="padding-left: .5cm">Link:
-					<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
-					<ul>
-						{% for file in files %}
-							<li> {{file.original_filename}} </li>
-							<ul>
-								<li>raw: <a href="{{ file.docfile.url }}">{{file.docfile}}</a></li>
-							</ul>
-						{% endfor %}
-					</ul>
-					<!-- Add file form -->
-					<form action= "{% explink editdict experiment %}" method="get" style="padding-left: .6cm">
-						<input type="submit" class="btn btn-default" value="Edit Experiment"/>
-					</form>
 
-					<!-- post to MTurk -->
-					{% if experiment.published %}
-			   			<form action="/api/removemturk" method="get" style="padding-left: .6cm">
-					{% else %}
-			   			<form action="/api/mturk" method="get" style="padding-left: .6cm">
-					{% endif %}
+					<div class="tab-space">
+						<h3> {{experiment.name}} </h3> 
 
-						<input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
-						<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
-						<input type="hidden" value="{{description}}" name="description" id = "id3" />
-						<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+						<!-- link experiment -->
+						<p style="padding-left: .5cm">Link:
+						<a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
+						<ul>
+							<!-- Link files -->
+							{% for file in files %}
+								<li><a href="{{ file.docfile.url }}">{{file.original_filename}}</a></li>
+							{% endfor %}
+						</ul>
+					</div> <!-- close tab-space -->
 
-						{% if experiment.published %}
-						    <input type="submit" class="btn btn-default" value="Remove from MTurk" />
-						{% else %}
-						    <input type="submit" class="btn btn-default" value="Post to MTurk" />
-						{% endif %}
-					</form>
+					<!-- Buttons -->
+					<div class="row">
+						<!-- <div class="col-sm-1">Hi</div> -->
+						<div class="col-sm-3">
+							<!-- Add file form -->
+							<form action= "{% explink editdict experiment %}" method="get" style="padding-left: .6cm">
+								<input type="submit" class="btn btn-by" value="Edit Experiment"/>
+							</form>
+						</div>
+						<div class="col-sm-3">
+							<!-- post to MTurk -->
+							{% if experiment.published %}
+					   			<form action="/api/removemturk" method="get" style="padding-left: .6cm">
+							{% else %}
+					   			<form action="/api/mturk" method="get" style="padding-left: .6cm">
+							{% endif %}
 
+								<input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
+								<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
+								<input type="hidden" value="{{description}}" name="description" id = "id3" />
+								<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
 
+								{% if experiment.published %}
+								    <input type="submit" class="btn btn-by" value="Remove from MTurk" />
+								{% else %}
+								    <input type="submit" class="btn btn-by" value="Post to MTurk" />
+								{% endif %}
+							</form>
+						</div>
+						<div class="col-sm-3">
 
+							<!-- Download Data -->
+							<form action="/api/export" method="get" style="padding-left: .3cm">
+								<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
+								<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+								<input type="submit" class="btn btn-by" value="Download Data" />
+							</form>
+						</div>
+					</div> <!--  close row -->
 
-					<form action="/api/export" method="get" style="padding-left: .6cm">
-
-						<input type="hidden" value="{{experiment.name}}" name="experiment" id = "id2" />
-						<input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-
-
-						<input type="submit" class="btn btn-default" value="Download Data" />
-
-					</form>
-					</div>
-				</div>
+				</div> <!-- close div experiment.name -->
 			{% endfor %}
-			</div>	
-		</div>
+			</div>	<!-- close div tab-content -->
+		</div> <!-- close form-box -->
 
-	</div>
-
-	<!-- Create New experiment button -->
-	<div id="margin-left-percentage">
-
-	<a href="/gpaas/viewresults?researcher={{username}}" class="btn btn-default">Payments</a>
-			<!-- create new experiment -->
-			<br></br>
-		    <form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
-		    	<p><input type="submit" class="btn btn-default" value ="Create New Experiment"></p>
-		    </form>
-    </div>
-     <br></br>
-		
+	</div> <!-- close container -->
 </body>
 </html>

@@ -2,17 +2,44 @@
 <html>
 <head>
     <title> Oh no!</title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
 
-    <p> Sorry, this experiment does not exist </p>
-	<form action="/gpaas/userprofile/" method="get">
-            <p><input type="submit" value="Profile"/></p>
-    </form>
+	<div id="page-header">
+        <div id="current-user">
+        {% if current_user %}
+            <p> Currently logged in: {{user}} </p>
+            <div id="view-profile">
+                <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
+                </form>
+            </div>
+        {% else %}
+            <p> No user is currently logged in </p>
+        {% endif %}
+        </div>
 
+        <div id="logout-button">
+        {% if current_user %}
+            <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
+                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
+            </form>
+        {% endif %}
+        </div>
 
-    <br></br>
+    </div>
+
+    <div class ="form-box">
+    	<p> Sorry, this experiment does not exist </p>
+		<form action="/gpaas/userprofile/" method="get">
+            <p><input type="submit" class ="btn btn-info" value="Profile"/></p>
+    	</form>
+    </div>
+
 
 </body>
 

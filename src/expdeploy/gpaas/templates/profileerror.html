@@ -3,12 +3,12 @@
 <head>
     <title> Oh no!</title>
     {% load staticfiles %}
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'stylesheet2.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
-    <div class="page-header">
+    <div id="page-header">
         <div id="current-user">
         {% if current_user %}
             <p> Currently logged in: {{user}} </p>
@@ -32,15 +32,13 @@
 
     </div>
 
-    <div id ="form-box">
+    <div class ="form-box">
     <p> Sorry, you must be logged in to see this page </p>
 	<form action="/gpaas/" method="get">
             <p><input type="submit" class ="btn btn-info" value="Login"/></p>
     </form>
     </div>
 
-
-    <br></br>
 
 </body>
 

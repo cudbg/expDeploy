@@ -16,7 +16,8 @@ from .forms import LoginForm
 from .forms import UploadForm
 from .forms import UserForm
 from .forms import ExperimentForm
-from .forms import HitDescriptionForm, HitPaymentForm, HitKeywordsForm, SandboxForm, TaskNumberForm
+from .forms import HitDescriptionForm, HitPaymentForm, \
+	HitKeywordsForm, SandboxForm, TaskNumberForm, BonusPaymentForm
 
 import os
 import json
@@ -144,6 +145,17 @@ def CreateUserView(request):
 			{'userform': form, 'current_user': current_user, 'user': user},
 		)
 
+def EditBonusPaymentView(request,username, experiment):
+	if request.method == 'POST':
+		form = BonusPaymentForm(request.POST)
+		if form.is_valid():
+			exp = ExperimentModel.objects.filter(username=username).get(name=experiment)
+			exp.bonus_payment = form.cleaned_data['bonus_payment']
+			exp.save()
+		return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UploadFileView',
+			kwargs={'username': username, 'experiment':experiment}))
+	else:
+		return render_to_response('uploaderror.html')
 
 def EditHitDescriptionView(request, username, experiment):
 	if request.method == 'POST':
@@ -295,6 +307,7 @@ def UploadFileView(request, username, experiment): #EditExperimentView
 
 	#url
 	thisurl = "/gpaas/upload/" + username + "/" + experiment + "/"
+	bonus_payment_url="/gpaas/upload/"+username+"/"+experiment+"/bonuspayment/"
 	hit_description_url="/gpaas/upload/"+username+"/"+experiment+"/hitdescription/"
 	hit_payment_url="/gpaas/upload/"+username+"/"+experiment+"/hitpayment/"
 	hit_keywords_url="/gpaas/upload/"+username+"/"+experiment+"/hitkeywords/"
@@ -306,8 +319,8 @@ def UploadFileView(request, username, experiment): #EditExperimentView
 
 	#forms
 	hit_description_form = HitDescriptionForm({'hit_description': experiment_object.hit_description})
-	hit_payment_form = HitPaymentForm({'per_task_payment': experiment_object.per_task_payment,
-		'bonus_payment':experiment_object.bonus_payment})
+	hit_payment_form = HitPaymentForm({'per_task_payment': experiment_object.per_task_payment})
+	bonus_payment_form = BonusPaymentForm({'bonus_payment':experiment_object.bonus_payment})
 	hit_keywords_form = HitKeywordsForm({'hit_keywords': experiment_object.hit_keywords})
 	sandbox_form = SandboxForm({'sandbox': experiment_object.sandbox})
 	tasknumber_form = TaskNumberForm({'number_of_hits': experiment_object.n})
@@ -331,6 +344,7 @@ def UploadFileView(request, username, experiment): #EditExperimentView
 	# 	#add experimenturl to first item in file_list
 	# 	usr = str(username)
 	# 	linkdict[experiment] = "/gpaas/experiment/"+usr+"/"+experiment.name+"/"
+
 	linkdict = {}
 	experiment_link = "/gpaas/experiment/"+username+"/"+experiment+"/"
 
@@ -373,17 +387,19 @@ def UploadFileView(request, username, experiment): #EditExperimentView
 		form = UploadForm()
 
 	#No loading documents for list page
-	return render_to_response('uploadpage.html',
+	return render_to_response('editexperiment.html',
 		{'uploadform': form, 'username': user, 'experiments': experiment,
 		'filedict': filedict,
 		'experiment_link': experiment_link,
 		'linkdict': linkdict, 
 		'thisurl': thisurl,
+		'bonus_payment_url': bonus_payment_url,
 		'hit_description_url': hit_description_url, 
 		'hit_payment_url': hit_payment_url,
 		'hit_keywords_url': hit_keywords_url, 
 		'sandbox_url': sandbox_url, 
 		'tasknumber_url': tasknumber_url,
+		'bonus_payment_form':bonus_payment_form,
 		'hit_description_form': hit_description_form,
 		'hit_payment_form': hit_payment_form,
 		'hit_keywords_form': hit_keywords_form, 
@@ -503,7 +519,7 @@ def UploadView(request, experiment):
 		form = UploadForm()
 
 	#No loading documents for list page
-	return render_to_response('uploadpage.html',
+	return render_to_response('editexperiment.html',
 		{'uploadform': form, 'username': user},
 		context_instance = RequestContext(request)
 	)

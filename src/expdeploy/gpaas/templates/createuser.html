@@ -2,13 +2,13 @@
 <head>
 	<title> Create User </title>
     {% load staticfiles %}
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'stylesheet2.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
 
-	 <div class="page-header">
+	 <div id="page-header">
         <div id="current-user">
         {% if current_user %}
             <p> Currently logged in: {{user}} </p>
@@ -36,7 +36,7 @@
 
     </div>
 
-    <div id="form-box">
+    <div class="form-box">
     	<!-- create user form -->
         <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
         <p> Creating an account while logged in will log you out! </p>
@@ -45,12 +45,9 @@
                 {% csrf_token %}
                 {{ userform.as_p}}
 
-                <p><input type="submit" value="Submit"/></p>
+                <p><input type="submit" class="btn btn-by" value="Submit"/></p>
         </form>
     </div>
-
-    <br></br>
-
 </body>
 
 </html>
