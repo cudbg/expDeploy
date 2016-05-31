@@ -30,12 +30,14 @@
             </form>
         {% endif %}
         </div>
-
     </div>
 
     <div class ="form-box">
     {% if mismatch %}
         <p> The username and password provided do not match an existing account </p>
+    {% endif %}
+    {% if profileerror %}
+        <p> You must be logged in to view your profile. </p>
     {% endif %}
 
     <!-- login form -->
