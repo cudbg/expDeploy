@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import UploadView
+#from .views import UploadView
 
 urlpatterns = patterns(
     'expdeploy.gpaas.views',
