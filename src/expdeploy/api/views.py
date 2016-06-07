@@ -139,13 +139,26 @@ def export(request):
 
 	exp_num = find_tasks[0].experiment.id
 
+
+	metaDataIds = []
+	workerTaskIds = []
 	for w in WorkerTask.objects.raw("SELECT * FROM api_workertask WHERE experiment_id=%s", [exp_num]):
-		print(w.id)
+		metaDataIds.append(w.metaData_id)
+		workerTaskIds.append(w.id)
 		#print('hi')
 
 	cursor = connection.cursor()
 	if db_table_exists("api_workertask_temp"):
 		cursor.execute("DROP TABLE api_workertask_temp")
+	if db_table_exists("api_metadata_temp"):
+		cursor.execute("DROP TABLE api_metadata_temp")
+	if db_table_exists("api_historyevent_temp"):
+		cursor.execute("DROP TABLE api_historyevent_temp")
+	print("\n\n\n",workerTaskIds)
+	
+	##workerTaskIds=[129,130]
+	cursor.execute("SELECT * INTO api_historyevent_temp FROM api_historyevent WHERE workerTask_id = ANY(%s)", [workerTaskIds]) #doesn't work
+	cursor.execute("SELECT * INTO api_metadata_temp FROM api_metadata WHERE id = ANY(%s)", [metaDataIds]) #works
 	cursor.execute("SELECT * INTO api_workertask_temp FROM api_workertask WHERE experiment_id=%s AND researcher=%s", [exp_num,usrId])
 
 	# for task in find_tasks:
@@ -157,7 +170,7 @@ def export(request):
 	# 	d = byteify(json.loads(task.results));
 	# 	data.append(d);
 
-	system("pg_dump -d gpaasdb -f " + str(usrId) +'.dump ' + "-t api_workertask_temp")
+	system("pg_dump -d gpaasdb -f " + str(usrId) +'.dump ' + "-t api_workertask_temp -t api_metadata_temp -t api_historyevent_temp")
 	filename = "hn2284.dump" # Select your file here.                                
 	wrapper = FileWrapper(file(filename))
 	response = HttpResponse(wrapper, content_type='mimetype=application/force-download')

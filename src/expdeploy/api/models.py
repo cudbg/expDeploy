@@ -29,7 +29,7 @@ class WorkerTask (models.Model):
 
 class HistoryEvent (models.Model):
 
-	workerTask = models.ForeignKey('WorkerTask',default="",null=True,blank=True)
+	workerTask = models.ForeignKey('WorkerTask',default=0,null=True,blank=True)
 	newStatus = models.TextField(default="")
 	eventType = models.TextField(default="changeStatus")
 	timeStamp = models.IntegerField(default=0)
