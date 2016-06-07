@@ -1,16 +1,10 @@
 TODO:
-√ Pass into options (tasks completed so far, money made so far)
-~/√ Pages for when you've completed everything, API to refresh page when HIT is compelted 
-√ Price per task, bonus for completion
+*#1. Look at Django cursor database API, ? or %. Passing parameters into raw
 
--Error handling
--config file textfield
-
-
-TODO:
+*Error handling
+*config file textfield
 *Way to approve and pay for all completed worker tasks
 *Debug submission
-*Look at Django cursor database API, ? or %. Passing parameters into raw
 
 Backend:
 √ Assignment ID & Worker ID, pull from URL parameter, send to server, store in WorkerTask

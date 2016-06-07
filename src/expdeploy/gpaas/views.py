@@ -266,8 +266,8 @@ def LoginView(request):
 		mismatch = True
 		#return loginerror is user in not active.	
 		return render_to_response('login.html',
-			{'loginform': form, 'user': None, "current_user": None,
-			"mismatch": mismatch},
+			{'loginform': form, 'user': None, 'current_user': None,
+			'mismatch': mismatch, 'profileerror': False,},
 		)
 	else:
 		form = LoginForm()
@@ -278,8 +278,8 @@ def LoginView(request):
 		 	current_user = False
 		mismatch = False;
 		return render_to_response('login.html',
-			{'loginform': form, 'user': user, "current_user": current_user,
-			"mismatch": mismatch},
+			{'loginform': form, 'user': user, 'current_user': current_user,
+			'mismatch': mismatch, 'profileerror': False,},
 		)
 
 
@@ -413,7 +413,15 @@ def UserProfileView(request):
 	if request.user.is_authenticated: 
 		username = request.user
 	if request.user.id is None:
-		return render_to_response('profileerror.html')
+		form = LoginForm()
+		user = request.user
+		current_user = False
+		mismatch = False;
+		profileerror = True
+		return render_to_response('login.html',
+			{'loginform': LoginForm(), 'user': None, 'current_user': False,
+			'mismatch': False, 'profileerror': True,},
+		)
 
 	#list of experiments
 	experiment_objects = ExperimentModel.objects.filter(username=username)
@@ -455,71 +463,3 @@ def UserProfileView(request):
 		{'username':username, 'experiments': experiments, 'filedict': filedict,
 		'linkdict': linkdict, 'editdict': editdict, 'publishdict':publishdict,'experiment_objects':experiment_objects}
 		)
-
-
-
-def UploadView(request, experiment):
-	#user
-	if request.user.is_authenticated: 
-			user = str(request.user)
-	else: 
-			user = None
-	if request.user.id is None:
-		return render_to_response('profileerror.html')
-
-	#Upload files for post request
-	if request.method == 'POST':
-		form = UploadForm(request.POST, request.FILES)
-		#Create ExperimentFile instance for each uploaded file.
-		if form.is_valid():
-			#get experiment
-			experiment = form.cleaned_data['experiment']
-			#if experiment already exists, use it. If not, make a new one.
-
-			#check if experiment already exists
-			temp = ExperimentModel.objects.filter(username=user).filter(name=experiment)
-			if not temp:
-			 	exp = ExperimentModel(name=experiment, username=user)
-				exp.save()
-			else: 
-				exp = ExperimentModel.objects.filter(username=user,name=experiment)[0]
-
-			for each in request.FILES.getlist('attachments'):
-				# if instance of file for this user exists already, delete old instance.
-				try: 
-					plain_filename = str(each).split('/')[-1]
-					duplicate = ExperimentFile.objects.filter(username=user).\
-						filter(experiment=exp).get(original_filename=plain_filename)
-					#remove physical file
-					try:
-						os.remove(settings.BASE_DIR +"/expdeploy/"+str(duplicate.docfile))
-					except OSError:
-						pass
-					duplicate.delete()
-				except ExperimentFile.DoesNotExist:
-					duplicate = None
-				#create new ExperimentFile object
-				newdoc = ExperimentFile(original_filename=each,\
-					docfile=each,username=user, filetext="tmptxt")
-
-
-				newdoc.experiment = exp
-
-				newdoc.save()
-				
-				#Open document to read contents and save to filetext field
-				f = open(newdoc.docfile.path, "r")
-  				file_contents = f.read()
-  				newdoc.filetext = file_contents
-  				newdoc.save()
-
-			return HttpResponseRedirect(reverse('expdeploy.gpaas.views.UserProfileView'))
-	#For non-post request:
-	else :
-		form = UploadForm()
-
-	#No loading documents for list page
-	return render_to_response('editexperiment.html',
-		{'uploadform': form, 'username': user},
-		context_instance = RequestContext(request)
-	)

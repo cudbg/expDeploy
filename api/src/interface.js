@@ -16,6 +16,8 @@ var n = "";
 var numberTasks = 5;
 var completed = 0
 
+var local = true
+
 var viewTask;
 var finish;
 var clearTask = function() {
@@ -28,6 +30,14 @@ var taskStart;
 
 var perTaskPay = 0
 var bonusPay = 0
+
+/*
+CONFIG
+*/
+//var serverurl = "https://192.241.179.74:8000"
+var serverurl = "https://localhost:8000"
+
+//var serverurl = "https://gpaas.xyz"
 
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -44,13 +54,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-/*
-CONFIG
-*/
-//var serverurl = "https://192.241.179.74:8000"
-//var serverurl = "https://localhost:8000"
 
-var serverurl = "https://gpaas.xyz"
 
 tasks = [];
 
@@ -152,6 +156,10 @@ function setupExperiment(options) {
 	var assignmentID =  getUrlParameter("assignmentId")
 	wid =  getUrlParameter("workerId")
 
+	if (local) {
+		wid = "exampleWorker"
+	}
+
 	if ("" + wid == "undefined") {
 		alert("You must accept the HIT in order to start!!!")
 		return
@@ -187,6 +195,46 @@ function setupExperiment(options) {
 	});
 
 
+	if (local) {
+		console.log("local setup of experiment")
+
+
+		temp = options.params
+
+		obj = {"params":[],"pay":1.0,"bonus":1.0}
+
+		console.log(n)
+		for (k = 0; k < numberTasks; k++) {
+			console.log(k)
+
+			trial = {}
+			temp["params"].forEach(function(entry) {
+
+				name = entry["name"]
+				choice = entry["options"][Math.floor(Math.random() * entry["options"].length)]
+		   		trial[name] = choice
+			});
+
+			obj["params"].push(trial)
+		}
+
+		completed = 0
+
+		perTaskPay = obj["pay"]
+		bonusPay = obj["bonus"]
+
+		console.log(obj)
+
+		obj["params"].forEach(function(entry) {
+
+	   		tasks.push(entry);
+	   		
+		});
+
+	}
+
+	else {
+
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", serverurl + "/api/task?researcher="+researcher+"&experiment="+n+"&task="+task+"&wid=" + wid + "&n=" + numberTasks +"&hitId="+hitID+"&assignmentId="+assignmentID, false ); // false for synchronous request
     xmlHttp.send( null );
@@ -206,6 +254,9 @@ function setupExperiment(options) {
 
 	completed = numberTasks - obj["params"].length
 	console.log('..........this is how many completed' + completed)
+
+
+	 }
    }
 
    else {

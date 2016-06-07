@@ -24,6 +24,12 @@ from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
 from django.db import connection
+from os import system
+import os, tempfile, zipfile
+from django.http import HttpResponse
+from wsgiref.util import FileWrapper
+#from sendfile import sendfile
+
 
 def ban(request):
 	usrId = request.GET.get('researcher', '');
@@ -34,6 +40,9 @@ def ban(request):
 	exp.banned = json.dumps(wids)
 	exp.save()
 	return (HttpResponse(str(exp.banned)))
+
+def db_table_exists(table_name):
+    return table_name in connection.introspection.table_names()
 
 def payout(request):
 	assignmentId = request.GET.get('assignmentId', '');
@@ -121,30 +130,58 @@ def results(request):
 def export(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
-	print(usrId)
+	#print(usrId)
 	#TODO: Filter by experiment name
 	find_tasks = WorkerTask.objects.filter(experiment__name=expId, researcher=usrId);
 	data = []
 	metadata = []
 	histories = []
 
-	for w in WorkerTask.objects.raw("SELECT * FROM api_workertask WHERE name = "+expId):
-		print(w.pk)
+	exp_num = find_tasks[0].experiment.id
+
+
+	metaDataIds = []
+	workerTaskIds = []
+	for w in WorkerTask.objects.raw("SELECT * FROM api_workertask WHERE experiment_id=%s", [exp_num]):
+		metaDataIds.append(w.metaData_id)
+		workerTaskIds.append(w.id)
+		#print('hi')
 
 	cursor = connection.cursor()
-	cursor.execute("DROP TABLE api_workertask_temp")
-	cursor.execute("SELECT * INTO api_workertask_temp FROM api_workertask WHERE name="+expId + " AND researcher="+usrId)
+	if db_table_exists("api_workertask_temp"):
+		cursor.execute("DROP TABLE api_workertask_temp")
+	if db_table_exists("api_metadata_temp"):
+		cursor.execute("DROP TABLE api_metadata_temp")
+	if db_table_exists("api_historyevent_temp"):
+		cursor.execute("DROP TABLE api_historyevent_temp")
+	print("\n\n\n",workerTaskIds)
+	
+	##workerTaskIds=[129,130]
+	cursor.execute("SELECT * INTO api_historyevent_temp FROM api_historyevent WHERE workerTask_id = ANY(%s)", [workerTaskIds]) #doesn't work
+	cursor.execute("SELECT * INTO api_metadata_temp FROM api_metadata WHERE id = ANY(%s)", [metaDataIds]) #works
+	cursor.execute("SELECT * INTO api_workertask_temp FROM api_workertask WHERE experiment_id=%s AND researcher=%s", [exp_num,usrId])
 
-	for task in find_tasks:
-		sss = task.historyevent_set.all() 
-		for his in sss:
-			histories.append(his)
-		metadata.append(task.metaData)
-		print("SSS" + task.experiment.name)
-		d = byteify(json.loads(task.results));
-		data.append(d);
+	# for task in find_tasks:
+	# 	sss = task.historyevent_set.all() 
+	# 	for his in sss:
+	# 		histories.append(his)
+	# 	metadata.append(task.metaData)
+	# 	print("SSS" + task.experiment.name)
+	# 	d = byteify(json.loads(task.results));
+	# 	data.append(d);
 
-	return HttpResponse("hi")
+	system("pg_dump -d gpaasdb -f " + str(usrId) +'.dump ' + "-t api_workertask_temp -t api_metadata_temp -t api_historyevent_temp")
+	filename = "hn2284.dump" # Select your file here.                                
+	wrapper = FileWrapper(file(filename))
+	response = HttpResponse(wrapper, content_type='mimetype=application/force-download')
+	response['Content-Length'] = os.path.getsize(filename)
+
+	os.remove( str(usrId) +'.dump')
+	return response
+
+	#return sendfile(request, 'hn2284.dump')
+
+	#return HttpResponse("hi")
 
 
 
