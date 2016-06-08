@@ -1,6 +1,8 @@
 # fabfile.py
 # for droplet deployment
 
+#Usage: in directory of fabfile.py
+	#$ fab update
 from fabric.api import *
 
 env.hosts = ['192.241.179.74']
