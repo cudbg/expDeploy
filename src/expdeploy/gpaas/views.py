@@ -324,8 +324,8 @@ def ProfileGalleryView(request):
 	publishdict = {} # Dictionary of puublished values
 	for experiment in experiments_list:
 		linkdict[experiment.name] = "/gpaas/experiment/"+str(username)+"/"+experiment.name+"/"
-		#publishdict[experiment.name] = experiment.published
-		publishdict[experiment.name] = True
+		publishdict[experiment.name] = experiment.published
+
 
 	#Populate formdict of structure{'experiment.name':{'FormName': form, ... }, ...}
 	formdict = {}
