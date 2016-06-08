@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import UploadFileView
+#from .views import UploadFileView
 
 urlpatterns = patterns(
     'expdeploy.gpaas.views',
@@ -38,7 +38,7 @@ urlpatterns = patterns(
     # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/sandbox/$', 'EditSandboxView', name='sandbox'),
     # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
 
-    url(r'^userprofile/$', 'UserProfileView', name='user_profile'),
+    #url(r'^userprofile/$', 'UserProfileView', name='user_profile'),
     url(r'^profile/$', 'ProfileGalleryView', name='user_profile'),
     url(r'^viewresults', 'ViewResults', name='ViewResults'),
 )
