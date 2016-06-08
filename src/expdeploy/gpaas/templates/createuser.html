@@ -13,13 +13,13 @@
         {% if current_user %}
             <p> Currently logged in: {{user}} </p>
             <div id="view-profile">
-                <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
+                <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
                     <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
                 </form>
             </div>
         {% else %}
             <p> No user is currently logged in </p>
-            <form action="/gpaas/error/" method="POST">
+            <form action="/gpaas/" method="GET">
             <p><input type="submit" class="btn btn-default" value="Back to login"/></p>
     </form>
         {% endif %}
@@ -38,6 +38,10 @@
 
     <div class="form-box">
     	<!-- create user form -->
+        {% if duplicate %}
+            <p><h3> Sorry, an account with that username already exists. Please try again. </h3></p>
+        {% endif %}
+
         <p> Username must contain fewer than 120 characters and no spaces. E-mail must be at a .edu address. </p>
         <p> Creating an account while logged in will log you out! </p>
     	<form action="/gpaas/createuser/" method="post" enctype="multipart/form-data">

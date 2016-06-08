@@ -6,6 +6,7 @@
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
     <script src="{% static 'jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'scroll.js' %}"></script>
 </head>
 <body>
 	<div id="page-header">
@@ -47,14 +48,14 @@
 	    		</div>
 	    	</div>
     	</div>
+
     	
     	<div class="form-box"> 
-	    	<ul class="nav nav-pills">
+    		<ul class="nav nav-pills">
 	    		{% for experiment, files in filedict.items %}
-	    			<li><a data-toggle="pill" href="#{{experiment.name}}">{{experiment.name}}</a></li>
+	    			<li><a data-toggle="pill" class="scroll" href="#{{experiment.name}}">{{experiment.name}}</a></li>
 	    		{% endfor %}
-	    	</ul>
-
+	   		 </ul>
 	    	<div class="tab-content">
 			{% for experiment, files in filedict.items %}
 				<div id="{{experiment.name}}" class = "tab-pane fade">

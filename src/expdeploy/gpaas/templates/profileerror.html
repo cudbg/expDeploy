@@ -1,11 +1,10 @@
+
 <html>
 <head>
-    <title> login </title>
+    <title> Oh no!</title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
-
-
 </head>
 
 <body>
@@ -14,7 +13,7 @@
         {% if current_user %}
             <p> Currently logged in: {{user}} </p>
             <div id="view-profile">
-                <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
+                <form action="/gpaas/userprofile/" method="post" enctype="    multipart/form-data">
                     <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
                 </form>
             </div>
@@ -30,32 +29,15 @@
             </form>
         {% endif %}
         </div>
+
     </div>
-    
+
     <div class ="form-box">
-    {% if mismatch %}
-        <p> The username and password provided do not match an existing account </p>
-    {% endif %}
-    {% if profileerror %}
-        <p> You must be logged in to view your profile. </p>
-    {% endif %}
-
-    <!-- login form -->
-    <form action="/gpaas/" method="POST" enctype="multipart/form-data">
-            
-            {% csrf_token %}
-            {{ loginform.as_p}}
-
-            <p><input type="submit" class="btn btn-by" value="Login"/></p>
+    <p> Sorry, you must be logged in to see this page </p>
+	<form action="/gpaas/" method="get">
+            <p><input type="submit" class ="btn btn-info" value="Login"/></p>
     </form>
     </div>
-
-    <div class="tab-space">
-    <a href="/gpaas/createuser/">
-        Don't have an account? Create one here.
-    </a>
-    </div>
-
 
 
 </body>

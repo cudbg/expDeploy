@@ -21,3 +21,12 @@ def explink(dictionary, key):
 def expfullink(dictionary, key):
 	return "https://gpaas.xyz" + str(dictionary.get(key))
 
+@register.simple_tag
+def formlookup(dictionary, experiment, form):
+	inner_formdict = dictionary.get(experiment)
+	return inner_formdict.get(form)
+
+@register.simple_tag
+def publishlookup(dictionary, key):
+	return dictionary.get(key)
+
