@@ -1,0 +1,77 @@
+<html>
+<head> 
+	{% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+	<div id="page-header">
+        <div id="profile-user">
+
+            <p> {{researcher}}'s Results Page </p>
+        
+        </div>
+
+
+    </div>
+
+    <!-- Do not remove the comment below this one. -->
+    <!-- {% load lookup %} -->
+
+    <!-- Pills for separate experiments -->
+    <div class="container">
+
+         <table class="table">
+            <thead>
+              <tr>
+                <th>Experiment</th>
+                <th>Name</th>
+                <th>Assignment ID</th>
+                <th>Worker ID</th>
+                <th>Tasks Submitted</th>
+                <th>Status</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for row in rows  %}
+              <tr>
+              <td>{{row.task.experiment.name}}</td>
+              <td>{{row.task.name}}</td>
+                <td>{{row.task.assignmentId}}</td>
+                <td>{{row.task.wid}} </td>
+                <td>{{row.completed}}/{{row.tasks}}</td>
+
+                 {% if row.waiting %}
+                   <td>Waiting</td>
+                {% else %}
+                     <td>Completed</td>
+
+                {% endif %}
+                
+
+
+                {% if row.task.paid %}
+                   <td>Paid</td>
+                {% elif not row.waiting %}
+                     <td><a href="/api/payout?completed={{row.completed}}&wid={{row.task.wid}}&assigned={{row.tasks}}&assignmentId={{row.task.assignmentId}}&researcher={{row.task.researcher}}&exp={{row.task.experiment.name}}" class="btn btn-default">Pay</a></td>
+
+                {% endif %}
+                
+              </tr>
+         {% endfor %}
+            </tbody>
+          </table>
+
+
+
+        
+           
+	</div>
+
+
+		
+</body>
+</html>
