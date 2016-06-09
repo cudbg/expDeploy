@@ -73,9 +73,9 @@ def AuthenticateUser(request):
 	#Send to login page if not logged in.
 	if request.user.id is None:
 		return render_to_response('login.html',
-		{'loginform': LoginForm(), 'user': None, 'current_user': False,
-		'mismatch': False, 'profileerror': True,},
-	)
+			{'loginform': LoginForm(), 'user': None, 'current_user': False,
+			'mismatch': False, 'profileerror': True,},
+			)
 
 
 def AuthenticateExperiment(user, experiment):
@@ -112,23 +112,28 @@ def CreateExperimentView(request):
 			key = form.cleaned_data['hit_keywords']
 
 			#check if experiment already exists
-			temp = ExperimentModel.objects.filter(username=user).\
-				filter(name=experiment)
-			if not temp:
+			temp = ExperimentModel.objects.filter(username=user)
+			temp = temp.filter(name=experiment)
+			if temp.count() == 0:
 			 	exp = ExperimentModel(name=experiment, username=user,
 			 		hit_description=desc, per_task_payment=payment,
 			 		bonus_payment=bonus, hit_keywords=key)
 				exp.save()
 
-				#create qualifications objext associated w exp
+				#create qualifications object associated w exp
 				qualifications = QualificationsModel()
 				qualifications.experiment = exp
 				qualifications.username = user
 				qualifications.save()
 
 			else: 
-				exp = ExperimentModel.objects.filter(username=user,
-					name=experiment)[0]
+				# exp = ExperimentModel.objects.filter(username=user,
+				# 	name=experiment)[0]
+				return render_to_response('createexperiment.html',
+					{'experimentform': form, 'username': user, 
+					'duplicate': True},
+					context_instance = RequestContext(request)
+					)
 
 			return HttpResponseRedirect(reverse(profile_view))
 	#For non-post request:
@@ -139,7 +144,7 @@ def CreateExperimentView(request):
 	return render_to_response('createexperiment.html',
 		{'experimentform': form, 'username': user},
 		context_instance = RequestContext(request)
-	)
+		)
 
 
 def CreateUserView(request):
@@ -173,7 +178,7 @@ def CreateUserView(request):
 				return render_to_response('createuser.html',
 					{'userform': form, 'current_user': current_user,
 					 'user': user, 'duplicate': True},
-				)
+					)
 
 		#logout previous user. login new user and send them to profile
 		logout(request)
@@ -192,7 +197,7 @@ def CreateUserView(request):
 		 	current_user = False
 		return render_to_response('createuser.html',
 			{'userform': form, 'current_user': current_user, 'user': user},
-		)
+			)
 
 
 def EditBonusPaymentView(request,username, experiment):
@@ -286,7 +291,7 @@ def ExperimentView(request, username, experiment):
 
 	return render_to_response(index_file,
 		{'testfiles': filedict,  'username': username}
-	)
+		)
 
 
 def FileHttpResponse(request, username, experiment, filename):
@@ -317,7 +322,7 @@ def LoginView(request):
 		return render_to_response('login.html',
 			{'loginform': form, 'user': None, 'current_user': None,
 			'mismatch': mismatch, 'profileerror': False,},
-		)
+			)
 	else:
 		form = LoginForm()
 		user = request.user
@@ -329,7 +334,7 @@ def LoginView(request):
 		return render_to_response('login.html',
 			{'loginform': form, 'user': user, 'current_user': current_user,
 			'mismatch': mismatch, 'profileerror': False,},
-		)
+			)
 
 
 def LogoutView(request):
@@ -346,7 +351,7 @@ def ProfileGalleryView(request):
 		return render_to_response('login.html',
 			{'loginform': LoginForm(), 'user': None, 'current_user': False,
 			'mismatch': False, 'profileerror': True,},
-		)
+			)
 
 	# list of experiments for given user
 	experiments_list = ExperimentModel.objects.filter(username=username)

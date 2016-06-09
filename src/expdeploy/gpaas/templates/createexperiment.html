@@ -31,22 +31,28 @@
     </div>
 
     <div class="tab-space">
-    <div class="form-box">
-        <p><h2> Create New Experiment </h2></p>
-        <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces.</p>
-        <p> Need decription for Hit values, sandbox and n. </p>
-        <p> Files can be uploaded after experiment creation on Edit Experiment page. </p>
-        <p> The Per task payment and Bonus Payment options below are in <b>USD</b> demoninations. </p>
-    	<!-- upload form -->
-    	<form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
-                
-            {% csrf_token %}
-            {{ experimentform.as_p}}
+        {% if duplicate %}
+            <div style="margin-left: 11%; margin-right: 30%; margin-bottom:30px">
 
-            <p><input type="submit" class="btn btn-by" value="Create Experiment"/></p>
-        </form>
+                <p> <h2>Error:</h2><h3> The experiment you attempted to create shares a name with an existing experiment. Please try again using a different name, or edit the experiment which already exists.</p></h3>
+            </div>
+        {% endif %} 
+        <div class="form-box">
+            <p><h2> Create New Experiment </h2></p>
+            <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces.</p>
+            <p> Need decription for Hit values, sandbox and n. </p>
+            <p> Files can be uploaded after experiment creation on Edit Experiment page. </p>
+            <p> The Per task payment and Bonus Payment options below are in <b>USD</b> demoninations. </p>
+        	<!-- upload form -->
+        	<form action="/gpaas/createexperiment/" method="post" enctype="multipart/form-data">
+                    
+                {% csrf_token %}
+                {{ experimentform.as_p}}
 
-    </div>
+                <p><input type="submit" class="btn btn-by" value="Create Experiment"/></p>
+            </form>
+
+        </div>
     </div>
 </body>
 
