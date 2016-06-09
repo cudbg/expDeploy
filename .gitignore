@@ -13,29 +13,9 @@ src/db/*
 
 #src/VotingTask.log
 
-src/expdeploy/testapp/templates/*
-src/expdeploy/testapp/*
-
 src/expdeploy/gpaas/migrations/*
 src/expdeploy/api/migrations/*
-
-#ignore templates except for those created by us
-src/expdeploy/gpaas/templates/*
-!src/expdeploy/gpaas/templates/base.html
-!src/expdeploy/gpaas/templates/createaccounterror.html
-!src/expdeploy/gpaas/templates/createexperiment.html
-!src/expdeploy/gpaas/templates/createuser.html
-!src/expdeploy/gpaas/templates/login.html
-!src/expdeploy/gpaas/templates/loginerror.html
-!src/expdeploy/gpaas/templates/logouterror.html
-!src/expdeploy/gpaas/templates/profileerror.html
-!src/expdeploy/gpaas/templates/uploaderror.html
-!src/expdeploy/gpaas/templates/uploadpage.html
-!src/expdeploy/gpaas/templates/userprofile.html
-!src/expdeploy/gpaas/templates/viewresults.html
-!src/expdeploy/gpaas/templates/profilegallery.html
-!src/expdeploy/gpaas/templates/noindex.html
-
+src/expdeploy/gpaas/experimentfiles/*
 
 
 
