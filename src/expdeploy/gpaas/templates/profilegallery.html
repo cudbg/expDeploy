@@ -222,7 +222,25 @@
                                     <input type="submit" class="btn btn-by" style="margin-top:2px;" value="Update Tasknumber"/>
                                 </div>
                             </form>
-                        </div>
+                        </div> c<!-- lose row -->
+
+                        <!-- Edit Qualifications -->
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4> Edit Qualifications: </h4> 
+                            </div> <!-- close col -->
+                        </div><!--  close row -->
+                        <div class="row">
+                            <div class = "col-md-1"></div>
+                            <div class = "col-md-1">
+                                Link:
+                            </div>
+                            <div class = "col-md-3">
+                                <a href = "{% explink q_linkdict experiment %}"> {% explink q_linkdict experiment %} </a> 
+                            </div> <!-- close col -->
+                        </div> <!-- close row -->
+                        <hr>
                     </div> <!-- close tab-space -->                
                 </div> <!-- close div experiment -->
             {% endfor %}

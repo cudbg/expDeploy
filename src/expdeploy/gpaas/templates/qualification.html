@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title> Edit Qualifications </title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+    
+    <div id="page-header">
+        <div id="current-user">
+
+            <p> {{user}} </p>
+            <div id="view-profile">
+                <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
+                </form>
+            </div>
+        
+        </div>
+
+        <div id="logout-button">
+    
+            <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
+                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
+            </form>
+       
+        </div>
+
+    </div>
+
+    <div class="tab-space">
+        <div class="experiment-header" style="margin-left:11%">
+               <p><h3> Worker Qualifications For {{experiment}} </h3></p>
+        </div>
+        <div class="form-box">
+            <p>This page will update the worker qualifications of the experiment. A reasonable set of defaults exists already for each experiment. You can read more about what these qualifications are <a href="http://boto.cloudhackers.com/en/latest/ref/mturk.html#module-boto.mturk.qualification">here.</a> </p>
+            <p> They ensure that only MTurk workers with a good record of reliability will be able to view your HITs. 
+        	<!-- qualifications form -->
+        	<form action="{{post_url}}" method="post" enctype="multipart/form-data">
+                    
+                {% csrf_token %}
+                {{ qualform.as_p}}
+
+                <p><input type="submit" class="btn btn-by" value="Update Qualifications"/></p>
+            </form>
+        </div> <!--  form box-->
+    </div> <!-- tab space -->
+</body>
+
+</html>

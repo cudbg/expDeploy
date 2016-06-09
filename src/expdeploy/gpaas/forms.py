@@ -3,6 +3,16 @@ from django import forms
 from multiupload.fields import MultiFileField
 from .models import ExperimentFile
 
+class BonusPaymentForm(forms.Form):
+	bonus_payment = forms.FloatField(required=True, min_value = 0)
+	def as_p(self):
+	#"Returns this form rendered as HTML <p>s."
+		return self._html_output(
+			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s <b>(USD)</b> </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
+			error_row = u'%s',
+			row_ender = '',
+			help_text_html = u' <span class="helptext">%s</span>',
+			errors_on_separate_row = True)
 
 class ExperimentForm(forms.Form):
 	experiment = forms.CharField(max_length=120, required=True)
@@ -33,6 +43,17 @@ class HitDescriptionForm(forms.Form):
 			help_text_html = u' <span class="helptext">%s</span>',
 			errors_on_separate_row = True)
 
+class HitKeywordsForm(forms.Form):
+	hit_keywords = forms.CharField(max_length=120, required=True)
+	def as_p(self):
+	#"Returns this form rendered as HTML <p>s."
+		return self._html_output(
+			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
+			error_row = u'%s',
+			row_ender = '',
+			help_text_html = u' <span class="helptext">%s</span>',
+			errors_on_separate_row = True)
+
 class HitPaymentForm(forms.Form):
 	#hit_payment = forms.FloatField(required=True)
 	per_task_payment = forms.FloatField(required=True, min_value = 0.01)
@@ -45,25 +66,21 @@ class HitPaymentForm(forms.Form):
 			help_text_html = u' <span class="helptext">%s</span>',
 			errors_on_separate_row = True)
 
-class BonusPaymentForm(forms.Form):
-	bonus_payment = forms.FloatField(required=True, min_value = 0)
-	def as_p(self):
-	#"Returns this form rendered as HTML <p>s."
-		return self._html_output(
-			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s <b>(USD)</b> </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
-			error_row = u'%s',
-			row_ender = '',
-			help_text_html = u' <span class="helptext">%s</span>',
-			errors_on_separate_row = True)
+class LoginForm(forms.Form):
+	username = forms.CharField(max_length=120)
+	password = forms.CharField(widget=forms.PasswordInput())
 
-class HitKeywordsForm(forms.Form):
-	hit_keywords = forms.CharField(max_length=120, required=True)
+class QualificationsForm(forms.Form):
+	adult_requirement = forms.BooleanField(required=True) # adults only
+	percentage_hits_approved = forms.IntegerField(required=True)
+	percentage_assignments_submitted = forms.IntegerField(required=True)
+
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
-			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
+			normal_row = u'<div class="row" style="margin-top:5px"><div class="col-sm-3"> %(html_class_attr)s %(label)s</div> <div class="col-sm-4"> %(field)s%(help_text)s</div></div>',
 			error_row = u'%s',
-			row_ender = '',
+			row_ender = '</p>',
 			help_text_html = u' <span class="helptext">%s</span>',
 			errors_on_separate_row = True)
 
@@ -118,9 +135,3 @@ class UserForm(forms.Form):
 			row_ender = '</p>',
 			help_text_html = u' <span class="helptext">%s</span>',
 			errors_on_separate_row = True)
-
-class LoginForm(forms.Form):
-	username = forms.CharField(max_length=120)
-	password = forms.CharField(widget=forms.PasswordInput())
-	
-	

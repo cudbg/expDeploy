@@ -1,19 +1,11 @@
-from __future__ import unicode_literals
-
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.db import models
-from uuid import uuid4
 import os
-
-#arbitrary name generating function
 from django.contrib.auth.models import User
+from uuid import uuid4
 
-
-class Researcher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    aws_key_id = models.CharField(max_length=250)
-    aws_secret_key = models.CharField(max_length=250)
-
+# function used in ExperimentFile model to create alias
 def uuid_file_name(instance, filename):
 	instance.filename = filename
 	filetype = filename.split('.')[-1]
@@ -24,7 +16,6 @@ class ExperimentModel(models.Model):
 	name = models.CharField(max_length=120, blank=True, null=True)
 	username = models.CharField(max_length=120, blank=True, null=True)
 	hit_description = models.CharField(max_length=120)
-	#hit_payment = models.FloatField(blank=0.1,  null=True)
 	per_task_payment = models.FloatField(blank=0.1)
 	bonus_payment = models.FloatField(blank=0)
 	hit_keywords = models.CharField(max_length=120)
@@ -43,7 +34,21 @@ class ExperimentFile(models.Model):
 	filetext = models.TextField()
 	original_filename = models.CharField(max_length = 128)
 	username = models.CharField(max_length=120, blank=True, null=True)
-	
 
 	def __str__(self):
 		return str(self.docfile)
+
+class QualificationsModel(models.Model):
+	adult_requirement = models.BooleanField(default=True) # adults only
+	experiment = models.ForeignKey(ExperimentModel)
+	percentage_hits_approved = models.IntegerField(default=95)
+	percentage_assignments_submitted = models.IntegerField(default=95)
+	username = models.CharField(max_length=120, blank=True, null=True)
+
+	def __str__(self):
+		return str(self.experiment)
+
+class Researcher(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    aws_key_id = models.CharField(max_length=250)
+    aws_secret_key = models.CharField(max_length=250)

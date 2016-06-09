@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 #from .views import UploadFileView
 
+
 urlpatterns = patterns(
     'expdeploy.gpaas.views',
 
@@ -27,18 +28,8 @@ urlpatterns = patterns(
     url(r'^$', 'LoginView', name='login'),
     url(r'^logout/$', 'LogoutView', name='logout'),
 
-    # upload: can be deleted later
-    #url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/$', 'UploadFileView', name='upload'),
+    url(r'^qualification/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/$', 'QualificationView', name='qualification'),
 
-    #All upload urls can be deleted later
-    # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitdescription/$', 'EditHitDescriptionView', name='hit_description'),
-    # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitpayment/$', 'EditHitPaymentView', name='hit_payment'),
-    # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/bonuspayment/$', 'EditBonusPaymentView', name='bonus_payment'),
-    # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
-    # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/sandbox/$', 'EditSandboxView', name='sandbox'),
-    # url(r'^upload/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
-
-    #url(r'^userprofile/$', 'UserProfileView', name='user_profile'),
     url(r'^profile/$', 'ProfileGalleryView', name='user_profile'),
-    url(r'^viewresults', 'ViewResults', name='ViewResults'),
+    url(r'^viewresults/$', 'ViewResults', name='view_results'),
 )
