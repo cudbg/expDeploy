@@ -77,6 +77,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(BASE_DIR, 'expdeploy', 'fileloader', 'templates'),
                 os.path.join(BASE_DIR,  'expdeploy', 'gpaas', 'templates'),
+                os.path.join(BASE_DIR, 'expdeploy', 'gpaas', 'experimentfiles'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -107,15 +108,15 @@ WSGI_APPLICATION = 'expdeploy.wsgi.application'
 
 DATABASES = {
     'default': {
-	 #'ENGINE': 'django.db.backends.sqlite3',
-	 #'NAME': 'db.sqlite3',
+#	 'ENGINE': 'django.db.backends.sqlite3',
+#	 'NAME': 'db.sqlite3',
 	 'ENGINE': 'django.db.backends.postgresql_psycopg2',
- 	 'NAME': 'gpaas',
+	 'NAME': 'gpaas',
 	 'USER': 'gpaasteam',
 	 'PASSWORD': 'gpaas',
 	 'HOST': 'localhost',
 	 'PORT': '',
-    }
+	   }
 }
 
 
