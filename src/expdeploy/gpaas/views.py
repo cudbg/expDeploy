@@ -455,8 +455,6 @@ def QualificationView(request, username, experiment):
 			exp.adult_requirement = form.cleaned_data['adult_requirement']
 			exp.percentage_hits_approved = (
 				form.cleaned_data['percentage_hits_approved'])
-			exp.percentage_assigments_abandoned = (
-				form.cleaned_data['percentage_assigments_abandoned'])
 			exp.percentage_assigments_submitted = (
 				form.cleaned_data['percentage_assignments_submitted'])
 			exp.save()
