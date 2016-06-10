@@ -1,0 +1,22 @@
+{
+	
+	"tasks":[
+
+		{
+			"name":"estimationtask",
+			"params":[
+				{"name": "nbars", "type":"UniformChoice", "options":[6,7,8,9,8]},
+				{"name": "weight", "type":"UniformChoice", "options":[0]},
+				{"name": "time", "type":"UniformChoice", "options":[5]},
+				{"name": "a", "type":"UniformChoice", "options":[-0.75, 0, 0.75]},
+				{"name": "fname", "type":"UniformChoice", "options":['t1']}
+			]
+
+
+
+		}
+
+
+	]
+
+}

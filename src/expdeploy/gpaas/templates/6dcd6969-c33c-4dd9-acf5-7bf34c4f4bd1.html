@@ -1,0 +1,27 @@
+<html>
+  <head>
+
+    {% load lookup %}
+
+    <title>Example Experiment Implementation</title>
+    <script>
+    {% autoescape off %}
+    	{% lookup testfiles "api.js" %}
+    	{% lookup testfiles "experiment1.js" %}
+    {% endautoescape %}
+
+    
+    </script>
+  <script type="text/javascript" src="api.js"></script>
+    <script type="text/javascript" src="experiment1.js"></script>
+  </head>
+
+  <body>
+    Which buttons do you want to click? <br>
+
+    <div id="b"> </div>
+
+    <button type="button" onclick="endTasks()">Stop Doing Tasks</button>
+  </body>
+</html>
+

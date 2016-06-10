@@ -16,7 +16,7 @@ var n = "";
 var numberTasks = 5;
 var completed = 0
 
-var local = true
+var local = false
 
 var viewTask;
 var finish;
@@ -35,9 +35,9 @@ var bonusPay = 0
 CONFIG
 */
 //var serverurl = "https://192.241.179.74:8000"
-var serverurl = "https://localhost:8000"
+//var serverurl = "https://localhost:8000"
 
-//var serverurl = "https://gpaas.xyz"
+var serverurl = "https://gpaas.xyz"
 
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -144,6 +144,7 @@ var endTasks = function () {
 
 function setupExperiment(options) {
 
+	console.log(window.location)
 	n = options.name;
 	task = options.task;
 	researcher = options.researcher;

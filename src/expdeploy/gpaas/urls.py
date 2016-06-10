@@ -4,6 +4,8 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     'expdeploy.gpaas.views',
+    #view results go here, not at the bottom???
+    url(r'^viewresults', 'ViewResults', name='ViewResults'),
 
     url(r'^createuser/$', 'CreateUserView', name='create_user'),
     url(r'^createexperiment/$', 'CreateExperimentView'),
@@ -31,6 +33,5 @@ urlpatterns = patterns(
     url(r'^qualification/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/$', 'QualificationView', name='qualification'),
 
     url(r'^profile/$', 'ProfileGalleryView', name='user_profile'),
-    url(r'^viewresults/$', 'ViewResults', name='view_results'),
     url(r'^$', 'WelcomeView', name="welcome"),
 )
