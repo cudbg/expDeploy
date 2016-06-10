@@ -296,6 +296,15 @@ def ExperimentView(request, username, experiment):
 
 def FileHttpResponse(request, username, experiment, filename):
 	#Get proper experiment and file
+
+	DEBUG = True
+	
+	if filename=="api.js" and !DEBUG:
+
+		print("\n\n\n\n TRYING TO GET THE API.")
+		return render_to_response('api.js',	{'username':username,'experiment':experiment})
+
+
 	exp = GetExperiment(username, experiment)
 	file_object = exp.experimentfile_set.get(original_filename = filename)
 	static_content = file_object.filetext

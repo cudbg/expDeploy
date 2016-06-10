@@ -140,6 +140,7 @@ def export(request):
 	exp_num = find_tasks[0].experiment.id
 
 
+
 	metaDataIds = []
 	workerTaskIds = []
 	for w in WorkerTask.objects.raw("SELECT * FROM api_workertask WHERE experiment_id=%s", [exp_num]):

@@ -110,10 +110,12 @@ var nextTask = function() {
 
 
 	if (tasks.length == 0) {
+
+		earned += bonusPay
 		console.log("No tasks left")
 
 		if (completed > 0) {
-			finish({submit:submit})
+			finish({submit:submit, tasksCompleted:completed,  moneyEarned:earned})
 		}
 
 		return;
@@ -145,9 +147,18 @@ var endTasks = function () {
 function setupExperiment(options) {
 
 	console.log(window.location)
-	n = options.name;
+	n= "{{experiment}}"
+	researcher = "{{username}}"
+
 	task = options.task;
-	researcher = options.researcher;
+	
+	
+
+	if (n=="{{experiment}}") {
+		n = options.name;
+		researcher = options.researcher;
+	}
+
 	viewTask = options.viewTask;
 	finish = options.finish;
 	clearTask = options.clearTask;
