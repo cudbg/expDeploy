@@ -1,0 +1,63 @@
+<html>
+<head>
+	<title> Create User </title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+	 <div id="page-header">
+        <div id="current-user">
+        {% if current_user %}
+            <p> Currently logged in: {{user}} </p>
+            <div id="view-profile">
+                <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
+                </form>
+            </div>
+        {% else %}
+            <p> Already have an account? </p>
+            <form action="/gpaas/login/" method="GET">
+            <p><input type="submit" class="btn btn-default" value="Login"/></p>
+    </form>
+        {% endif %}
+        </div>
+
+
+        <div id="logout-button">
+        {% if current_user %}
+            <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
+                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
+            </form>
+        {% endif %}
+        </div>
+
+    </div>
+
+    <div id="experiment-header">
+        <b><h1> Create an account</h1> </b>
+    </div>
+    <div class="form-box">
+    	<!-- create user form -->
+        {% if duplicate %}
+            <p><h3> Sorry, an account with that username already exists. Please try again. </h3></p>
+        {% endif %}
+
+        <p> First, you must create an account. Then, we will walk through how to design an experiment for MTurk. </p>
+        <p> Your account name must match the account name of your AWS account. If you do not have an AWS account you can create one <a href="https://aws.amazon.com/">here</a>.  It must contain fewer than 120 characters and no spaces. </p>
+        <p>Your e-mail must be have a .edu extension. </p>
+        <p> The AWS Key ID and Secret Key are certfications provided for your account by Amazon Web Services. If you do not have them already, you can follow the steps provided <a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html">here</a>.</p> 
+        <p> </p>
+    	<form action="/gpaas/createuser/" method="post" enctype="multipart/form-data">
+                
+                {% csrf_token %}
+                {{ userform.as_p}}
+
+                <p><input type="submit" class="btn btn-by" value="Submit"/></p>
+        </form>
+    </div>
+</body>
+
+</html>
