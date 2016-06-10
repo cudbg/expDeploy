@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title> Welcome</title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+    <style> 
+    	p {
+    		text-indent: 40px;
+    	}
+    </style>
+
+</head>
+
+<body>
+    <div id="page-header" style="height:140px;">
+		<div class="gpaas-logo">
+			GPaaS
+			<div id="logout-button">
+		        <form action="/gpaas/login/" method="GET" enctype="multipart/form-data">
+		            <p><input type="submit" class="btn btn-default" value ="Login"></p>
+		        </form>
+	        </div> <!-- logout button -->
+		</div>
+		
+    </div>
+
+    <div class="centered">
+    	<h2>Welcome to Graphical Perception as a Service</h2> 
+    </div>
+    
+    <div class="column-text">
+    	<p> GPaaS has been created to aid the development of the <i>InterVis</i> system, a design which makes use of simple models of human perceptual inaccuracies to improve the performance of large scale, database-backed visualization systems. These
+		models, which we call perceptual functions, map visually
+		encoded data (e.g., the value 80 represented as the height
+		of a bar in a bar chart) into the perceived error (e.g., perceiving
+		the pixel height by ±5 pixels). </p>
+
+		<p>Many existing perceptual studies rely on crowd-sourcing platforms such as Mechanical Turk (MTurk), which have drastically simplified the process of recruiting study participants. However, in order to use these platforms, researchers must build and deploy custom crowd task management software simply to communicate and manage their experiments. The time commitment towards developing this software can require investments on the order of weeks. </p>
+
+		<p> GPaaS enables researchers to perform large scale graphical
+		perception studies by dramatically reducing the cost of running
+		such studies. The figure below highlights the key components of GPaaS architecture.</p>
+
+		<p> Researchers upload a task description, along with the randomized parameters
+		and the code of an experiment to run.
+		The Task Randomizer uses this parameter information to generate a randomized sequence of tasks for each participant, and stores the sequences in the database so participants can resume their tasks. GPaaS runs a webserver to host the experimental tasks, and store MTurk worker responses in
+		the database. </p>
+    </div>
+    
+    <div class="centered"  style="margin-bottom:100px">
+    	<form action="/gpaas/createuser/" method="get" enctype="multipart/form-data">
+			<p><input type="submit" class="btn-lg btn-by" value ="Get Started"></p>
+        </form>
+    </div>
+
+
+
+</body>
+
+</html>

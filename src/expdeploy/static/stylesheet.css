@@ -11,6 +11,20 @@ body{
 	margin-bottom:: 1px;
 }
 
+.centered{
+	text-align:center;
+	margin-top: 5%;
+	margin-bottom: 3%;
+}
+
+.column-text{
+	font-size:15px;
+	margin: 0 auto;
+	max-width:700px;
+	text-align: justify;
+	width:75%;
+}
+
 #current-user{
 	float:left;
 	font-size: 20px;
@@ -23,6 +37,12 @@ body{
 	margin-left: 10%;
     padding: 10px;
     width: 70%;
+}
+
+.gpaas-logo{
+	font-size:50px;
+	padding-top:30px;
+	text-align:center;
 }
 
 #logout-button{
@@ -68,6 +88,11 @@ body{
 
 .top-buffer { 
 	margin-top:10px; 
+}
+
+.top-buffer-large{
+	margin-top:80px;
+	margin-left:150px;
 }
 
 #view-profile{

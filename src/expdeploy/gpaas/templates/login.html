@@ -33,21 +33,21 @@
     </div>
     
     <div class ="form-box">
-    {% if mismatch %}
-        <p> The username and password provided do not match an existing account </p>
-    {% endif %}
-    {% if profileerror %}
-        <p> You must be logged in to view your profile. </p>
-    {% endif %}
+        {% if mismatch %}
+            <p> The username and password provided do not match an existing account </p>
+        {% endif %}
+        {% if profileerror %}
+            <p> You must be logged in to view your profile. </p>
+        {% endif %}
 
-    <!-- login form -->
-    <form action="/gpaas/" method="POST" enctype="multipart/form-data">
-            
-            {% csrf_token %}
-            {{ loginform.as_p}}
+        <!-- login form -->
+        <form action="/gpaas/login/" method="POST" enctype="multipart/form-data">
+                
+                {% csrf_token %}
+                {{ loginform.as_p}}
 
-            <p><input type="submit" class="btn btn-by" value="Login"/></p>
-    </form>
+                <p><input type="submit" class="btn btn-by" value="Login"/></p>
+        </form>
     </div>
 
     <div class="tab-space">

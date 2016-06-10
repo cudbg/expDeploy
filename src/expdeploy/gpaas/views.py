@@ -67,9 +67,9 @@ def API(request):
 def AuthenticateUser(request):
 	#user
 	if request.user.is_authenticated: 
-			return str(request.user)
+		return str(request.user)
 	else: 
-			user = None
+		user = None
 	#Send to login page if not logged in.
 	if request.user.id is None:
 		return render_to_response('login.html',
@@ -503,3 +503,11 @@ def UploadView(request, username, experiment):
 			return HttpResponseRedirect(reverse(profile_view))
 		else: 
 			return HttpResponseRedirect(reverse(profile_view))
+
+def WelcomeView(request):
+	#user 
+	if request.user.id is not None:
+		return HttpResponseRedirect(reverse(profile_view))
+	else: 
+		return render_to_response('welcome.html')
+	

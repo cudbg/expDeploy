@@ -25,11 +25,12 @@ urlpatterns = patterns(
     url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/(?P<filename>[A-Za-z0-9\w.,-]+)$', 'FileHttpResponse', name='file_http_response'),
     
     # login and logout
-    url(r'^$', 'LoginView', name='login'),
+    url(r'^login/$', 'LoginView', name='login'),
     url(r'^logout/$', 'LogoutView', name='logout'),
 
     url(r'^qualification/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/$', 'QualificationView', name='qualification'),
 
     url(r'^profile/$', 'ProfileGalleryView', name='user_profile'),
     url(r'^viewresults/$', 'ViewResults', name='view_results'),
+    url(r'^$', 'WelcomeView', name="welcome"),
 )
