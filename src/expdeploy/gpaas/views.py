@@ -2,6 +2,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.core.files import File
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib import messages
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -84,6 +85,7 @@ def AuthenticateExperiment(user, experiment):
 		return HttpResponseRedirect(reverse(profile_view))
 	else: 
 		return ExperimentModel.objects.filter(username=user,name=experiment)[0]
+
 
 def GetExperiment(username, experiment):
 	exp = ExperimentModel.objects.filter(username=username)
@@ -228,8 +230,7 @@ def EditHitKeywordView(request, username, experiment):
 	if request.method == 'POST':
 		form = HitKeywordsForm(request.POST)
 		if form.is_valid():
-			exp = ExperimentModel.objects.filter(username=username)
-
+			exp = GetExperiment(username, experiment)
 			exp.hit_keywords = form.cleaned_data['hit_keywords']
 			exp.save()
 		return HttpResponseRedirect(reverse(profile_view))
@@ -242,7 +243,7 @@ def EditHitPaymentView(request, username, experiment):
 		form = HitPaymentForm(request.POST)
 		if form.is_valid():
 			exp = GetExperiment(username, experiment)
-			exp.hit_payment = form.cleaned_data['per_task_payment']
+			exp.per_task_payment = form.cleaned_data['per_task_payment']
 			exp.save()
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
@@ -390,8 +391,8 @@ def ProfileGalleryView(request):
 	formdict = {}
 	for exp in experiments_list:
 		inner_formdict = {}
-		inner_formdict["hit_description_form"] = HitDescriptionForm(
-			{'hit_description': exp.hit_description}).as_p()
+		hitdescriptionform = HitDescriptionForm({'hit_description': exp.hit_description})
+		inner_formdict["hit_description_form"] = hitdescriptionform.as_p()
 		inner_formdict["hit_payment_form"] = HitPaymentForm(
 			{'per_task_payment': exp.per_task_payment}).as_p()
 		inner_formdict["bonus_payment_form"] = BonusPaymentForm(
@@ -456,17 +457,24 @@ def QualificationView(request, username, experiment):
 			)
 	else:
 		user = AuthenticateUser(request)
-		exp = AuthenticateExperiment(username, experiment)
-		form = QualificationsForm(request.POST, request.FILES)
-		form = ExperimentForm(request.POST, request.FILES)
+		exp = GetExperiment(username, experiment)
+			# exp = ExperimentModel.objects.filter(username=username)
+			# return exp.get(name=experiment)
+		qualifications = QualificationsModel.objects.get(experiment=exp)
+		form = QualificationsForm(request.POST)
+		# form = ExperimentForm(request.POST, request.FILES)
 		#Update experiment qualifications
 		if form.is_valid():
-			exp.adult_requirement = form.cleaned_data['adult_requirement']
-			exp.percentage_hits_approved = (
+			# adult = form.cleaned_data['adult_requirement']
+			qualifications.adult_requirement = form.cleaned_data['adult_requirement']
+			# percentage_appr = form.cleaned_data['percentage_hits_approved']
+			qualifications.percentage_hits_approved = (
 				form.cleaned_data['percentage_hits_approved'])
-			exp.percentage_assigments_submitted = (
+			# percentage_subm = form.cleaned_data['percentage_assignments_submitted']
+			qualifications.percentage_assignments_submitted = (
 				form.cleaned_data['percentage_assignments_submitted'])
-			exp.save()
+			qualifications.save()
+			
 		return HttpResponseRedirect(reverse(profile_view))
 
 

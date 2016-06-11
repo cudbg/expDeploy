@@ -25,7 +25,6 @@
     <!-- Do not remove the comment below this one. Black magic ensues. -->
     <!-- {% load lookup %} -->
 
-
     <!-- Create experiment and Payment buttons -->
     <div class="container"> <!-- style="min-width:700px;">  -->
     	<div id="experiment-header">
@@ -134,7 +133,7 @@
                                 <form action="{{url_base}}{{experiment}}{{upload_url}}" method="post" enctype="multipart/form-data" >
                             
                                     {% csrf_token %}
-                                    {{ uploadform}}
+                                    {{ uploadform }}
                             </div> <!-- col -->
                             <div class = "col-md-4">
                                     <p><input type="submit" style = "margin-top: 5px" class="btn btn-by" value="Upload"/></p>
@@ -154,11 +153,13 @@
                         </ul>
 
                         <hr>
+
+
                                 
                         <!-- Hit Description Form -->
                         <p><h4>Edit Experiment</h4></p>
                         <p> Here you can edit the parameters associated with this experiment. </p>
-                        <div class="row top-buffer">
+                        
                             <form action="{{url_base}}{{experiment}}{{hit_description_url}}" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {% formlookup formdict experiment "hit_description_form" %}
@@ -222,7 +223,7 @@
                                     <input type="submit" class="btn btn-by" style="margin-top:2px;" value="Update Tasknumber"/>
                                 </div>
                             </form>
-                        </div> c<!-- lose row -->
+                        </div> <!-- lose row -->
 
                         <!-- Edit Qualifications -->
                         <hr>

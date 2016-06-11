@@ -37,7 +37,7 @@ class HitDescriptionForm(forms.Form):
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
-			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
+			normal_row = u'<div class="row" style="margin-top:5px"><div class="col-sm-3"> %(html_class_attr)s %(label)s</div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
 			error_row = u'%s',
 			row_ender = '',
 			help_text_html = u' <span class="helptext">%s</span>',
