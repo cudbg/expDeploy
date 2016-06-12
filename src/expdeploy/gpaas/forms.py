@@ -22,7 +22,7 @@ class ExperimentForm(forms.Form):
 	bonus_payment = forms.FloatField(required=True, min_value = 0)
 	hit_keywords = forms.CharField(max_length=120, required=True)
 	sandbox = forms.BooleanField(required=True)
-	number_of_hits = forms.IntegerField(required=True);
+	number_of_assignments = forms.IntegerField(required=True);
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
@@ -96,7 +96,7 @@ class SandboxForm(forms.Form):
 			errors_on_separate_row = True)
 
 class TaskNumberForm(forms.Form):
-	number_of_hits = forms.IntegerField(required=True);
+	number_of_assignments = forms.IntegerField(required=True);
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(

@@ -110,6 +110,7 @@ def CreateExperimentView(request):
 			experiment = form.cleaned_data['experiment']
 			desc = form.cleaned_data['hit_description']
 			payment = form.cleaned_data['per_task_payment']
+			number_assignments = form.cleaned_data['number_of_assignments']
 			bonus = form.cleaned_data['bonus_payment']
 			key = form.cleaned_data['hit_keywords']
 
@@ -119,7 +120,8 @@ def CreateExperimentView(request):
 			if temp.count() == 0:
 			 	exp = ExperimentModel(name=experiment, username=user,
 			 		hit_description=desc, per_task_payment=payment,
-			 		bonus_payment=bonus, hit_keywords=key)
+			 		bonus_payment=bonus, hit_keywords=key,
+			 		n=number_assignments,)
 				exp.save()
 
 				#create qualifications object associated w exp
@@ -267,7 +269,7 @@ def EditTaskNumberView(request, username, experiment):
 		form = TaskNumberForm(request.POST)
 		if form.is_valid():
 			exp = GetExperiment(username, experiment)
-			exp.n = form.cleaned_data['number_of_hits']
+			exp.n = form.cleaned_data['number_of_assignments']
 			exp.save()
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
@@ -402,7 +404,7 @@ def ProfileGalleryView(request):
 		inner_formdict["sandbox_form"] = SandboxForm(
 			{'sandbox': exp.sandbox}).as_p()
 		inner_formdict["tasknumber_form"] = TaskNumberForm(
-			{'number_of_hits': exp.n}).as_p()
+			{'number_of_assignments': exp.n}).as_p()
 		#add inner_formdict to outer formdict
 		formdict[exp.name] = inner_formdict
 
