@@ -47,10 +47,9 @@ body{
 	border: 3px solid #9BDDFF;
 	border-radius: 7.5px;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
-
-	margin-bottom:10;
+	margin-bottom:10px;
 	margin-left: 10%;
-	margin-top: 2;
+	margin-top: 2px;
     padding: 12px;
     width: 70%;
     min-width: 500px;
