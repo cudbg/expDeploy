@@ -8,7 +8,11 @@ body{
 .bottom-border{
 	border: solid #f9f9f9;
 	border-bottom:2px;
-	margin-bottom:: 1px;
+	margin-bottom: 1px;
+}
+
+.bottom-buffer{ 
+	margin-bottom:50px; 
 }
 
 .centered{
@@ -35,8 +39,22 @@ body{
 #experiment-header{
 	margin-bottom:0;
 	margin-left: 10%;
-    padding: 10px;
+    padding: 5px;
     width: 70%;
+}
+
+.form-box{
+	border: 3px solid #9BDDFF;
+	border-radius: 7.5px;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+
+	margin-bottom:10;
+	margin-left: 10%;
+	margin-top: 2;
+    padding: 12px;
+    width: 70%;
+    min-width: 500px;
+    max-width:900px;
 }
 
 .gpaas-logo{
@@ -56,6 +74,9 @@ body{
 	background-color: #9BDDFF;
 	background-image: linear-gradient(120deg,#9BDDFF,#ffff9e);
 	border-radius: 0px;
+	border-bottom:solid;
+    border-bottom-width: 1px;
+    border-bottom-color:#c8c8c8;
 	height:120px;
 	margin-bottom: 2%;
 	margin-left: 0%;
@@ -63,16 +84,10 @@ body{
 	margin-top:0%;
 }
 
-.form-box{
-	border: 3px solid #9BDDFF;
-	border-radius: 7.5px;
-	margin-bottom:10;
-	margin-left: 10%;
-	margin-top: 2;
-    padding: 12px;
-    width: 70%;
-    min-width: 500px;
-    max-width:900px;
+
+.polaroid {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2),
+  		0 2px 6px 0 rgba(0, 0, 0, 0.2);
 }
 
 #profile-user{
@@ -86,7 +101,12 @@ body{
 	margin-left: 15px;
 }
 
-.top-buffer { 
+.top-bottom-spacing{
+	margin-top:10px;
+	margin-bottom: 10px;
+}
+
+.top-buffer{ 
 	margin-top:10px; 
 }
 
