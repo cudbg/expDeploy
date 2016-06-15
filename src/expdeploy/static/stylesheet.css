@@ -44,6 +44,7 @@ body{
 }
 
 .form-box{
+	background-color: #fffbfb;
 	border: 3px solid #9BDDFF;
 	border-radius: 7.5px;
     box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.2);
