@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'expdeploy.fileloader',
     'expdeploy.gpaas',
     'expdeploy.api',
     'sslserver'
@@ -54,18 +53,16 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-   #  'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-   #  'django.middleware.common.CommonMiddleware',
-   #  'django.middleware.csrf.CsrfViewMiddleware',
-   # 'django.contrib.auth.middleware.AuthenticationMiddleware',
-   # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-   #  'django.contrib.messages.middleware.MessageMiddleware',
-   #  'django.middleware.clickjacking.XFrameOptionsMiddleware',
-   #  'expdeploy.api',
+    #'django.middleware.security.SecurityMiddleware',
+    #'django.middleware.common.CommonMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    #'django.contrib.messages.middleware.MessageMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True  
@@ -108,14 +105,14 @@ WSGI_APPLICATION = 'expdeploy.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': 'db.sqlite3',
-    	'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    	'NAME': 'gpaas',
-    	'USER': 'gpaasteam',
-    	'PASSWORD': 'gpaas',
-    	'HOST': 'localhost',
-    	'PORT': '',
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': 'db.sqlite3',
+   # 	'ENGINE': 'django.db.backends.postgresql_psycopg2',
+   # 	'NAME': 'gpaas',
+   # 	'USER': 'gpaasteam',
+   # 	'PASSWORD': 'gpaas',
+   # 	'HOST': 'localhost',
+   # 	'PORT': '',
 	   }
 }
 
