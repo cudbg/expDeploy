@@ -15,6 +15,10 @@ body{
 	margin-bottom:50px; 
 }
 
+.bottom-buffer-small{ 
+	margin-bottom:5px; 
+}
+
 .centered{
 	text-align:center;
 	margin-top: 5%;
@@ -43,6 +47,13 @@ body{
     width: 70%;
 }
 
+#experiment-header-left{
+	margin-bottom:0;
+	margin-left: 1%;
+    padding: 5px;
+    width: 70%;
+}
+
 .form-box{
 	background-color: #fffbfb;
 	border: 3px solid #9BDDFF;
@@ -55,6 +66,13 @@ body{
     width: 70%;
     min-width: 500px;
     max-width:900px;
+}
+
+.form-box-left{
+	margin-left: 1%;
+    width: 15%;
+    min-width: 200px;
+    max-width:500px;
 }
 
 .gpaas-logo{
