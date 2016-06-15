@@ -154,7 +154,7 @@ function setupExperiment(options) {
 	
 	
 
-	if (n.includes("{{experiment}") {
+	if (n.includes("{{experiment}")) {
 		n = options.name;
 		researcher = options.researcher;
 	}
