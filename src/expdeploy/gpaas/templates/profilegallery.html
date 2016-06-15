@@ -24,10 +24,17 @@
 
     <!-- Do not remove the comment below this one. Black magic ensues. -->
     <!-- {% load lookup %} -->
-
+     
     <!-- Create experiment and Payment buttons -->
-    <div class="container"> <!-- style="min-width:700px;">  -->
-    	<div id="experiment-header-left">
+    <div class="container"> 
+        {% if messages %}   
+            {% for message in messages %}
+                <div class="experiment-header-left"> 
+                    <h3>{{message}}</h3>
+                </div>  
+            {% endfor %}
+        {% endif %}
+    	<div class="experiment-header-left">
     		<b><h1> Experiments</h1> </b>
     		<div class = "row">
 	    		<div class = "col-sm-5" style="max-width:200px">
@@ -61,7 +68,7 @@
             	</div><!-- close form-box -->
             </div> <!-- close column -->
             <div class="col-md-1">
-                <div class="col-md-9">
+                <div class="col-md-5">
                     <!-- Form box and pills for separate experiments -->
                     <div class="form-box" style="margin-bottom:75px"> 
                         <!-- Create Pills -->
@@ -248,7 +255,7 @@
                         </div>  <!-- close div tab-content -->
                     </div> <!-- close form-box -->
                 </div> <!-- close col -->
-            </div>
+            </div>  <!-- extra col close -->
         </div> <!-- close row with form-boxes -->
     </div> <!-- container -->
 </body>

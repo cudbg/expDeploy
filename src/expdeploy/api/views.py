@@ -1,5 +1,7 @@
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import json
 #from .models import Experiment
 from .models import WorkerTask
@@ -12,6 +14,7 @@ from planout.ops.random import *
 from expdeploy.gpaas.models import ExperimentFile
 from expdeploy.gpaas.models import Researcher
 from expdeploy.gpaas.models import ExperimentModel
+from expdeploy.gpaas.views import ProfileGalleryView
 from django.utils.dateformat import format
 import importlib;
 import random
@@ -216,7 +219,13 @@ def removemturk(request):
 
 	exp.published = False
 	exp.save()
-	return HttpResponse("Successfully deleted from MTurk");
+
+	#include message for ProfileGallery
+	messages.add_message(request,
+		messages.SUCCESS, 'Experiment successfully removed from MTurk.')
+
+	return HttpResponseRedirect(reverse(ProfileGalleryView));
+	#return HttpResponse("Successfully deleted from MTurk");
 
 
 def mturk(request):
@@ -276,7 +285,13 @@ def mturk(request):
 	exp.published = True
 	exp.save()
 	print (create_hit_result)
-	return HttpResponse("Successfully posted to MTurk");
+
+	#include message for ProfileGallery
+	messages.add_message(request,
+		messages.SUCCESS, 'Experiment successfully posted to MTurk.')
+
+	return HttpResponseRedirect(reverse(ProfileGalleryView));
+	# return HttpResponse("Successfully posted to MTurk");
 
 
 
