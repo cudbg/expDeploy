@@ -1,10 +1,26 @@
 TODO:
-*#1. Look at Django cursor database API, ? or %. Passing parameters into raw
+*Fix the Payments page from ewu
+*Test having a different experiment name (specifically how it affects the config.json, and the requests from the API) -- fix with auto-find json and auto-push api
+*Make polite notifications for failed qualifications
+*Prevent nextTask until response from server on prior task
+*Make sure payments happen 1 time
+*Bulk pay button on experiment page
+*Filter by all unpaid, and also sort by experiment on payments page
+*Summary statistics on experiment page
 
-*Error handling
-*config file textfield
-*Way to approve and pay for all completed worker tasks
-*Debug submission
+
+
+-Bulk payment button on experiment page, 
+make sure you can only pay 1 time, filter 
+experiments
+-Summary statistics on experiments page
+-Notification for failing qualification. 
+Very polite language. Return hit. Non-
+aggressive language
+-Payments not showing up - potentially 
+because of experiment name being wrong
+-Make sure that you don't make progress if you lose connection. 
+
 
 Backend:
 √ Assignment ID & Worker ID, pull from URL parameter, send to server, store in WorkerTask
