@@ -300,7 +300,7 @@ def ExperimentView(request, username, experiment):
 def FileHttpResponse(request, username, experiment, filename):
 	#Get proper experiment and file
 
-	DEBUG = True
+	DEBUG = False
 
 	if filename=="api.js" and DEBUG==False:
 
