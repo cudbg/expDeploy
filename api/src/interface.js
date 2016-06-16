@@ -276,7 +276,7 @@ function setupExperiment(options) {
 	 	console.log("BANNED")
 	});
 
-   	alert("Your Worker ID has been banned from completing this task")
+   	alert("Unfortunately, based on prior qualification results, no tasks can be assigned to your Worker ID. Please return the HIT to end.")
    }
 
    	//nextTask();

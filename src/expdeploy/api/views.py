@@ -56,6 +56,12 @@ def payout(request):
 	wid = request.GET.get('wid', '');
 	bonus = (completed == assigned)
 
+
+	find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
+	for t in find_tasks:
+		if t.paid == True:
+			return HttpResponse("This task has already been paid for.")
+
 	
 	researcher = Researcher.objects.filter(user__username=usrId)[0];
 	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
@@ -93,7 +99,6 @@ def payout(request):
 	
 	bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
 
-	find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
 
 	for t in find_tasks:
 		t.paid = True
