@@ -1,13 +1,14 @@
 TODO:
 DISCUSS: Recursively call until requests==responses?		*Prevent nextTask until response from server on prior task  *Bind and callback 
+DISUCSS: How to view Django logs? *Bulk pay button on experiment page
 
 for sure:
+XFixed payment bug
 XMake polite notifications for failed qualifications, check banning
 XMake sure payments happen 1 time
-*Bulk pay button on experiment page
+
 
 try:
-
 *Filter by all unpaid, and also sort by experiment on payments page
 *Summary statistics on experiment page
 
