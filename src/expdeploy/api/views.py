@@ -69,7 +69,6 @@ def payout(request):
 
 	print(assignIds)
 
-	OUTER:
 	for assignmentId in assignIds:
 
 		shouldBreak = False
@@ -82,6 +81,8 @@ def payout(request):
 
 		if shouldBreak:
 			continue
+
+		return HttpResponse("trace done.")
 		
 		researcher = Researcher.objects.filter(user__username=usrId)[0];
 		exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
