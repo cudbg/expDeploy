@@ -68,14 +68,20 @@ def payout(request):
 
 
 	print(assignIds)
-	
+
+	OUTER:
 	for assignmentId in assignIds:
+
+		shouldBreak = False
 
 		find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
 		for t in find_tasks:
 			if t.paid == True:
-				continue
+				shouldBreak = True
 
+
+		if shouldBreak:
+			continue
 		
 		researcher = Researcher.objects.filter(user__username=usrId)[0];
 		exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
