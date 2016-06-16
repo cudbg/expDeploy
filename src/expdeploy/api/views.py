@@ -82,7 +82,6 @@ def payout(request):
 		if shouldBreak:
 			continue
 
-		return HttpResponse("trace done.")
 		
 		researcher = Researcher.objects.filter(user__username=usrId)[0];
 		exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
