@@ -19,6 +19,10 @@ body{
 	margin-bottom:5px; 
 }
 
+.btn{
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
 .centered{
 	text-align:center;
 	margin-top: 5%;
@@ -47,7 +51,7 @@ body{
     width: 70%;
 }
 
-#experiment-header-left{
+.experiment-header-left{
 	margin-bottom:0;
 	margin-left: 0%;
     padding: 5px;
@@ -73,6 +77,12 @@ body{
     width: 15%;
     min-width: 170px;
     max-width:400px;
+}
+
+.gallery-min-width{
+   min-width:1000px; /* suppose you want minimun width of 1000px */
+   width: auto !important;  /* Firefox will set width as auto */
+   width:1000px;             /* As IE ignores !important it will set width as 1000px; */
 }
 
 .gpaas-logo{
