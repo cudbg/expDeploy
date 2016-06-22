@@ -7,6 +7,52 @@
   background-color: #b3e6ff; 
   border-color: #474242; 
 } 
+
+.btn-expedit { 
+  color: #000000; 
+  background-color: #fffbfb; 
+  border-color: #9BDDFF; 
+} 
+ 
+.btn-expedit:hover, 
+.btn-expedit:focus, 
+.btn-expedit:active, 
+.btn-expedit.active, 
+.open .dropdown-toggle.btn-expedit { 
+  color: #000000; 
+  background-color: #F7F7F7; 
+  border-color: #9BDDFF; 
+} 
+ 
+.btn-expedit:active, 
+.btn-expedit.active, 
+.open .dropdown-toggle.btn-expedit { 
+  background-image: none; 
+} 
+ 
+.btn-expedit.disabled, 
+.btn-expedit[disabled], 
+fieldset[disabled] .btn-expedit, 
+.btn-expedit.disabled:hover, 
+.btn-expedit[disabled]:hover, 
+fieldset[disabled] .btn-expedit:hover, 
+.btn-expedit.disabled:focus, 
+.btn-expedit[disabled]:focus, 
+fieldset[disabled] .btn-expedit:focus, 
+.btn-expedit.disabled:active, 
+.btn-expedit[disabled]:active, 
+fieldset[disabled] .btn-expedit:active, 
+.btn-expedit.disabled.active, 
+.btn-expedit[disabled].active, 
+fieldset[disabled] .btn-expedit.active { 
+  background-color: #fffbfb; 
+  border-color: #9BDDFF; 
+} 
+ 
+.btn-expedit .badge { 
+  color: #fffbfb; 
+  background-color: #000000; 
+}
  
 .btn-by:hover, 
 .btn-by:focus, 
