@@ -56,50 +56,76 @@ def payout(request):
 	wid = request.GET.get('wid', '');
 	bonus = (completed == assigned)
 
-	
-	researcher = Researcher.objects.filter(user__username=usrId)[0];
-	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
-	key = researcher.aws_key_id;
-	secret_key = researcher.aws_secret_key;
-	host = 'mechanicalturk.sandbox.amazonaws.com'
+	assignIds = []
 
-	if (exp.sandbox == False):
-		host = 'mechanicalturk.amazonaws.com'
-	
-	mturk = boto.mturk.connection.MTurkConnection(
-	    aws_access_key_id = key,
-	    aws_secret_access_key = secret_key,
-	    host = host,
-	    debug = 1 # debug = 2 prints out all requests.
-	)
-	 
-	print boto.Version 
-	print mturk.get_account_balance() 
+	if assignmentId == '':
+		find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
+		print('here are my tasksssss')
+		print(find_tasks)
+	else:
+		assignIds.append(assignmentId)
 
 
-	assignmnet = mturk.get_assignment(assignmentId)
+	print(assignIds)
 
-	#print(assignmnet.AssignmentStatus)
+	for assignmentId in assignIds:
 
-	BONUS = exp.bonus_payment
-	PERTASK = exp.per_task_payment
+		shouldBreak = False
 
-	p = mturk.get_price_as_price(PERTASK * float(completed))
-	if bonus:
-		p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
+		find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
+		for t in find_tasks:
+			if t.paid == True:
+				shouldBreak = True
 
-	approve = mturk.approve_assignment(assignmentId)
-	
-	bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
 
-	find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
+		if shouldBreak:
+			continue
 
-	for t in find_tasks:
-		t.paid = True
-		t.save()
+		
+		researcher = Researcher.objects.filter(user__username=usrId)[0];
+		exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
-	return HttpResponse("Payment made")
+		key = researcher.aws_key_id;
+		secret_key = researcher.aws_secret_key;
+		host = 'mechanicalturk.sandbox.amazonaws.com'
+
+		if (exp.sandbox == False):
+			host = 'mechanicalturk.amazonaws.com'
+		
+		mturk = boto.mturk.connection.MTurkConnection(
+		    aws_access_key_id = key,
+		    aws_secret_access_key = secret_key,
+		    host = host,
+		    debug = 1 # debug = 2 prints out all requests.
+		)
+		 
+		print boto.Version 
+		print mturk.get_account_balance() 
+
+
+		assignmnet = mturk.get_assignment(assignmentId)
+
+		#print(assignmnet.AssignmentStatus)
+
+		BONUS = exp.bonus_payment
+		PERTASK = exp.per_task_payment
+
+		p = mturk.get_price_as_price(PERTASK * float(completed))
+		if bonus:
+			p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
+
+		approve = mturk.approve_assignment(assignmentId)
+		
+		bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
+
+
+		for t in find_tasks:
+			t.paid = True
+			t.save()
+
+
+	return HttpResponse("Payments done.")
 
 def results(request):
 	researcherId = request.GET.get('researcher', '');
