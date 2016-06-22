@@ -57,7 +57,7 @@ def ViewResults(request):
 	print(rows)
 	return render_to_response('viewresults.html',
 		{'rows':rows,'researcher':researcherId},
-		context_instance = RequestContext(request)
+		context_instance = RequestContext(request),
 		)
 
 
@@ -299,9 +299,7 @@ def ExperimentView(request, username, experiment):
 
 def FileHttpResponse(request, username, experiment, filename):
 	#Get proper experiment and file
-
 	DEBUG = True
-
 	if filename=="api.js" and DEBUG==False:
 
 		print("\n\n\n\n TRYING TO GET THE API.")
@@ -432,7 +430,7 @@ def ProfileGalleryView(request):
 		'hit_keywords_form'   : HitKeywordsForm(), 
 		'sandbox_form'        : SandboxForm(), 
 		'tasknumber_form'     : TaskNumberForm(),},
-		context_instance = RequestContext(request)
+		context_instance = RequestContext(request),
 		)
 
 
