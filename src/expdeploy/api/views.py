@@ -82,7 +82,7 @@ def payout(request):
 		if shouldBreak:
 			continue
 
-		
+
 		researcher = Researcher.objects.filter(user__username=usrId)[0];
 		exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
@@ -216,6 +216,7 @@ def export(request):
 
 
 def removemturk(request):
+	isSandbox = request.GET.get('isSandbox', '');
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
 	researcher = Researcher.objects.filter(user__username=usrId)[0];
@@ -242,8 +243,10 @@ def removemturk(request):
 	disable = mturk.disable_hit(exp.hitID)
 	
 
-
-	exp.published = False
+	if isSandbox:
+		exp.published_sandbox = False
+	else:
+		exp.published_mturk = False
 	exp.save()
 
 	#include message for ProfileGallery
@@ -255,6 +258,7 @@ def removemturk(request):
 
 
 def mturk(request):
+	isSandbox = request.GET.get('isSandbox', '');
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
 	researcher = Researcher.objects.filter(user__username=usrId)[0];
@@ -264,7 +268,7 @@ def mturk(request):
 	secret_key = researcher.aws_secret_key;
 	host = 'mechanicalturk.sandbox.amazonaws.com'
 
-	if (exp.sandbox == False):
+	if (isSandbox == False):
 		host = 'mechanicalturk.amazonaws.com'
 	
 	mturk = boto.mturk.connection.MTurkConnection(
@@ -308,7 +312,10 @@ def mturk(request):
 
 	exp.hitID = create_hit_result[0].HITId
 
-	exp.published = True
+	if isSandbox:
+		exp.published_sandbox = True
+	else:
+		exp.published_mturk = True
 	exp.save()
 	print (create_hit_result)
 
