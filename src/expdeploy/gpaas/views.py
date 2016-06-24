@@ -264,18 +264,6 @@ def EditHitPaymentView(request, username, experiment):
 		return HttpResponseRedirect(reverse(profile_view))
 
 
-def EditSandboxView(request, username, experiment):
-	if request.method == 'POST':
-		form = SandboxForm(request.POST)
-		if form.is_valid():
-			exp = GetExperiment(username, experiment)
-			exp.sandbox = form.cleaned_data['sandbox']
-			exp.save()
-		return HttpResponseRedirect(reverse(profile_view))
-	else:
-		return HttpResponseRedirect(reverse(profile_view))
-
-
 def EditTaskNumberView(request, username, experiment):
 	if request.method == 'POST':
 		form = TaskNumberForm(request.POST)

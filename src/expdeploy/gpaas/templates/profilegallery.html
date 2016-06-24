@@ -250,18 +250,6 @@
                             </div> <!-- close row -->
                             <hr>
 
-                            <!-- Sandbox Form -->
-                            <div class="row">
-                                <form action="{{url_base}}{{experiment}}{{sandbox_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "sandbox_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update Sandbox Status"/>
-                                    </div>
-                                </form>
-                            </div> <!-- close row -->
-                            <hr>
-
                             <!-- TaskNumber Form -->
                             <div class="row">
                                 <form action="{{url_base}}{{experiment}}{{tasknumber_url}}" method="post" enctype="multipart/form-data">
