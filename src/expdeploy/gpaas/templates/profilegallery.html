@@ -100,7 +100,7 @@
                                         <form action="/api/removemturk" method="get">
                                 {% else %}
                                     <!-- different column sizes for different buttons -->
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <form action="/api/mturk" method="get">
                                 {% endif %}
                                 
@@ -112,9 +112,9 @@
                                     <input type="hidden" value="False" name="isSandbox" id="id5"/>
 
                                     {% if published %}
-                                        <input type="submit" class="btn btn-by" value="Remove from MTurk" />
+                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Remove from MTurk" />
                                     {% else %}
-                                        <input type="submit" class="btn btn-by" value="Post to MTurk" />
+                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Post to MTurk" />
                                     {% endif %}
                                     </form>
                                 </div> <!-- close col -->
@@ -125,7 +125,7 @@
                                     <div class="col-sm-5">
                                         <form action="/api/removemturk" method="get">
                                 {% else %}
-                                    <div class="col-sm-4 tab-space">
+                                    <div class="col-sm-3 tab-space">
                                         <form action="/api/mturk" method="get">
                                 {% endif %}
                                 
@@ -137,20 +137,21 @@
                                     <input type="hidden" value="True" name="isSandbox" id="id5"/>
 
                                     {% if published %}
-                                        <input type="submit" class="btn btn-by" value="Remove from Sandbox" />
+                                        <input type="submit" class="btn btn-by" style ="width:170px" value="Remove from Sandbox" />
                                     {% else %}
-                                        <input type="submit" class="btn btn-by" value="Post to Sandbox" />
+                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Post to Sandbox" />
                                     {% endif %}
                                     </form>
                                 </div> <!-- close col -->
-
+                            </div> <!-- close row -->
+                            <div class="row">
                                 <div class="col-sm-3">
 
                                     <!-- Download Data -->
                                     <form action="/api/export" method="get">
                                         <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
                                         <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-                                        <input type="submit" class="btn btn-by" value="Download Data" />
+                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Download Data" />
                                     </form>
                                 </div>
                             </div> <!--  close row -->
@@ -165,7 +166,7 @@
                             <p><h3>Upload files</h3></p>
                             <p>  The files uploaded will be the same files posted to MTurk. The home-page of the experiment must be named "index.html". All files must be in one directory. Duplicate file uploads will be overwritten. </p>
                             <!-- upload form -->
-                            <div class = "row" style = "margin-top:10px">
+                            <div class = "row" style = "margin-top:15px; margin-bottom:15px;">
                                 <div class = "col-md-7">
                                     <form action="{{url_base}}{{experiment}}{{upload_url}}" method="post" enctype="multipart/form-data" >
                                 

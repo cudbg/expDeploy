@@ -15,7 +15,7 @@ from .models import Researcher
 from .forms import LoginForm, UploadForm, UserForm, ExperimentForm,\
 	QualificationsForm
 from .forms import HitDescriptionForm, HitPaymentForm, \
-	HitKeywordsForm, SandboxForm, TaskNumberForm, BonusPaymentForm, ConfigFileForm
+	HitKeywordsForm, TaskNumberForm, BonusPaymentForm, ConfigFileForm
 
 import os
 import json
@@ -402,8 +402,6 @@ def ProfileGalleryView(request):
 			{'bonus_payment': exp.bonus_payment}).as_p()
 		inner_formdict["hit_keywords_form"] = HitKeywordsForm(
 			{'hit_keywords': exp.hit_keywords}).as_p()
-		inner_formdict["sandbox_form"] = SandboxForm(
-			{'sandbox': exp.sandbox}).as_p()
 		inner_formdict["tasknumber_form"] = TaskNumberForm(
 			{'number_of_assignments': exp.n}).as_p()
 		inner_formdict["config_file_form"] = ConfigFileForm(
@@ -429,6 +427,7 @@ def ProfileGalleryView(request):
 		'upload_url'          : "/",
 		'config_url'		  : "/config/",
 		'url_base'            : "/gpaas/edit/"+str(username)+"/", 
+		'uploadform'          : UploadForm(),
 		},
 		context_instance = RequestContext(request)
 		)
