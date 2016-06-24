@@ -245,13 +245,15 @@ def removemturk(request):
 
 	if isSandbox == "True":
 		exp.published_sandbox = False
+		messages.add_message(request,
+			messages.SUCCESS, 'Experiment successfully removed from Sandbox.')
 	else:
 		exp.published_mturk = False
+		messages.add_message(request,
+			messages.SUCCESS, 'Experiment successfully removed from MTurk.')
 	exp.save()
 
-	#include message for ProfileGallery
-	messages.add_message(request,
-		messages.SUCCESS, 'Experiment successfully removed from MTurk.')
+	
 
 	return HttpResponseRedirect(reverse(ProfileGalleryView));
 	#return HttpResponse("Successfully deleted from MTurk");
@@ -314,14 +316,17 @@ def mturk(request):
 
 	if isSandbox == "True":
 		exp.published_sandbox = True
+		#include message for ProfileGallery
+		messages.add_message(request,
+			messages.SUCCESS, 'Experiment successfully posted to Sandbox.')
 	else:
 		exp.published_mturk = True
+		messages.add_message(request,
+			messages.SUCCESS, 'Experiment successfully posted to MTurk.')
 	exp.save()
 	print (create_hit_result)
 
-	#include message for ProfileGallery
-	messages.add_message(request,
-		messages.SUCCESS, 'Experiment successfully posted to MTurk.')
+	
 
 	return HttpResponseRedirect(reverse(ProfileGalleryView));
 	# return HttpResponse("Successfully posted to MTurk");
