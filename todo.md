@@ -1,6 +1,12 @@
 TODO:
 DISCUSS: Recursively call until requests==responses?		*Prevent nextTask until response from server on prior task  *Bind and callback 
+--keep all log data
 DISUCSS: How to view Django logs? *Bulk pay button on experiment page
+-sys.stdout = sys.stderr
+-Make sure task generation is deterministic
+-Figure out indentation
+DISCUSS: config file naming -they cant just set the name. 
+
 
 for sure:
 XFixed payment bug
