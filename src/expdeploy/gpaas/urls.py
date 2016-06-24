@@ -17,6 +17,7 @@ urlpatterns = patterns(
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/sandbox/$', 'EditSandboxView', name='sandbox'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
+    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/config/$', 'EditConfigFileNameView', name='config_file'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/$', 'UploadView', name='upload'),
 
     # experiment view

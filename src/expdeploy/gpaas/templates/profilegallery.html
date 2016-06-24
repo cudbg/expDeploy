@@ -108,6 +108,7 @@
 
                                         <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
                                         <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                            <!-- add isSandbox field here, same for remove button -->
                                         <input type="hidden" value="{{description}}" name="description" id = "id3" />
                                         <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
 
@@ -150,8 +151,17 @@
                                         <p><input type="submit" style = "margin-top: 5px" class="btn btn-by" value="Upload"/></p>
                                     </form>
                                 </div>
-                                
                             </div> <!-- row -->
+
+                                <form action="{{url_base}}{{experiment}}{{config_url}}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {% formlookup formdict experiment "config_file_form" %}
+                                    <div class="col-md-4">
+                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update Config File Name"/>
+                                    </div> <!-- close col -->
+                                </form>
+                            </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
+
                             <p> All files assocaited with this experiment: </p>
                             <ul>
                                 <!-- Link files -->
@@ -176,7 +186,7 @@
                                         <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update HIT Description"/>
                                     </div> <!-- close col -->
                                 </form>
-                            </div> <!-- close row -->
+                            </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
                             <hr>
 
                             <!-- Hit Payment Form -->

@@ -15,7 +15,7 @@ from .models import Researcher
 from .forms import LoginForm, UploadForm, UserForm, ExperimentForm,\
 	QualificationsForm
 from .forms import HitDescriptionForm, HitPaymentForm, \
-	HitKeywordsForm, SandboxForm, TaskNumberForm, BonusPaymentForm
+	HitKeywordsForm, SandboxForm, TaskNumberForm, BonusPaymentForm, ConfigFileForm
 
 import os
 import json
@@ -216,6 +216,18 @@ def EditBonusPaymentView(request,username, experiment):
 		return HttpResponseRedirect(reverse(profile_view))
 
 
+def EditConfigFileNameView(request, username, experiment):
+	if request.method == 'POST':
+		form = ConfigFileForm(request.POST)
+		if form.is_valid():
+			exp = GetExperiment(username, experiment)
+			exp.config_file = form.cleaned_data['config_file_name']
+			exp.save()
+		return HttpResponseRedirect(reverse(profile_view))
+	else:
+		return HttpResponseRedirect(reverse(profile_view))
+
+
 def EditHitDescriptionView(request, username, experiment):
 	if request.method == 'POST':
 		form = HitDescriptionForm(request.POST)
@@ -384,7 +396,7 @@ def ProfileGalleryView(request):
 	q_linkdict = {} # Dictionary of links to qualifications pages
 	for exp in experiments_list:
 		linkdict[exp.name] ="/gpaas/experiment/"+str(username)+"/"+exp.name+"/"
-		publishdict[exp.name] = exp.published
+		publishdict[exp.name] = exp.published_mturk
 		q_linkdict[exp.name] = "/gpaas/qualification/"+\
 			str(username)+"/"+exp.name+"/"
 
@@ -405,6 +417,8 @@ def ProfileGalleryView(request):
 			{'sandbox': exp.sandbox}).as_p()
 		inner_formdict["tasknumber_form"] = TaskNumberForm(
 			{'number_of_assignments': exp.n}).as_p()
+		inner_formdict["config_file_form"] = ConfigFileForm(
+			{'config_file_name': exp.config_file}).as_p()
 		#add inner_formdict to outer formdict
 		formdict[exp.name] = inner_formdict
 
@@ -423,6 +437,7 @@ def ProfileGalleryView(request):
 		'sandbox_url'         : "/sandbox/", 
 		'tasknumber_url'      : "/tasknumber/",
 		'upload_url'          : "/",
+		'config_url'		  : "/config/",
 		'url_base'            : "/gpaas/edit/"+str(username)+"/", 
 		# forms
 		'uploadform'          : UploadForm(),

@@ -21,9 +21,11 @@ class ExperimentModel(models.Model):
 	hit_keywords = models.CharField(max_length=120)
 	sandbox = models.BooleanField(default=True)
 	n = models.IntegerField(default=5);
-	published = models.BooleanField(default=False);
+	published_mturk = models.BooleanField(default=False);
+	published_sandbox = models.BooleanField(default=False);	
 	banned = models.TextField(default='{"ids":[]}')
 	hitID = models.CharField(max_length=120)
+	config_file = models.CharField(max_length=120,default="config.json")
 
 	def __str__(self):
 		return str(self.name)
