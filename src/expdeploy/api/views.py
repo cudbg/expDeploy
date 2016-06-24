@@ -243,7 +243,7 @@ def removemturk(request):
 	disable = mturk.disable_hit(exp.hitID)
 	
 
-	if isSandbox:
+	if isSandbox == "True":
 		exp.published_sandbox = False
 	else:
 		exp.published_mturk = False
@@ -268,7 +268,7 @@ def mturk(request):
 	secret_key = researcher.aws_secret_key;
 	host = 'mechanicalturk.sandbox.amazonaws.com'
 
-	if (isSandbox == False):
+	if (isSandbox == "False"):
 		host = 'mechanicalturk.amazonaws.com'
 	
 	mturk = boto.mturk.connection.MTurkConnection(
@@ -312,7 +312,7 @@ def mturk(request):
 
 	exp.hitID = create_hit_result[0].HITId
 
-	if isSandbox:
+	if isSandbox == "True":
 		exp.published_sandbox = True
 	else:
 		exp.published_mturk = True

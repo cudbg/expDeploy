@@ -82,7 +82,6 @@
             </div> <!-- close column -->
             <div class="col-md-5">
                 <!-- Form box div for each experiment -->
-               
                 {% for experiment, files in filedict.items %}
                      <div class="form-box edit-form" id="{{experiment}}-form"> 
                         <div class="tab-space">
@@ -94,31 +93,57 @@
                             <!-- Post/Delete MTurk buttons -->
                             <div class="row">
                                 
-                                    <!-- post to MTurk -->
-                                    {% publishlookup publishdict experiment as published %}
-                                    {% if published %}
-                                        <div class="col-sm-4">
+                                <!-- post to MTurk -->
+                                {% publishlookup publishdict experiment as published %}
+                                {% if published %}
+                                    <div class="col-sm-4">
                                         <form action="/api/removemturk" method="get">
-                                    {% else %}
-                                        <!-- different column sizes for different buttons -->
-                                        <div class="col-sm-3">
+                                {% else %}
+                                    <!-- different column sizes for different buttons -->
+                                    <div class="col-sm-3">
                                         <form action="/api/mturk" method="get">
+                                {% endif %}
+                                
+
+                                    <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
+                                    <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                    <input type="hidden" value="{{description}}" name="description" id = "id3" />
+                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                    <input type="hidden" value="False" name="isSandbox" id="id5"/>
+
+                                    {% if published %}
+                                        <input type="submit" class="btn btn-by" value="Remove from MTurk" />
+                                    {% else %}
+                                        <input type="submit" class="btn btn-by" value="Post to MTurk" />
                                     {% endif %}
-                                    
-
-                                        <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
-                                        <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
-                                            <!-- add isSandbox field here, same for remove button -->
-                                        <input type="hidden" value="{{description}}" name="description" id = "id3" />
-                                        <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-
-                                        {% if published %}
-                                            <input type="submit" class="btn btn-by" value="Remove from MTurk" />
-                                        {% else %}
-                                            <input type="submit" class="btn btn-by" value="Post to MTurk" />
-                                        {% endif %}
                                     </form>
-                                </div>
+                                </div> <!-- close col -->
+
+                                <!-- post to Sandbox -->
+                                {% publishlookup pub_sandbox experiment as sndbx_pub %}
+                                {% if sndbx_pub %}
+                                    <div class="col-sm-5">
+                                        <form action="/api/removemturk" method="get">
+                                {% else %}
+                                    <div class="col-sm-4 tab-space">
+                                        <form action="/api/mturk" method="get">
+                                {% endif %}
+                                
+
+                                    <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
+                                    <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                    <input type="hidden" value="{{description}}" name="description" id = "id3" />
+                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                    <input type="hidden" value="True" name="isSandbox" id="id5"/>
+
+                                    {% if published %}
+                                        <input type="submit" class="btn btn-by" value="Remove from Sandbox" />
+                                    {% else %}
+                                        <input type="submit" class="btn btn-by" value="Post to Sandbox" />
+                                    {% endif %}
+                                    </form>
+                                </div> <!-- close col -->
+
                                 <div class="col-sm-3">
 
                                     <!-- Download Data -->

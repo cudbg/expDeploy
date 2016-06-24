@@ -390,13 +390,14 @@ def ProfileGalleryView(request):
 			file_list.append(file)
 		filedict[experiment.name] = file_list
 
-	#  populate linkdict and publisheddict
 	linkdict = {} # Dictionary of experiment links
 	publishdict = {} # Dictionary of puublished values
+	pub_sandbox = {} #Dictionary of sandbox values. True if posted
 	q_linkdict = {} # Dictionary of links to qualifications pages
 	for exp in experiments_list:
 		linkdict[exp.name] ="/gpaas/experiment/"+str(username)+"/"+exp.name+"/"
 		publishdict[exp.name] = exp.published_mturk
+		pub_sandbox[exp.name] = exp.published_sandbox
 		q_linkdict[exp.name] = "/gpaas/qualification/"+\
 			str(username)+"/"+exp.name+"/"
 
@@ -426,8 +427,9 @@ def ProfileGalleryView(request):
 	return render_to_response('profilegallery.html',
 		{'username': username, 'experiments_list': experiments_list, 
 		# dictionaries
-		'filedict': filedict, 'linkdict': linkdict, 'q_linkdict':q_linkdict,
-		'publishdict': publishdict, 'formdict': formdict,
+		'filedict': filedict, 'linkdict': linkdict, 'q_linkdict': q_linkdict,
+		'publishdict': publishdict, 'pub_sandbox':pub_sandbox,
+		'formdict': formdict,
 		# Form urls:
 			# Use in template: {{url_base}}{{experiment}}{{specific}}
 		'bonus_payment_url'   : "/bonuspayment/", 
@@ -439,14 +441,7 @@ def ProfileGalleryView(request):
 		'upload_url'          : "/",
 		'config_url'		  : "/config/",
 		'url_base'            : "/gpaas/edit/"+str(username)+"/", 
-		# forms
-		'uploadform'          : UploadForm(),
-		'bonus_payment_form'  : BonusPaymentForm(),
-		'hit_description_form': HitDescriptionForm(),
-		'hit_payment_form'    : HitPaymentForm(),
-		'hit_keywords_form'   : HitKeywordsForm(), 
-		'sandbox_form'        : SandboxForm(), 
-		'tasknumber_form'     : TaskNumberForm(),},
+		},
 		context_instance = RequestContext(request)
 		)
 
