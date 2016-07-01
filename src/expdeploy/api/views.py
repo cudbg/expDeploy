@@ -22,7 +22,7 @@ import string
 import boto.mturk.connection
 from boto.mturk.qualification import Qualifications, \
 	PercentAssignmentsApprovedRequirement,\
-	PercentAssignmentsSubmittedRequirement,\
+	PercentAssignmentsSubmittedRequirement
 import datetime
 import csv
 import json
