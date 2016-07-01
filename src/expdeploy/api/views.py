@@ -59,8 +59,19 @@ def allPay(request):
 	print >>sys.stderr, 'Goodbye, cruel world!'
 	print >>sys.stderr, str(find_tasks)
 
+	completions = {}
+
 	for task in find_tasks:
-		print >>sys.stderr, (task.currentStatus=="Complete")
+		if task.assignmentId not in completions:
+			if task.currentStatus=="Complete":
+				completions[task.assignmentId] = True
+			else:
+				completions[task.assignmentId] = False
+
+		if task.currentStatus != "Complete":
+			completions[task.assignmentId] = False
+
+	print >>sys.stderr, (completions)
 
 	return HttpResponse(str(find_tasks))
 
