@@ -61,17 +61,8 @@ def allPay(request):
 
 	completions = {}
 
-	for task in find_tasks:
-		if task.assignmentId not in completions:
-			if task.currentStatus=="Complete":
-				completions[task.assignmentId] = True
-			else:
-				completions[task.assignmentId] = False
 
-		if task.currentStatus != "Complete":
-			completions[task.assignmentId] = False
-
-	print >>sys.stderr, (completions)
+	
 
 	return HttpResponse(str(find_tasks))
 
@@ -81,30 +72,44 @@ def payout(request):
 	assigned = request.GET.get('assigned', '');
 	usrId = request.GET.get('researcher', '');
 	expId = request.GET.get('exp', '');
-	wid = request.GET.get('wid', '');
 	bonus = (completed == assigned)
 
 
 	assignIds = []
 
+	completions = {}
+
 	if assignmentId == '':
 		find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
 		print('here are my tasksssss')
+
+		for task in find_tasks:
+			if task.assignmentId not in completions:
+				if task.currentStatus=="Complete":
+					completions[task.assignmentId] = True
+				else:
+					completions[task.assignmentId] = False
+
+				assignIds.append(task.assignmentId)
+			if task.currentStatus != "Complete":
+				completions[task.assignmentId] = False
+
 		print(find_tasks)
 	else:
 		assignIds.append(assignmentId)
-
-
-	print(assignIds)
+		completions[assignmentId] = bonus
 
 	for assignmentId in assignIds:
 
 		shouldBreak = False
 
 		find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
+		wid = ""
 		for t in find_tasks:
 			if t.paid == True:
 				shouldBreak = True
+
+			wid = t.workerId
 
 
 		if shouldBreak:
@@ -140,13 +145,17 @@ def payout(request):
 		PERTASK = exp.per_task_payment
 
 		p = mturk.get_price_as_price(PERTASK * float(completed))
-		if bonus:
+		if completions[assignmentId]:
 			p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
 
 		approve = mturk.approve_assignment(assignmentId)
 		
 		bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
 
+
+		print >>sys.stderr, (bon)
+		print >>sys.stderr, (assignmentId)
+		print >>sys.stderr, (wid)
 
 		for t in find_tasks:
 			t.paid = True
