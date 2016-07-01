@@ -50,7 +50,7 @@ def ban(request):
 def db_table_exists(table_name):
     return table_name in connection.introspection.table_names()
 
-def allPayout(request):
+def allPay(request):
 	usrId = request.GET.get('researcher', '');
 	expId = request.GET.get('exp', '');
 	find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
