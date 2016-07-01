@@ -59,6 +59,9 @@ def allPay(request):
 	print >>sys.stderr, 'Goodbye, cruel world!'
 	print >>sys.stderr, str(find_tasks)
 
+	for task in find_tasks:
+		print >>sys.stderr, str(task.completed)
+
 	return HttpResponse(str(find_tasks))
 
 def payout(request):
