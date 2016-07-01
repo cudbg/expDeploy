@@ -15,3 +15,4 @@ def update():
 		run('python src/manage.py makemigrations')
 		run('python src/manage.py migrate')
 		run('sudo service apache2 restart')
+
