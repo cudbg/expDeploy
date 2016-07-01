@@ -60,7 +60,7 @@ def allPay(request):
 	print >>sys.stderr, str(find_tasks)
 
 	for task in find_tasks:
-		print >>sys.stderr, str(task.completed)
+		print >>sys.stderr, (task.currentStatus=="Complete")
 
 	return HttpResponse(str(find_tasks))
 
