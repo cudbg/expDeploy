@@ -9,7 +9,7 @@ import collections;
 class WorkerTask (models.Model):
 
 
-	hitId2 = models.TextField(default="none")
+	hitId = models.TextField(default="none")
 	assignmentId = models.TextField(default="")
 	workerId = models.TextField(default="")
 	params = models.TextField(default="{}")
