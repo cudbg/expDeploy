@@ -10,6 +10,7 @@ from .models import Metadata
 from copy import copy
 from zipfile import ZIP_DEFLATED, ZipFile
 
+import sys
 from planout.ops.random import *
 from expdeploy.gpaas.models import ExperimentFile
 from expdeploy.gpaas.models import Researcher
@@ -57,7 +58,7 @@ def allPay(request):
 	
 	print >>sys.stderr, 'Goodbye, cruel world!'
 	print >>sys.stderr, str(find_tasks)
-	
+
 	return HttpResponse(str(find_tasks))
 
 def payout(request):
