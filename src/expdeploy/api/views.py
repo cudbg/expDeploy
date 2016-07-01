@@ -105,9 +105,14 @@ def payout(request):
 
 		find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
 		wid = ""
+		completed = 0
+
 		for t in find_tasks:
 			if t.paid == True:
 				shouldBreak = True
+
+			if t.currentStatus == "Complete":
+				completed+=1
 
 			wid = t.workerId
 
