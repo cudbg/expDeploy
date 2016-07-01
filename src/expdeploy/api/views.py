@@ -340,9 +340,12 @@ def mturk(request):
 
 	experiment_quals = exp.qualificationsmodel_set
 	userperson = exp.username
-	q_set = qualifications.get(username=username)
 
 	qualifications = Qualifications()
+	
+	q_set = qualifications.get(username=username)
+
+	
 	approved_req = PercentAssignmentsApprovedRequirement(comparator = "GreaterThan",
 		integer_value = q_set.percentage_hits_approved)
 	submitted_req = PercentAssignmentsSubmittedRequirement(comparator = "GreaterThan",
