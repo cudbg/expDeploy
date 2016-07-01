@@ -115,6 +115,8 @@ def payout(request):
 				completed+=1
 
 			wid = t.workerId
+			print >>sys.stderr, (t.workerId)
+			print >>sys.stderr, (wid)
 
 
 		if shouldBreak:
