@@ -54,7 +54,10 @@ def allPay(request):
 	usrId = request.GET.get('researcher', '');
 	expId = request.GET.get('exp', '');
 	find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
-	str(find_tasks)
+	
+	print >>sys.stderr, 'Goodbye, cruel world!'
+	print >>sys.stderr, str(find_tasks)
+	
 	return HttpResponse(str(find_tasks))
 
 def payout(request):
