@@ -163,6 +163,11 @@ var gpaas = (function() {
 		clearTask = options.clearTask;
 		numberTasks = options.numTasks
 
+
+
+		var sandbox =(getUrlParameter("turkSubmitTo").indexOf("sandbox")!=-1)
+
+		console.log("AM I IN SANDBOX MODE???" + sandbox)
 		var hitID = getUrlParameter("hitId")
 		var assignmentID = getUrlParameter("assignmentId")
 		wid = getUrlParameter("workerId")
