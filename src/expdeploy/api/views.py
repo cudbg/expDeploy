@@ -355,7 +355,7 @@ def mturk(request):
 	frame_height = 500 # the height of the iframe holding the external hit
 	amount = exp.bonus_payment
 	 
-	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
+	questionform = boto.mturk.question.ExternalQuestion( url + "&sandbox=" + str(isSandbox), frame_height )
 
 	#experiment_quals = exp.qualificationsmodel_set
 	userperson = exp.username
