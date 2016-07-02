@@ -7639,7 +7639,7 @@ var gpaas = (function() {
 			} else {
 
 				var xmlHttp = new XMLHttpRequest();
-				xmlHttp.open("GET", serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID, false); // false for synchronous request
+				xmlHttp.open("GET", serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID +"&isSandbox="+sandbox, false); // false for synchronous request
 				xmlHttp.send(null);
 				resp = xmlHttp.responseText.replaceAll("'", '"');
 

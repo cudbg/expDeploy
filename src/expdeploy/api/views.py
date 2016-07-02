@@ -120,6 +120,8 @@ def payout(request):
 			wid = ""
 			completed = 0
 
+			paySandbox = find_tasks[0].isSandbox
+
 			for t in find_tasks:
 				if t.paid == True:
 					shouldBreak = True
@@ -142,7 +144,7 @@ def payout(request):
 			secret_key = researcher.aws_secret_key;
 			host = 'mechanicalturk.sandbox.amazonaws.com'
 
-			if (exp.sandbox == False):
+			if (paySandbox == False):
 				host = 'mechanicalturk.amazonaws.com'
 			
 			mturk = boto.mturk.connection.MTurkConnection(
@@ -282,7 +284,7 @@ def removemturk(request):
 	secret_key = researcher.aws_secret_key;
 	host = 'mechanicalturk.sandbox.amazonaws.com'
 
-	if (exp.sandbox == False):
+	if (isSandbox == False):
 		host = 'mechanicalturk.amazonaws.com'
 	
 	mturk = boto.mturk.connection.MTurkConnection(
@@ -582,7 +584,7 @@ def task(request):
 	usrId = request.GET.get('researcher', '');
 	taskName = request.GET.get('task', '');
 	wid = request.GET.get('wid', '');
-
+	isSandbox = request.GET.get('sandbox', '');
 
 	
 	
@@ -659,7 +661,9 @@ def task(request):
 							history["events"].append(event)
 							NewTask.history = json.dumps(history)
 							#print(NewTask.history)
+							NewTask.isSandbox = isSandbox
 							NewTask.save();
+
 							#print(NewTask.experiment)
 							return_tasks.append(NewTask);
 
