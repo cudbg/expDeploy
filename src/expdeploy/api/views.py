@@ -610,7 +610,7 @@ def task(request):
 	for exp in expsBackwards:
 
 		print(exp.original_filename)
-		if (exp.original_filename == (expId + ".json")):
+		if (exp.original_filename == (exp.config_file)):
 			print("test 2");
 
 			EX = exp.experiment
