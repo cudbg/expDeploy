@@ -30,6 +30,8 @@ import json
 from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
+from random import seed
+
 from django.db import connection
 from os import system
 import os, tempfile, zipfile
@@ -638,7 +640,7 @@ def task(request):
 								#param[p["name"]] = random.choice(p["options"])
 
 						param = gen[0]
-
+						seed(abs(hash(wid)) % (10 ** 8))
 						shuffle(gen)
 
 						for i in range(0,n):
