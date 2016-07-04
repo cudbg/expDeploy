@@ -7420,6 +7420,8 @@ var gpaas = (function() {
 	var perTaskPay = 0
 	var bonusPay = 0
 
+	var success = true
+
 	/*
 	CONFIG
 	*/
@@ -7595,8 +7597,9 @@ var gpaas = (function() {
 			}
 
 			if ("" + wid == "undefined") {
-				alert("You must accept the HIT in order to start!!!")
-				throw new Error("HIT not started");
+				//alert("You must accept the HIT in order to start!!!")
+				success = false
+				throw new Error("You must accept the HIT in order to start");
 				return
 			}
 
@@ -7715,7 +7718,7 @@ var gpaas = (function() {
 	return {
 		startExperiment: function(setup) {
 			setupExperiment(setup({ logData: logData }))
-			return { run: nextTask }
+			return { run: nextTask , setupSuccessful: success}
 		},
 		logData: logData,
 		nextTask: nextTask,
