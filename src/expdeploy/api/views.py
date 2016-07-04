@@ -462,7 +462,7 @@ def log(request):
 
 		print(metaData)
 
-		d["data"].append(body["data"]);
+		d["data"] = (body["data"]);
 
 		task.results = json.dumps(d);
 
