@@ -66,38 +66,11 @@ var gpaas = (function() {
 
 	tasks = [];
 
+
+	var dataToSend = []
+
 	var logData = function(d) {
-		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
-		xmlhttp.open("POST", serverurl + "/api/log/");
-		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-
-		m = {
-			"userAgent": navigator.userAgent,
-			"dimension": "" + window.outerWidth + "x" + window.outerHeight,
-			"taskStart": taskStart,
-			"taskFinish": Math.round(new Date().getTime() / 1000)
-
-		}
-
-		d.metaData = m
-
-		var postData = {
-			data: d,
-			worker_id: wid,
-			experiment_name: n,
-			researcher_id: researcher,
-			task_name: task,
-			task_id: currentId
-		}
-
-		try {
-
-			console.log(JSON.stringify(postData));
-			xmlhttp.send(JSON.stringify(postData));
-		} catch (e) {
-			catchError(e)
-		}
+		dataToSend.push(d)
 	}
 
 
@@ -119,6 +92,47 @@ var gpaas = (function() {
 	}
 
 	var nextTask = function() {
+
+		
+		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
+		xmlhttp.open("POST", serverurl + "/api/log/");
+		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+
+		m = {
+			"userAgent": navigator.userAgent,
+			"dimension": "" + window.outerWidth + "x" + window.outerHeight,
+			"taskStart": taskStart,
+			"taskFinish": Math.round(new Date().getTime() / 1000)
+
+		}
+
+		d.metaData = m
+
+		var postData = {
+			data: dataToSend,
+			worker_id: wid,
+			experiment_name: n,
+			researcher_id: researcher,
+			task_name: task,
+			task_id: currentId
+		}
+
+		try {
+
+			console.log(JSON.stringify(postData));
+			xmlhttp.send(JSON.stringify(postData));
+		} catch (e) {
+			catchError(e)
+		}
+
+
+
+
+
+
+
+
 
 		try {
 			clearTask();
