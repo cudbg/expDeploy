@@ -7512,7 +7512,9 @@ var gpaas = (function() {
 				type: "POST",
 				url: serverurl + "/api/log/",
 				data: postData,
-				success: success
+				success: success,
+				dataType: "json",
+        		 contentType: "application/json"
 			});
 
 
