@@ -7558,6 +7558,9 @@ var gpaas = (function() {
 
 					if (xmlhttp.responseText == "success") {
 
+
+						dataToSend = []
+
 						localNextTask()
 
 					}
@@ -7575,7 +7578,7 @@ var gpaas = (function() {
 		};
 
 
-//hamedn: I tried using ajax but got a key error/it wouldn't load the JSON data
+		//hamedn: I tried using ajax but got a key error/it wouldn't load the JSON data
 
 		// $.ajax({
 		// 		type: "POST",
