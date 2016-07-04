@@ -7561,20 +7561,27 @@ var gpaas = (function() {
 						localNextTask()
 
 					}
+					else {
+						catchError(new Error("Server error when logging data"))
+					}
 				}
+				else {
+					catchError(new Error("Server error when logging data"))
+				}
+			}
+			else {
+				catchError(new Error("Server error when logging data"))
 			}
 		};
 
 
 		
-			try {
+			console.log(JSON.stringify(postData));
+			xmlhttp.send(JSON.stringify(postData));
+	
 
-				console.log(JSON.stringify(postData));
-				xmlhttp.send(JSON.stringify(postData));
-			} catch (e) {
-				catchError(e)
-			}
-		} else {
+		} 
+		else {
 			localNextTask()
 		}
 
