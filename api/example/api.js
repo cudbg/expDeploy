@@ -7489,15 +7489,6 @@ var gpaas = (function() {
 
 		xmlhttp.responseType = 'text';
 
-		m = {
-			"userAgent": navigator.userAgent,
-			"dimension": "" + window.outerWidth + "x" + window.outerHeight,
-			"taskStart": taskStart,
-			"taskFinish": Math.round(new Date().getTime() / 1000)
-
-		}
-
-		d.metaData = m
 
 		var postData = {
 			data: dataToSend,
@@ -7505,7 +7496,14 @@ var gpaas = (function() {
 			experiment_name: n,
 			researcher_id: researcher,
 			task_name: task,
-			task_id: currentId
+			task_id: currentId,
+			metaData: {
+				"userAgent": navigator.userAgent,
+				"dimension": "" + window.outerWidth + "x" + window.outerHeight,
+				"taskStart": taskStart,
+				"taskFinish": Math.round(new Date().getTime() / 1000)
+
+			}
 		}
 
 
@@ -7515,7 +7513,7 @@ var gpaas = (function() {
 		xmlhttp.onload = function() {
 			if (xmlhttp.readyState === xmlhttp.DONE) {
 				if (xmlhttp.status === 200) {
-					
+
 					if (xmlhttp.responseText == "success") {
 
 
