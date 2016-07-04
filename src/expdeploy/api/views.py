@@ -426,6 +426,9 @@ def result(request):
 
 def log(request):
 	if request.method == 'POST':
+
+		print >>sys.stderr, request
+
 		body_unicode = request.body.decode('utf-8')
 		body = json.loads(body_unicode)
 		#print(body["task_id"]);
