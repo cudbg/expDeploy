@@ -94,6 +94,44 @@ var gpaas = (function() {
 	var nextTask = function() {
 
 
+
+		var localNextTask = function() {
+
+
+
+
+			try {
+				clearTask();
+
+				taskStart = Math.round(new Date().getTime() / 1000)
+
+
+				if (tasks.length == 0) {
+
+					earned += bonusPay
+					console.log("No tasks left")
+
+					if (completed > 0) {
+						finish({ submit: submit, tasksCompleted: completed, moneyEarned: earned })
+					}
+
+					return;
+				}
+
+				entry = tasks[0];
+				currentId = tasks[0]["identifier"];
+				earned = completed * perTaskPay
+				viewTask({ params: entry, logData: logData, nextTask: nextTask, tasksCompleted: completed, moneyEarned: earned })
+				tasks.shift();
+				completed++
+
+			} catch (e) {
+				catchError(e)
+			}
+
+		}
+
+
 		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
 		xmlhttp.open("POST", serverurl + "/api/log/");
 		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -127,46 +165,7 @@ var gpaas = (function() {
 
 					if (xmlhttp.responseText == "success") {
 
-
-
-
-
-
-						try {
-							clearTask();
-
-							taskStart = Math.round(new Date().getTime() / 1000)
-
-
-							if (tasks.length == 0) {
-
-								earned += bonusPay
-								console.log("No tasks left")
-
-								if (completed > 0) {
-									finish({ submit: submit, tasksCompleted: completed, moneyEarned: earned })
-								}
-
-								return;
-							}
-
-							entry = tasks[0];
-							currentId = tasks[0]["identifier"];
-							earned = completed * perTaskPay
-							viewTask({ params: entry, logData: logData, nextTask: nextTask, tasksCompleted: completed, moneyEarned: earned })
-							tasks.shift();
-							completed++
-
-						} catch (e) {
-							catchError(e)
-						}
-
-
-
-
-
-
-
+						localNextTask()
 
 					}
 				}
@@ -174,13 +173,16 @@ var gpaas = (function() {
 		};
 
 
+		if (currentId != "") {
+			try {
 
-		try {
-
-			console.log(JSON.stringify(postData));
-			xmlhttp.send(JSON.stringify(postData));
-		} catch (e) {
-			catchError(e)
+				console.log(JSON.stringify(postData));
+				xmlhttp.send(JSON.stringify(postData));
+			} catch (e) {
+				catchError(e)
+			}
+		} else {
+			localNextTask()
 		}
 
 
