@@ -7521,6 +7521,10 @@ var gpaas = (function() {
 		}
 
 
+		if (currentId != "") {
+
+			console.log(".......THIS IS THE ID DJKDHKSJHDKJDH SKJDHSJKDH SJKDH D" + currentId)
+
 		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
 		xmlhttp.open("POST", serverurl + "/api/log/");
 		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -7562,7 +7566,7 @@ var gpaas = (function() {
 		};
 
 
-		if (currentId != "") {
+		
 			try {
 
 				console.log(JSON.stringify(postData));
