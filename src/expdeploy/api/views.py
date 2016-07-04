@@ -430,9 +430,8 @@ def log(request):
 		print >>sys.stderr, request
 		print >>sys.stderr, request.body
 		print >>sys.stderr, 'ajhdkjahdkjadhajksdhasjkdhkjad'
-		
-		body_unicode = request.body.decode('utf-8')
-		body = json.loads(body_unicode)
+
+		body = request.body
 		#print(body["task_id"]);
 
 		#TODO: Filter by experiment name
