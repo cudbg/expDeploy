@@ -134,13 +134,13 @@ var gpaas = (function() {
 
 		if (currentId != "") {
 
-			console.log(".......THIS IS THE ID DJKDHKSJHDKJDH SKJDHSJKDH SJKDH D" + currentId)
+			//console.log(".......THIS IS THE ID DJKDHKSJHDKJDH SKJDHSJKDH SJKDH D" + currentId)
 
-		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
-		xmlhttp.open("POST", serverurl + "/api/log/");
-		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		// var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
+		// xmlhttp.open("POST", serverurl + "/api/log/");
+		// xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-		xmlhttp.responseType = 'text';
+		// xmlhttp.responseType = 'text';
 
 
 		var postData = {
@@ -163,32 +163,47 @@ var gpaas = (function() {
 
 
 
-		xmlhttp.onload = function() {
-			if (xmlhttp.readyState === xmlhttp.DONE) {
-				if (xmlhttp.status === 200) {
+		// xmlhttp.onload = function() {
+		// 	if (xmlhttp.readyState === xmlhttp.DONE) {
+		// 		if (xmlhttp.status === 200) {
 
-					if (xmlhttp.responseText == "success") {
+		// 			if (xmlhttp.responseText == "success") {
 
-						localNextTask()
+		// 				localNextTask()
 
-					}
-					else {
-						catchError(new Error("Server error when logging data"))
-					}
-				}
-				else {
+		// 			}
+		// 			else {
+		// 				catchError(new Error("Server error when logging data"))
+		// 			}
+		// 		}
+		// 		else {
+		// 			catchError(new Error("Server error when logging data"))
+		// 		}
+		// 	}
+		// 	else {
+				
+		// 	}
+		// };
+
+
+
+		$.ajax({
+				type: "POST",
+				url: serverurl + "/api/log/",
+				data: postData,
+				success: function (data, status, jqXHR) {
+					localNextTask()
+				},
+				error: function (jqXHR, status, err) {
 					catchError(new Error("Server error when logging data"))
-				}
-			}
-			else {
-				catchError(new Error("Server error when logging data"))
-			}
-		};
-
+				},
+				dataType: "json",
+        		contentType: "application/json"
+		});
 
 		
-			console.log(JSON.stringify(postData));
-			xmlhttp.send(JSON.stringify(postData));
+			//console.log(JSON.stringify(postData));
+			//xmlhttp.send(JSON.stringify(postData));
 	
 
 		} 
