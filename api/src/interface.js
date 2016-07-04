@@ -185,10 +185,34 @@ var gpaas = (function() {
 				researcher = options.researcher;
 			}
 
-			viewTask = options.viewTask;
-			finish = options.finish;
-			clearTask = options.clearTask;
 			numberTasks = options.numTasks
+
+			options.clearTask.bind(options)
+			if (options.clearTask != null) {
+				clearTask = options.clearTask
+			}
+			else {
+				throw new Error("No clearTask method provided by researcher")
+			}
+
+			options.viewTask.bind(options)
+			if (options.viewTask != null) {
+				viewTask = options.viewTask
+			}
+			else {
+				throw new Error("No viewTask method provided by researcher")
+			}
+
+			options.finish.bind(options)
+			if (options.finish != null) {
+				finish = options.finish
+			}
+			else {
+				throw new Error("No finish method provided by researcher")
+			}
+
+
+
 
 
 			var sandboxParam = getUrlParameter("turkSubmitTo")
@@ -230,7 +254,9 @@ var gpaas = (function() {
 			});
 
 			if (failed) {
-				options.failQualification()
+				if (options.failQualification != null) {
+					options.failQualification()
+				}
 			}
 
 			if (failed == false) {
@@ -333,7 +359,8 @@ var gpaas = (function() {
 		},
 		logData: logData,
 		nextTask: nextTask,
-		cancelTasks: endTasks
+		cancelTasks: endTasks,
+		errorAction: catchError
 	}
 
 
