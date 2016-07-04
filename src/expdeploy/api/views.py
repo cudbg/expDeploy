@@ -431,7 +431,7 @@ def log(request):
 		print >>sys.stderr, request.body
 		print >>sys.stderr, 'ajhdkjahdkjadhajksdhasjkdhkjad'
 
-		body = request.POST
+		body = request.POST.dict()
 		#print(body["task_id"]);
 
 		#TODO: Filter by experiment name
