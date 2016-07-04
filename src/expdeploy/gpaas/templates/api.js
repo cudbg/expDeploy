@@ -7483,10 +7483,11 @@ var gpaas = (function() {
 	var nextTask = function() {
 
 
+		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
+		xmlhttp.open("POST", serverurl + "/api/log/");
+		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-		success = function() {
-			console.log("successfully posted dat")
-		}
+		xmlhttp.responseType = 'text';
 
 		m = {
 			"userAgent": navigator.userAgent,
@@ -7496,72 +7497,92 @@ var gpaas = (function() {
 
 		}
 
+		d.metaData = m
+
 		var postData = {
 			data: dataToSend,
 			worker_id: wid,
 			experiment_name: n,
 			researcher_id: researcher,
 			task_name: task,
-			task_id: currentId,
-			metaData: m
-		}
-
-		try {
-
-			$.ajax({
-				type: "POST",
-				url: serverurl + "/api/log/",
-				data: postData,
-				success: success,
-				dataType: "json",
-        		 contentType: "application/json"
-			});
-
-
-
-
-		} catch (e) {
-			catchError(e)
+			task_id: currentId
 		}
 
 
 
 
 
+		xmlhttp.onload = function() {
+			if (xmlhttp.readyState === xmlhttp.DONE) {
+				if (xmlhttp.status === 200) {
+					
+					if (xmlhttp.responseText == "success") {
 
 
 
 
 
 
-		try {
-			clearTask();
+						try {
+							clearTask();
 
-			taskStart = Math.round(new Date().getTime() / 1000)
+							taskStart = Math.round(new Date().getTime() / 1000)
 
 
-			if (tasks.length == 0) {
+							if (tasks.length == 0) {
 
-				earned += bonusPay
-				console.log("No tasks left")
+								earned += bonusPay
+								console.log("No tasks left")
 
-				if (completed > 0) {
-					finish({ submit: submit, tasksCompleted: completed, moneyEarned: earned })
+								if (completed > 0) {
+									finish({ submit: submit, tasksCompleted: completed, moneyEarned: earned })
+								}
+
+								return;
+							}
+
+							entry = tasks[0];
+							currentId = tasks[0]["identifier"];
+							earned = completed * perTaskPay
+							viewTask({ params: entry, logData: logData, nextTask: nextTask, tasksCompleted: completed, moneyEarned: earned })
+							tasks.shift();
+							completed++
+
+						} catch (e) {
+							catchError(e)
+						}
+
+
+
+
+
+
+
+
+					}
 				}
-
-				return;
 			}
+		};
 
-			entry = tasks[0];
-			currentId = tasks[0]["identifier"];
-			earned = completed * perTaskPay
-			viewTask({ params: entry, logData: logData, nextTask: nextTask, tasksCompleted: completed, moneyEarned: earned })
-			tasks.shift();
-			completed++
 
+
+		try {
+
+			console.log(JSON.stringify(postData));
+			xmlhttp.send(JSON.stringify(postData));
 		} catch (e) {
 			catchError(e)
 		}
+
+
+
+
+
+
+
+
+
+
 	}
 
 

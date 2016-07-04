@@ -426,12 +426,8 @@ def result(request):
 
 def log(request):
 	if request.method == 'POST':
-
-		print >>sys.stderr, request
-		print >>sys.stderr, request.body
-		print >>sys.stderr, 'ajhdkjahdkjadhajksdhasjkdhkjad'
-
-		body = request.POST.dict()
+		body_unicode = request.body.decode('utf-8')
+		body = json.loads(body_unicode)
 		#print(body["task_id"]);
 
 		#TODO: Filter by experiment name
