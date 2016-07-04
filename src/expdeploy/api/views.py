@@ -448,7 +448,7 @@ def log(request):
 
 		d = json.loads(task.results)
 
-		metaData = body["data"]["metaData"]
+		metaData = body["metaData"]
 
 
 
