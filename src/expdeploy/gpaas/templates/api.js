@@ -7596,6 +7596,7 @@ var gpaas = (function() {
 
 			if ("" + wid == "undefined") {
 				alert("You must accept the HIT in order to start!!!")
+				throw new Error("HIT not started");
 				return
 			}
 
