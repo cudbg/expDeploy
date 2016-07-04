@@ -435,6 +435,12 @@ def log(request):
 		find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
 		print(find_tasks);
 
+
+		print >>sys.stderr, body["worker_id"]
+		print >>sys.stderr, body["task_name"]
+		print >>sys.stderr, body["task_id"]
+
+
 		task = find_tasks[0]
 
 		if (task.results == "null"):
