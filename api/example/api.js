@@ -7576,24 +7576,27 @@ var gpaas = (function() {
 
 			numberTasks = options.numTasks
 
-			options.clearTask.bind(options)
+			
 			if (options.clearTask != null) {
+				options.clearTask.bind(options)
 				clearTask = options.clearTask
 			}
 			else {
 				throw new Error("No clearTask method provided by researcher")
 			}
 
-			options.viewTask.bind(options)
+			
 			if (options.viewTask != null) {
+				options.viewTask.bind(options)
 				viewTask = options.viewTask
 			}
 			else {
 				throw new Error("No viewTask method provided by researcher")
 			}
 
-			options.finish.bind(options)
+			
 			if (options.finish != null) {
+				options.finish.bind(options)
 				finish = options.finish
 			}
 			else {
