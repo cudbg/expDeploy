@@ -176,11 +176,24 @@ var gpaas = (function() {
 			n = "{{experiment}}"
 			researcher = "{{username}}"
 
-			task = options.task;
+			if (options.task != null) {
+				task = options.task;
+			}
+			else {
+				throw new Error("No task parameter provided by researcher")
+			}
 
 
 
 			if (n.includes("{{experiment}")) {
+
+				if (options.name == null) {
+					throw new Error("No name parameter provided by researcher")
+				}
+				if (options.researcher == null) {
+					throw new Error("No researcher parameter provided by researcher")
+				}
+
 				n = options.name;
 				researcher = options.researcher;
 			}
@@ -243,34 +256,43 @@ var gpaas = (function() {
 
 			failed = false
 
-			options.qualificationTasks.forEach(function(entry) {
+			if (options.qualificationTasks != null) {
+				options.qualificationTasks.forEach(function(entry) {
 
-				e = entry()
+					e = entry()
 
-				if (e == false) {
-					console.log("THIS IS WHERE I FAILED")
-						//console.log(entry)
-					console.log("BLEH")
-					failed = true
-				}
+					if (e == false) {
+						console.log("THIS IS WHERE I FAILED")
+							//console.log(entry)
+						console.log("BLEH")
+						failed = true
+					}
 
-			});
+				});
+
+			}
 
 			if (failed) {
 				if (options.failQualification != null) {
 					options.failQualification()
 				}
+				else {
+					throw new Error("failQualification method not provided by researcher")
+				}
 			}
 
 			if (failed == false) {
 
-				options.trainingTasks.forEach(function(entry) {
-					console.log(entry());
-					if (entry == false) {
-						return
-					}
+				if (options.trainingTasks != null) {
 
-				});
+					options.trainingTasks.forEach(function(entry) {
+						console.log(entry());
+						if (entry == false) {
+							return
+						}
+
+					});
+				}
 
 
 				if (local) {
