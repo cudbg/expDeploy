@@ -93,11 +93,11 @@ var gpaas = (function() {
 
 	var nextTask = function() {
 
-		
-		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
-		xmlhttp.open("POST", serverurl + "/api/log/");
-		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
+
+		success = function() {
+			console.log("successfully posted dat")
+		}
 
 		m = {
 			"userAgent": navigator.userAgent,
@@ -107,24 +107,34 @@ var gpaas = (function() {
 
 		}
 
-		d.metaData = m
-
 		var postData = {
 			data: dataToSend,
 			worker_id: wid,
 			experiment_name: n,
 			researcher_id: researcher,
 			task_name: task,
-			task_id: currentId
+			task_id: currentId,
+			metaData: m
 		}
 
 		try {
 
-			console.log(JSON.stringify(postData));
-			xmlhttp.send(JSON.stringify(postData));
+			$.ajax({
+				type: "POST",
+				url: serverurl + "/api/log/",
+				data: postData,
+				success: success,
+				dataType: 'text'
+			});
+
+
+
+
 		} catch (e) {
 			catchError(e)
 		}
+
+
 
 
 
@@ -192,8 +202,7 @@ var gpaas = (function() {
 
 			if (options.task != null) {
 				task = options.task;
-			}
-			else {
+			} else {
 				throw new Error("No task parameter provided by researcher")
 			}
 
@@ -214,30 +223,27 @@ var gpaas = (function() {
 
 			numberTasks = options.numTasks
 
-			
+
 			if (options.clearTask != null) {
 				options.clearTask.bind(options)
 				clearTask = options.clearTask
-			}
-			else {
+			} else {
 				throw new Error("No clearTask method provided by researcher")
 			}
 
-			
+
 			if (options.viewTask != null) {
 				options.viewTask.bind(options)
 				viewTask = options.viewTask
-			}
-			else {
+			} else {
 				throw new Error("No viewTask method provided by researcher")
 			}
 
-			
+
 			if (options.finish != null) {
 				options.finish.bind(options)
 				finish = options.finish
-			}
-			else {
+			} else {
 				throw new Error("No finish method provided by researcher")
 			}
 
@@ -289,8 +295,7 @@ var gpaas = (function() {
 			if (failed) {
 				if (options.failQualification != null) {
 					options.failQualification()
-				}
-				else {
+				} else {
 					throw new Error("failQualification method not provided by researcher")
 				}
 			}
@@ -394,7 +399,7 @@ var gpaas = (function() {
 	return {
 		startExperiment: function(setup) {
 			setupExperiment(setup({ logData: logData }))
-			return { run: nextTask , setupSuccessful: success}
+			return { run: nextTask, setupSuccessful: success }
 		},
 		logData: logData,
 		nextTask: nextTask,

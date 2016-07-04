@@ -475,7 +475,7 @@ def log(request):
 
 		#find_tasks = WorkerTask.objects.filter(name=body["task_name"], wid=body["worker_id"], experiment=body["experiment_name"]);
 
-		return HttpResponse(str(d));
+		return HttpResponse("success");
 
 	# 	n = body["experiment_name"];
 	# 	researchID = body["researcher_id"];
