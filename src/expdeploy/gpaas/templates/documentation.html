@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title> Welcome</title>
+    <title>Documentation</title>
     {% load staticfiles %}
     <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
     <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
@@ -9,11 +9,11 @@
 </head>
 
 <body>
-    <div id="page-header" style="height:140px;">
+    <div id="page-header" style="height:160px;">
 		<div class="gpaas-logo">
-			GPaaS
+			<img src="{% static 'images/logo.png' %}" class="top-buffer" style="width:425px;height:133px;"/>
 			<div id="logout-button">
-		        <form action="/gpaas/login/" method="GET" enctype="multipart/form-data">
+		        <form action="/gpaas/login/" method="GET" class="top-buffer" enctype="multipart/form-data">
 		            <p><input type="submit" class="btn btn-default" value ="Login"></p>
 		        </form>
 	        </div> <!-- logout button -->
@@ -146,11 +146,13 @@
 			<div id="api-advanced">
 				<h4><strong>Advanced API Usage</strong></h4>
 				<p><strong>gpaas.cancelTasks()</strong> – This should be called if the user is done doing tasks. This marks all assigned tasks with the status “Stopped,” and gives the researcher the option to pay the worker for the tasks that they did complete.</p>
-				<p class="bottom-buffer-large"><strong>gpaas.errorAction(e)</strong> – This method should be overwritten to accept an error. Any time an error is caught by the API this method is called. By default, an alert is created with the error message. </p>
+				<p><strong>gpaas.errorAction(e)</strong> – This method should be overwritten to accept an error. Any time an error is caught by the API this method is called. By default, an alert is created with the error message. </p>
 			</div>
 		</div>
     </div>
-
+    <div class="centered bottom-buffer tab-space-triple">
+    	<p><img src="{% static 'images/rocket.png' %}" style="width:206px;height:133px;"/></p>
+    </div>
 </body>
 
 </html>

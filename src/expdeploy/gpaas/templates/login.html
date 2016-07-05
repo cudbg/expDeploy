@@ -30,7 +30,7 @@
         </div>
     </div>
     
-    <div class ="form-box">
+    <div class ="form-box-login centered">
         {% if mismatch %}
             <p> The username and password provided do not match an existing account </p>
         {% endif %}
@@ -46,16 +46,15 @@
 
                 <p><input type="submit" class="btn btn-by" value="Login"/></p>
         </form>
+        <div class="top-buffer">
+            <a href="/gpaas/createuser/">
+                Don't have an account? Create one here.
+            </a>
+        </div>
     </div>
 
-    <div class="tab-space top-buffer">
-    <a href="/gpaas/createuser/">
-        Don't have an account? Create one here.
-    </a>
+    <div class="centered bottom-buffer tab-space-triple">
+        <p><img src="{% static 'images/rocket.png' %}" style="width:206px;height:133px;"/></p>
     </div>
-
-
-
 </body>
-
 </html>

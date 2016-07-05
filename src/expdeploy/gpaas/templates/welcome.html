@@ -13,11 +13,11 @@
 </head>
 
 <body>
-    <div id="page-header" style="height:140px;">
+    <div id="page-header" style="height:160px;">
 		<div class="gpaas-logo">
-			GPaaS
+			<img src="{% static 'images/logo.png' %}" class="tab-space-triple top-buffer" style="width:425px;height:133px;"/>
 			<div id="logout-button">
-		        <form action="/gpaas/login/" method="GET" enctype="multipart/form-data">
+		        <form action="/gpaas/login/" method="GET" class="top-buffer" enctype="multipart/form-data">
 		            <p><input type="submit" class="btn btn-default" value ="Login"></p>
 		        </form>
 	        </div> <!-- logout button -->
@@ -54,9 +54,5 @@
 			<p><input type="submit" class="btn-lg btn-by" value ="Get Started"></p>
         </form>
     </div>
-
-
-
 </body>
-
 </html>
