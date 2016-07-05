@@ -1,0 +1,156 @@
+<html>
+<head>
+    <title> Welcome</title>
+    {% load staticfiles %}
+    <link href="{% static 'bootstrap/css/bootstrap-augmented.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="{% static 'jquery.min.js' %}"></script>
+
+</head>
+
+<body>
+    <div id="page-header" style="height:140px;">
+		<div class="gpaas-logo">
+			GPaaS
+			<div id="logout-button">
+		        <form action="/gpaas/login/" method="GET" enctype="multipart/form-data">
+		            <p><input type="submit" class="btn btn-default" value ="Login"></p>
+		        </form>
+	        </div> <!-- logout button -->
+		</div>
+    </div>
+
+    <div id="bullet-list" class="column-text">
+    	<h2> GPaaS Documentation </h2>
+    	<ul>
+    		<li><a href="#introduction">Introduction</a></li>
+   				<ul>
+    				<li> <a href="#about">About GPaaS</a></li>
+    			</ul>
+    		<li><a href="#create-account">Creating an Account</a></li>
+    			<ul>
+    				<li> <a href="#AWS-account">AWS account</a></li>
+    				<li> <a href="#GPaaS-account">GPaaS account</a></li>
+    			</ul>
+
+    		<li><a href="#create-experiment">Creating an experiment</a></li>
+    			<ul>
+    				<li> <a href="#new-experiment">Create a new experiment</a></li>
+    				<li> <a href="#design-experiment">Core Experiment Components</a></li>
+    				<li> <a href="#deploy-experiment">Deploying an experiment</a></li>
+    			</ul>
+
+    		<li><a href="#api">GPaaS API</a></li>
+    			<ul>
+    				<li> <a href="#api-basic">Basic API usage</a></li>
+    				<li> <a href="#api-advanced">Advanced API usage</a></li>
+    			</ul>
+   			
+    	</ul>
+    </div>
+    <div class="column-text">
+    	<hr>
+
+    	<h3 id="introduction""> Introduction </h3>
+		<div class="tab-space">
+			<div id ="about">
+	    		GPaaS is a service created to help you deploy perceptual experiments faster. 
+	    		We use the <a href="boto3.readthedocs.io">boto api</a> to deploy your experiments to Amazon's MTurk.
+	    		You provide the experiment parameters and design, and leave the rest to us.
+	    		<p class="top-buffer">You can read more about GPaaS <a href="gpaas.xyz/gpaas/welcome/"> here</a>.</p>
+	    	</div>
+		</div>
+    	<hr>
+
+    	<h3 id="create-account">Create Account</h3>
+		<div class="tab-space">
+			<div id="AWS-account">
+    			In order to deploy your experiments to Amazon's MTurk, you must have an AWS account.
+	    		You can create one by following the steps 
+	    		<a href="http://docs.aws.amazon.com/lambda/latest/dg/setting-up.html">here</a>
+	    	</div>
+	    	<div id="GPaaS-account">
+	    		<p class="top-buffer">Then you can create an account with GPaaS. In order to do so you will 
+	    		need the AWS Key ID and Secret Key associated with your AWS account. If you do not have them
+	    		already, you can generate a set of access keys by following the instructions provided <a href="http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html">here</a>.</p> 
+	    		<form action="/gpaas/createuser/" method="get" enctype="multipart/form-data">
+					<p><input type="submit" class="btn-xs btn-by tab-space" value ="Create Account"></p>
+		        </form>
+		    </div>
+    	</div>
+    	<hr>
+
+	    <h3 id="create-experiment"> Create an Experiment </h3>
+    	<div class="tab-space">
+    		<div id="new-experiment">
+    			Once you have created a new account you will be redirected to the profile associated with your GPaaS user.
+    			On this page you will see a "Create New Experiment" button. Alternatively, if you are currently logged in, you can click the one below:
+    			<form action="/gpaas/createexperiment/" method="get" enctype="multipart/form-data">
+					<p><input type="submit" class="btn-xs btn-by top-buffer tab-space" value ="Create New Experiment"></p>
+		        </form>
+    			The page you will be brought to looks like this:
+    			<p><img src="{% static 'images/createexp.png' %}"  class="img-thumbnail tab-space top-buffer shadow" alt="Create Experiment"/></p>
+    			<ul>
+	    			<li>Experiment: This is the name of the experiment that will also show up when you post the HIT to MTurk.</li>
+					<li>HIT Description, Keywords, Number of Assignments: There are all parameters that are used to post the task to MTurk. Keywords are single words separated by a comma and a space. </li>
+					<li>Payment Options: Per task payment is the amount awarded to the worker for each task that they complete (each assignment can have a variable number of tasks), and bonus payment is only awarded if they complete all tasks that they are assigned. The “reward price” on MTurk is also set to the bonus payment variable.</li>
+					<li> You will upload the files associated with your experiment in it's associated "edit" section on your profile once the experiment is created </li>
+				</ul>
+
+			<div id="design-experiment">
+				<div class="top-buffer">
+					<h4><strong> Core Experiment Components </strong></h4>
+					Any GPaaS experiment will have three basic required files uploaded. 
+					<ol>
+						<li> <strong>config.json file</strong>. By default the file must be named “config.json” but this can be adjusted in the experiment settings. The config.json contains configuration information for the experiment, the most important being the parameters that are chosen from for each task. Below is an example of a valid config.json file:
+						Note that the “tasks” property is an array of objects, each that contains a “name” and “params” property. “params” is an array of objects that represent each parameter, with type following the naming schema used by Planout.
+						<p><img src="{% static 'images/parameters.png' %}"  class="img-thumbnail tab-space top-buffer shadow" alt="Create Experiment"/></p>
+						</li>
+						<li><strong>index.html</strong> is the page that is shown when the task is viewed. It is expected that your page will embed two javascript scripts “api.js” and “experiment.js” which are in the same folder. When tested on the server, a production version api.js is loaded directly from the server and does not have to be uploaded. </li>
+						<li><strong>experiment.js</strong> is the main script that implements our API. See the Basic API Usage section</li>
+					</ol>
+				</div>
+			</div>
+
+			<div id="deploy-experiment">
+				<h4><strong>Deploy Experiment</strong></h4>
+				Once you've created your experiment you can deploy it to MTurk with the click of a button.
+				However, before you post your experiment to MTurk, we recommend you deploy to MTurk's sandbox to make sure the HIT is functioning properly.
+			</div>
+		</div>
+		<hr>
+
+		<h3 id="api">GPaaS API</h3>
+		<div class="tab-space">
+			<div id="api-basic">
+				<h4><strong>Basic API Usage</strong></h4>
+
+				<strong>gpaas.startExperiment(setupFunction)</strong>
+				<p>To start an experiment, you must call gpaas.startExperiment, which accepts a function setupFunction(opt), the only parameter for which is passed an object which in future versions will contain useful API methods. gpaas.startExperiment() returns an object with two properties—“setupSuccessful” (a Boolean) and “run” which is a method that must be called to start the experiment.</p>
+				<p>setupFunction must return an object with all of the setup information required by the API. </p>
+				<p><i><strong>Local Testing Properties:</strong></i></p>
+				<p>name – the name of the experiment, same as specified when creating the experiment</p>
+				<p>researcher – the researcher’s username on GPaaS</p>
+				<p>params – an object containing a single property “params,” which is an array of parameters modeled after those for the tasks in config.json. This is used to simulate parameter assignment when testing locally</p>
+				<p><i><strong>Standard Properties:</strong></i></p>
+				<p>viewTask(opt) – This is the method called at the start of each task. opt is passed an object with several properties: “params” is an object with properties named after each of the parameters specified in the task’s parameters array from config.json. Additionally, “moneyEarned” and “tasksCompleted” is the total money earned and tasks completed by the worker thus far. </p>
+				<p>clearTask(opt) – This is the method that the API calls in between tasks, which should clear out the front-end from the previous task and prepare for viewTask to be called.</p>
+				<p>finish(opt) – This is the method that the API calls when all tasks assigned have been completed. The user should be notified that all tasks have been completed, at which point opts.submit() should be called.<p>
+				<p><i><strong>Optional Properties</strong></i></p>
+				<p>qualificationTasks – An array of functions, each one returning a Boolean true/false depending on if the qualification has been successfully completed. If the worker fails a qualification, their worker ID is blacklisted from completing further tasks. </p>
+				<p>failQualification – The method that is called if a qualification is failed, which should notify the user that a qualification has been failed</p>
+				<p>trainingTasks – An array of methods to be called, each of which should display a training task for the user</p>
+				<p><strong>gpaas.logData(logObject)</strong> – When information needs to be logged to the server, it should be passed in as an object to this method. It is stored locally and submitted to the server when gpaas.nextTask() is called. </p>
+				<p><strong>gpaas.nextTask()</strong> – Called when a task is completed, the data has been logged, and the API should display the next task. If there are no tasks, finish() is called.</p>
+			</div>
+			<div id="api-advanced">
+				<h4><strong>Advanced API Usage</strong></h4>
+				<p><strong>gpaas.cancelTasks()</strong> – This should be called if the user is done doing tasks. This marks all assigned tasks with the status “Stopped,” and gives the researcher the option to pay the worker for the tasks that they did complete.</p>
+				<p class="bottom-buffer-large"><strong>gpaas.errorAction(e)</strong> – This method should be overwritten to accept an error. Any time an error is caught by the API this method is called. By default, an alert is created with the error message. </p>
+			</div>
+		</div>
+    </div>
+
+</body>
+
+</html>
