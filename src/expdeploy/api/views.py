@@ -24,6 +24,7 @@ import boto.mturk.connection
 from boto.mturk.qualification import Qualifications, \
 	PercentAssignmentsApprovedRequirement,\
 	PercentAssignmentsSubmittedRequirement
+	#get function from qualifications 
 import datetime
 import csv
 import json
