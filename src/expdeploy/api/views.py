@@ -284,7 +284,7 @@ def removemturk(request):
 	secret_key = researcher.aws_secret_key;
 	host = 'mechanicalturk.sandbox.amazonaws.com'
 
-	if (isSandbox == False):
+	if (isSandbox == "False"):
 		host = 'mechanicalturk.amazonaws.com'
 	
 	mturk = boto.mturk.connection.MTurkConnection(
