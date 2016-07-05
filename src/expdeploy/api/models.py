@@ -9,7 +9,7 @@ import collections;
 class WorkerTask (models.Model):
 
 
-	hitId = models.TextField(default="")
+	hitId = models.TextField(default="none")
 	assignmentId = models.TextField(default="")
 	workerId = models.TextField(default="")
 	params = models.TextField(default="{}")
@@ -21,7 +21,7 @@ class WorkerTask (models.Model):
 
 	currentStatus = models.CharField(max_length=100, default="Waiting")
 	paid = models.BooleanField(default=False)
-
+	isSandbox = models.BooleanField(default=True)
 	researcher = models.CharField(max_length=200)
 	name = models.CharField(max_length=200)
 	wid = models.CharField(max_length=200)

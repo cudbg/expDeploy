@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^ban', views.ban, name='ban'),
+	url(r'^allPay', views.allPay, name='allPay'),
 	url(r'^payout', views.payout, name='payout'),
 	url(r'^results', views.results, name='results'),
 	url(r'^removemturk', views.removemturk, name='removemturk'),

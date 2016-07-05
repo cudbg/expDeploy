@@ -10,6 +10,7 @@ from .models import Metadata
 from copy import copy
 from zipfile import ZIP_DEFLATED, ZipFile
 
+import sys
 from planout.ops.random import *
 from expdeploy.gpaas.models import ExperimentFile
 from expdeploy.gpaas.models import Researcher
@@ -22,13 +23,15 @@ import string
 import boto.mturk.connection
 from boto.mturk.qualification import Qualifications, \
 	PercentAssignmentsApprovedRequirement,\
-	PercentAssignmentsSubmittedRequirement,\
+	PercentAssignmentsSubmittedRequirement
 import datetime
 import csv
 import json
 from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
+from random import seed
+
 from django.db import connection
 from os import system
 import os, tempfile, zipfile
@@ -50,82 +53,134 @@ def ban(request):
 def db_table_exists(table_name):
     return table_name in connection.introspection.table_names()
 
+def allPay(request):
+	usrId = request.GET.get('researcher', '');
+	expId = request.GET.get('exp', '');
+	find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
+	
+	print >>sys.stderr, 'Goodbye, cruel world!'
+	print >>sys.stderr, str(find_tasks)
+
+	completions = {}
+
+
+	
+
+	return HttpResponse(str(find_tasks))
+
 def payout(request):
 	assignmentId = request.GET.get('assignmentId', '');
 	completed = request.GET.get('completed', '');
 	assigned = request.GET.get('assigned', '');
 	usrId = request.GET.get('researcher', '');
 	expId = request.GET.get('exp', '');
-	wid = request.GET.get('wid', '');
 	bonus = (completed == assigned)
 
 
 	assignIds = []
 
+	completions = {}
+	waitingAssignments = []
+
 	if assignmentId == '':
 		find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
 		print('here are my tasksssss')
+
+
+
+
+		for task in find_tasks:
+
+
+			if task.currentStatus == "Waiting":
+				waitingAssignments.append(task.assignmentId)
+
+			if task.assignmentId not in completions:
+				if task.currentStatus=="Complete":
+					completions[task.assignmentId] = True
+				else:
+					completions[task.assignmentId] = False
+
+				assignIds.append(task.assignmentId)
+			if task.currentStatus != "Complete":
+				completions[task.assignmentId] = False
+
 		print(find_tasks)
 	else:
 		assignIds.append(assignmentId)
-
-
-	print(assignIds)
+		completions[assignmentId] = bonus
 
 	for assignmentId in assignIds:
 
-		shouldBreak = False
+		if assignmentId not in waitingAssignments:
 
-		find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
-		for t in find_tasks:
-			if t.paid == True:
-				shouldBreak = True
+			shouldBreak = False
 
+			find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
+			wid = ""
+			completed = 0
 
-		if shouldBreak:
-			continue
+			paySandbox = find_tasks[0].isSandbox
 
+			for t in find_tasks:
+				if t.paid == True:
+					shouldBreak = True
 
-		researcher = Researcher.objects.filter(user__username=usrId)[0];
-		exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+				if t.currentStatus == "Complete":
+					completed+=1
 
-		key = researcher.aws_key_id;
-		secret_key = researcher.aws_secret_key;
-		host = 'mechanicalturk.sandbox.amazonaws.com'
-
-		if (exp.sandbox == False):
-			host = 'mechanicalturk.amazonaws.com'
-		
-		mturk = boto.mturk.connection.MTurkConnection(
-		    aws_access_key_id = key,
-		    aws_secret_access_key = secret_key,
-		    host = host,
-		    debug = 1 # debug = 2 prints out all requests.
-		)
-		 
-		print boto.Version 
-		print mturk.get_account_balance() 
+				wid = t.wid
 
 
-		assignmnet = mturk.get_assignment(assignmentId)
 
-		#print(assignmnet.AssignmentStatus)
-
-		BONUS = exp.bonus_payment
-		PERTASK = exp.per_task_payment
-
-		p = mturk.get_price_as_price(PERTASK * float(completed))
-		if bonus:
-			p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
-
-		approve = mturk.approve_assignment(assignmentId)
-		
-		bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
+			if shouldBreak:
+				continue
 
 
-		for t in find_tasks:
-			t.paid = True
-			t.save()
+			researcher = Researcher.objects.filter(user__username=usrId)[0];
+			exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+
+			key = researcher.aws_key_id;
+			secret_key = researcher.aws_secret_key;
+			host = 'mechanicalturk.sandbox.amazonaws.com'
+
+			if (paySandbox == False):
+				host = 'mechanicalturk.amazonaws.com'
+			
+			mturk = boto.mturk.connection.MTurkConnection(
+			    aws_access_key_id = key,
+			    aws_secret_access_key = secret_key,
+			    host = host,
+			    debug = 1 # debug = 2 prints out all requests.
+			)
+			 
+			print boto.Version 
+			print mturk.get_account_balance() 
+
+
+			assignmnet = mturk.get_assignment(assignmentId)
+
+			#print(assignmnet.AssignmentStatus)
+
+			BONUS = exp.bonus_payment
+			PERTASK = exp.per_task_payment
+
+			p = mturk.get_price_as_price(PERTASK * float(completed))
+			if completions[assignmentId]:
+				p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
+
+			approve = mturk.approve_assignment(assignmentId)
+			
+			bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
+
+
+			print >>sys.stderr, (bon)
+			print >>sys.stderr, (assignmentId)
+			print >>sys.stderr, (wid)
+
+			for t in find_tasks:
+				t.paid = True
+				t.save()
 
 
 	return HttpResponse("Payments done.")
@@ -229,7 +284,7 @@ def removemturk(request):
 	secret_key = researcher.aws_secret_key;
 	host = 'mechanicalturk.sandbox.amazonaws.com'
 
-	if (exp.sandbox == False):
+	if (isSandbox == False):
 		host = 'mechanicalturk.amazonaws.com'
 	
 	mturk = boto.mturk.connection.MTurkConnection(
@@ -304,17 +359,20 @@ def mturk(request):
 	 
 	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
 
-	experiment_quals = exp.qualificationsmodel_set
+	#experiment_quals = exp.qualificationsmodel_set
 	userperson = exp.username
-	q_set = qualifications.get(username=username)
 
-	qualifications = Qualifications()
-	approved_req = PercentAssignmentsApprovedRequirement(comparator = "GreaterThan",
-		integer_value = q_set.percentage_hits_approved)
-	submitted_req = PercentAssignmentsSubmittedRequirement(comparator = "GreaterThan",
-		integer_value = q_set.percentage_assignments_submitted)
-	qualifications.add(approved_req)
-	qualifications.add(submitted_req)
+	# qualifications = Qualifications()
+
+	# q_set = qualifications.get(username=username)
+
+	
+	# approved_req = PercentAssignmentsApprovedRequirement(comparator = "GreaterThan",
+	# 	integer_value = q_set.percentage_hits_approved)
+	# submitted_req = PercentAssignmentsSubmittedRequirement(comparator = "GreaterThan",
+	# 	integer_value = q_set.percentage_assignments_submitted)
+	# qualifications.add(approved_req)
+	# qualifications.add(submitted_req)
 	
 	 
 	create_hit_result = mturk.create_hit(
@@ -324,7 +382,7 @@ def mturk(request):
 	    question = questionform,
 	    reward = boto.mturk.price.Price( amount = amount),
 	    max_assignments=exp.n,
-	    qualifications = qualifications,
+	    #qualifications = qualifications,
 	    response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
 	)
 
@@ -370,12 +428,18 @@ def log(request):
 	if request.method == 'POST':
 		body_unicode = request.body.decode('utf-8')
 		body = json.loads(body_unicode)
-		#print(body["task_id"]);
+		#body = request.POST.dict()
 
 		#TODO: Filter by experiment name
 
 		find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
 		print(find_tasks);
+
+
+		print >>sys.stderr, body["worker_id"]
+		print >>sys.stderr, body["task_name"]
+		print >>sys.stderr, body["task_id"]
+
 
 		task = find_tasks[0]
 
@@ -384,7 +448,7 @@ def log(request):
 
 		d = json.loads(task.results)
 
-		metaData = body["data"]["metaData"]
+		metaData = body["metaData"]
 
 
 
@@ -398,7 +462,7 @@ def log(request):
 
 		print(metaData)
 
-		d["data"].append(body["data"]);
+		d["data"] = (body["data"]);
 
 		task.results = json.dumps(d);
 
@@ -417,7 +481,7 @@ def log(request):
 
 		#find_tasks = WorkerTask.objects.filter(name=body["task_name"], wid=body["worker_id"], experiment=body["experiment_name"]);
 
-		return HttpResponse(str(d));
+		return HttpResponse("success");
 
 	# 	n = body["experiment_name"];
 	# 	researchID = body["researcher_id"];
@@ -526,7 +590,7 @@ def task(request):
 	usrId = request.GET.get('researcher', '');
 	taskName = request.GET.get('task', '');
 	wid = request.GET.get('wid', '');
-
+	isSandbox = request.GET.get('sandbox', '');
 
 	
 	
@@ -552,7 +616,7 @@ def task(request):
 	for exp in expsBackwards:
 
 		print(exp.original_filename)
-		if (exp.original_filename == (expId + ".json")):
+		if (exp.original_filename == (expModel.config_file)):
 			print("test 2");
 
 			EX = exp.experiment
@@ -584,7 +648,7 @@ def task(request):
 								#param[p["name"]] = random.choice(p["options"])
 
 						param = gen[0]
-
+						seed(abs(hash(wid)) % (10 ** 8))
 						shuffle(gen)
 
 						for i in range(0,n):
@@ -603,7 +667,9 @@ def task(request):
 							history["events"].append(event)
 							NewTask.history = json.dumps(history)
 							#print(NewTask.history)
+							NewTask.isSandbox = isSandbox
 							NewTask.save();
+
 							#print(NewTask.experiment)
 							return_tasks.append(NewTask);
 
