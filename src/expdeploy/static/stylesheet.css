@@ -84,6 +84,19 @@ body{
     max-width:900px;
 }
 
+.form-box-login{
+	background-color: #fffbfb;
+	border: 3px solid #9BDDFF;
+	border-radius: 7.5px;
+    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.2);
+	margin-bottom:10px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 2px;
+	padding: 12px;
+    width: 375px;
+}
+
 .form-box-left{
 	margin-left: 1%;
     width: 15%;
@@ -99,7 +112,7 @@ body{
 
 .gpaas-logo{
 	font-size:50px;
-	padding-top:30px;
+	padding-top:5px;
 	text-align:center;
 }
 
@@ -139,6 +152,10 @@ body{
 
 .tab-space{
 	margin-left: 15px;
+}
+
+.tab-space-triple{
+	margin-left: 45px;
 }
 
 .top-bottom-spacing{
