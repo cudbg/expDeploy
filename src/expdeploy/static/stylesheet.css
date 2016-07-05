@@ -41,6 +41,14 @@ body{
 	width:75%;
 }
 
+.column-text-wide{
+	font-size:15px;
+	margin: 0 auto;
+	max-width:825px;
+	text-align: justify;
+	width:80%;
+}
+
 #current-user{
 	float:left;
 	font-size: 20px;
