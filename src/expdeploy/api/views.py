@@ -264,8 +264,8 @@ def export(request):
 	# 	data.append(d);
 
 	#-t api_historyevent_temp 
-	system("sudo su - postgres")
-	system("pg_dump -d gpaas -f " + str(usrId) +'.dump ' + "-t api_metadata_temp -t api_workertask_temp")
+	#system("sudo su - postgres")
+	system("sudo -u postgres pg_dump -d gpaas -f " + str(usrId) +'.dump ' + "-t api_metadata_temp -t api_workertask_temp")
 	filename = "hn2284.dump" # Select your file here.                                
 	wrapper = FileWrapper(file(filename))
 	response = HttpResponse(wrapper, content_type='mimetype=application/force-download')
