@@ -221,6 +221,10 @@ def export(request):
 	#print(usrId)
 	#TODO: Filter by experiment name
 	find_tasks = WorkerTask.objects.filter(experiment__name=expId, researcher=usrId);
+
+	if len(find_tasks) == 0:
+		return HttpResponse("No data to download unfortunately.")
+
 	data = []
 	metadata = []
 	histories = []
@@ -246,7 +250,7 @@ def export(request):
 	print("\n\n\n",workerTaskIds)
 	
 	##workerTaskIds=[129,130]
-	cursor.execute("SELECT * INTO api_historyevent_temp FROM api_historyevent WHERE workerTask_id = ANY(%s)", [workerTaskIds]) #doesn't work
+	#cursor.execute("SELECT * INTO api_historyevent_temp FROM api_historyevent WHERE workerTask_id = ANY(%s)", [workerTaskIds]) #doesn't work
 	cursor.execute("SELECT * INTO api_metadata_temp FROM api_metadata WHERE id = ANY(%s)", [metaDataIds]) #works
 	cursor.execute("SELECT * INTO api_workertask_temp FROM api_workertask WHERE experiment_id=%s AND researcher=%s", [exp_num,usrId])
 
