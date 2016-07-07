@@ -119,7 +119,14 @@ def payout(request):
 
 		if assignmentId not in waitingAssignments:
 
+
+			
+			print >>sys.stderr, (assignmentId)
+
+
 			shouldBreak = False
+
+
 
 			find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
 			wid = ""
@@ -137,6 +144,7 @@ def payout(request):
 				wid = t.wid
 
 
+			print >>sys.stderr, (shouldBreak)
 
 			if shouldBreak:
 				continue
@@ -179,9 +187,9 @@ def payout(request):
 			bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
 
 
-			print >>sys.stderr, (bon)
-			print >>sys.stderr, (assignmentId)
-			print >>sys.stderr, (wid)
+			# print >>sys.stderr, (bon)
+			# print >>sys.stderr, (assignmentId)
+			# print >>sys.stderr, (wid)
 
 			for t in find_tasks:
 				t.paid = True
