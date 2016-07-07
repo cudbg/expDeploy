@@ -269,6 +269,10 @@ def export(request):
 	#query failed: ERROR:  permission denied for relation api_metadata_temp
 	#sudo -u postgres /// sudo: no tty present and no askpass program specified
 
+	resp = system('echo "$USER"')
+	print >>sys.stderr, resp
+
+
 	system("pg_dump -d gpaas -f " + str(usrId) +'.dump ' + "-t api_metadata_temp -t api_workertask_temp")
 	filename = "hn2284.dump" # Select your file here.                                
 	wrapper = FileWrapper(file(filename))
