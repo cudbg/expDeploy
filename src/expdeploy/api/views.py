@@ -170,8 +170,8 @@ def payout(request):
 			    debug = 1 # debug = 2 prints out all requests.
 			)
 			 
-			print boto.Version 
-			print mturk.get_account_balance() 
+			#print boto.Version 
+			balance = mturk.get_account_balance() 
 
 
 			assignmnet = mturk.get_assignment(assignmentId)
@@ -184,6 +184,9 @@ def payout(request):
 			p = mturk.get_price_as_price(PERTASK * float(completed))
 			if completions[assignmentId]:
 				p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
+
+			if p + BONUS > balance:
+				return HttpResponse("Insufficient funds. Please refill your account on Amazon.")
 
 			approve = mturk.approve_assignment(assignmentId)
 			
