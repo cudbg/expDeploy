@@ -284,7 +284,7 @@ def export(request):
 	response = HttpResponse(wrapper, content_type='mimetype=application/force-download')
 	response['Content-Length'] = os.path.getsize(filename)
 
-	os.remove( str(usrId) +'.dump')
+	os.remove(filename)
 	return response
 
 	#return sendfile(request, 'hn2284.dump')
