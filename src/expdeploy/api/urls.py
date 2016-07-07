@@ -3,6 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+	url(r'^approve', views.approve, name='approve'),
 	url(r'^ban', views.ban, name='ban'),
 	url(r'^allPay', views.allPay, name='allPay'),
 	url(r'^payout', views.payout, name='payout'),

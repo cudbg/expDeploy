@@ -42,6 +42,26 @@ from wsgiref.util import FileWrapper
 import os
 import pwd
 
+def approve():
+	researcher = Researcher.objects.filter(user__username="hn2284")[0];
+	key = researcher.aws_key_id;
+	secret_key = researcher.aws_secret_key;
+	host = 'mechanicalturk.amazonaws.com'
+	
+	mturk = boto.mturk.connection.MTurkConnection(
+	    aws_access_key_id = key,
+	    aws_secret_access_key = secret_key,
+	    host = host,
+	    debug = 1 # debug = 2 prints out all requests.
+	)
+	 
+	print boto.Version 
+	print mturk.get_account_balance() 
+
+	
+	approve = mturk.approve_rejected_assignment("39JEC7537VK9RX8SMLEVMEW0WN3VCN")
+	return HttpResponse("done");
+
 def get_username():
     return pwd.getpwuid( os.getuid() )[ 0 ]
 
