@@ -42,7 +42,7 @@ from wsgiref.util import FileWrapper
 import os
 import pwd
 
-def approve():
+def approve(request):
 	researcher = Researcher.objects.filter(user__username="hn2284")[0];
 	key = researcher.aws_key_id;
 	secret_key = researcher.aws_secret_key;
