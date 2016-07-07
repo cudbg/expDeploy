@@ -89,7 +89,10 @@ def payout(request):
 
 	if assignmentId == '':
 		find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
-		print('here are my tasksssss')
+		print >>sys.stderr, ("TASKS BELOW")
+		print >>sys.stderr, (find_tasks)
+		print >>sys.stderr, (expId)
+		print >>sys.stderr, (usrId)
 
 
 
