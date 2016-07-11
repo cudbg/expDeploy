@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-import json
+import simplejson as json
 #from .models import Experiment
 from .models import WorkerTask
 from .models import HistoryEvent
 from .models import Metadata
 from copy import copy
+
 from zipfile import ZIP_DEFLATED, ZipFile
 
 import sys
@@ -27,7 +28,6 @@ from boto.mturk.qualification import Qualifications, \
 	#get function from qualifications 
 import datetime
 import csv
-import json
 from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
@@ -585,7 +585,7 @@ def finishTasks(request):
 
 	print("bleh")
 
-	exps = ExperimentFile.objects.filter(username=usrId);
+	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
 	if len(exps)==0:
 		return HttpResponse("No experiments with those specs found")
 
@@ -652,7 +652,7 @@ def task(request):
 	n = int(request.GET.get('n', '1'));
 	print("test 1");
 
-	exps = ExperimentFile.objects.filter(username=usrId);
+	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
 	if len(exps)==0:
 		return HttpResponse("No experiments with those specs found")
 
@@ -663,6 +663,7 @@ def task(request):
 
 	if wid in wids:
 		return HttpResponse("Your WorkerID has been banned")
+
 
 
 	for exp in expsBackwards:
@@ -682,8 +683,6 @@ def task(request):
 				
 
 				print >>sys.stderr, 'docfile below!'
-
-				print(exp.docfile.read())
 				
 				data = json.loads(exp.docfile.read())
 				print(data["tasks"])
