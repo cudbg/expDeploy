@@ -213,6 +213,8 @@ def EditBonusPaymentView(request,username, experiment):
 			exp = GetExperiment(username, experiment)
 			exp.bonus_payment = form.cleaned_data['bonus_payment']
 			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - Bonus Payment Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
@@ -225,6 +227,8 @@ def EditConfigFileNameView(request, username, experiment):
 			exp = GetExperiment(username, experiment)
 			exp.config_file = form.cleaned_data['config_file_name']
 			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - Config File Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
@@ -237,6 +241,8 @@ def EditHitDescriptionView(request, username, experiment):
 			exp = GetExperiment(username, experiment)
 			exp.hit_description = form.cleaned_data['hit_description']
 			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - HIT Description Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
@@ -249,6 +255,8 @@ def EditHitKeywordView(request, username, experiment):
 			exp = GetExperiment(username, experiment)
 			exp.hit_keywords = form.cleaned_data['hit_keywords']
 			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - HIT Keywords Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
@@ -261,6 +269,8 @@ def EditHitPaymentView(request, username, experiment):
 			exp = GetExperiment(username, experiment)
 			exp.per_task_payment = form.cleaned_data['per_task_payment']
 			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - Per Task Payment Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
@@ -273,6 +283,8 @@ def EditTaskNumberView(request, username, experiment):
 			exp = GetExperiment(username, experiment)
 			exp.n = form.cleaned_data['number_of_assignments']
 			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - Number of Tasks Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
