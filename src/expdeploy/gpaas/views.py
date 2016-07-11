@@ -197,10 +197,12 @@ def CreateUserView(request):
 	else:
 		#create user form
 		form = UserForm()
-		user = request.user
-		current_user = True
-		if user.id == None:
-		 	current_user = False
+		if request.user.id is not None:
+		 	user = str(request.user)
+		 	current_user = True
+		else:
+			user = False
+			current_user = False
 		return render_to_response('createuser.html',
 			{'userform': form, 'current_user': current_user, 'user': user},
 			)
