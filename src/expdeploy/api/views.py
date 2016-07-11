@@ -415,8 +415,8 @@ def mturk(request):
 
 	#get set of qualifications for specific experiment
 	experiment_quals = exp.qualificationsmodel_set
-	userperson = exp.username
-	q_set = experiment_quals.get(username=username)
+	account_name = exp.username
+	q_set = experiment_quals.get(username=account_name)
 	
 	approved_req = PercentAssignmentsApprovedRequirement(comparator = "GreaterThan",
 		integer_value = q_set.percentage_hits_approved)
