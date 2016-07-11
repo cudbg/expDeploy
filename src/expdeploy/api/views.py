@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-import json
+import simplejson as json
 #from .models import Experiment
 from .models import WorkerTask
 from .models import HistoryEvent
@@ -27,7 +27,6 @@ from boto.mturk.qualification import Qualifications, \
 	#get function from qualifications 
 import datetime
 import csv
-import json
 from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
