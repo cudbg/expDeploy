@@ -25,7 +25,7 @@
             
             <div id="view-profile-button">
                 <div id="profile-user">
-                    <h3>{{current_user}}<h3>
+                    <h3>{{user}}<h3>
                 </div> <!-- profile user -->    
                 <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
                     <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
@@ -34,10 +34,10 @@
         </div>           
     </div>
 
-    <div id="experiment-header">
+    <div id="experiment-header-center">
         <b><h1> Create an account</h1> </b>
     </div>
-    <div class="form-box">
+    <div class="form-box-center">
     	<!-- create user form -->
         {% if duplicate %}
             <p><h3> Sorry, an account with that username already exists. Please try again. </h3></p>

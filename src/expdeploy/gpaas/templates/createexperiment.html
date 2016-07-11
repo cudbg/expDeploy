@@ -12,7 +12,7 @@
         <div class="gpaas-logo">
             <img src="{% static 'images/logo.png' %}" class="top-buffer" style="width:425px;height:133px;"/>
             <div id="logout-button">
-                {% if current_user %}
+                {% if username %}
                     <form action="/gpaas/logout/" method="GET">
                             <p><input type="submit" class="btn btn-default" value="Logout"/></p>
                     </form>
@@ -23,10 +23,10 @@
                 {% endif %}
             </div> <!-- logout button -->
             
-            {% if current_user %}
+            {% if username %}
                 <div id="view-profile-button">
                     <div id="profile-user">
-                    <h3>{{current_user}}<h3>
+                    <h3>{{username}}<h3>
                     </div> <!-- profile user -->    
                     <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
                         <input type="submit" class="btn btn-default" value ="View Profile">
@@ -37,6 +37,7 @@
     </div>
 
 
+
     <div class="tab-space">
         {% if duplicate %}
             <div style="margin-left: 11%; margin-right: 30%; margin-bottom:30px">
@@ -44,8 +45,10 @@
                 <p> <h2>Error:</h2><h3> The experiment you attempted to create shares a name with an existing experiment. Please try again using a different name, or edit the experiment which already exists.</p></h3>
             </div>
         {% endif %} 
-        <div class="form-box">
-            <p><h2> Create New Experiment </h2></p>
+        <div id="experiment-header-center">
+            <b><h1> Create New Experiment </h1> </b>
+        </div>
+        <div class="form-box-center">
             <p> Note: experiment names may use any alphanumeric/special characters. They must be fewer than 120 characters and contain no spaces.</p>
             <p> Need decription for Hit values, sandbox and n. </p>
             <p> Files can be uploaded after experiment creation on Edit Experiment page. </p>
