@@ -489,6 +489,8 @@ var gpaas = (function() {
 
 		}
 
+	}
+
 		if (options.trainingTasks != null && options.trainingTasks.length > 0) {
 
 			trainingTasks = options.trainingTasks
@@ -510,7 +512,7 @@ var gpaas = (function() {
 				// 	});
 				// }
 
-		}
+		
 
 
 
