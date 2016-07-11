@@ -7487,7 +7487,7 @@ var gpaas = (function() {
 	var trainingTasks = []
 	var nextTraining = function() {
 		currentTraining += 1;
-		if (currentTraining == currentTraining.length) {
+		if (currentTraining == trainingTasks.length) {
 			resumeQualify()
 		} else {
 			trainingTasks[currentTraining]()
