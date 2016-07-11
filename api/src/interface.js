@@ -101,7 +101,7 @@ var gpaas = (function() {
 		if (currentTraining == currentTraining.length) {
 			resumeQualify()
 		} else {
-			trainingTasks[nextTraining]()
+			trainingTasks[currentTraining]()
 		}
 	}
 
