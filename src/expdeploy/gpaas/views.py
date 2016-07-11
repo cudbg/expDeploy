@@ -206,7 +206,13 @@ def CreateUserView(request):
 			)
 
 def DocumentationView(request):
-	return render_to_response('documentation.html')
+	if request.user.id is not None: 
+			user = str(request.user)
+	else: 
+			user = False
+	return render_to_response('documentation.html',
+		{'current_user':user}
+		)
 
 def EditBonusPaymentView(request,username, experiment):
 	if request.method == 'POST':
@@ -552,12 +558,17 @@ def UploadView(request, username, experiment):
 			return HttpResponseRedirect(reverse(profile_view))
 
 def WelcomeView(request):
-	#user 
 	if request.user.id is not None:
 		return HttpResponseRedirect(reverse(profile_view))
 	else: 
 		return render_to_response('welcome.html')
 
 def WelcomeDirectView(request):
-	return render_to_response('welcome.html')
+	if request.user.id is not None: 
+			user = str(request.user)
+	else: 
+			user = False
+	return render_to_response('welcome.html',
+		{'current_user':user}
+		)
 	
