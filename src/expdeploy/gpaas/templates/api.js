@@ -7482,8 +7482,18 @@ var gpaas = (function() {
 
 
 
+	var resumeQualify = null
+	var currentTraining = 0
+	var trainingTasks = []
 	var nextTraining = function() {
-
+		currentTraining+=1;
+		if (currentTraining == trainingTasks.length) {
+			resumeQualify()
+		}
+		else {
+			trainingTasks[currentTraining]()
+		}
+		
 	}
 
 
@@ -7751,6 +7761,9 @@ var gpaas = (function() {
 
 
 
+
+			resumeQualify = function () {
+
 			if (options.qualificationTasks != null) {
 
 
@@ -7775,18 +7788,6 @@ var gpaas = (function() {
 			}
 
 			if (failed == false) {
-
-				if (options.trainingTasks != null) {
-
-					options.trainingTasks.forEach(function(entry) {
-						console.log(entry());
-						if (entry == false) {
-							return
-						}
-
-					});
-				}
-
 
 				if (local) {
 					console.log("local setup of experiment")
@@ -7865,7 +7866,7 @@ var gpaas = (function() {
 
 
 
-			}
+			
 
 
 			if (options.qualificationTasks != null && qualificationTasks.length > 0) {
@@ -7874,6 +7875,31 @@ var gpaas = (function() {
 			else {
 				resumeStartup(false)
 			}
+
+		}
+
+		if (options.trainingTasks != null && options.trainingTasks.length > 0) {
+
+			trainingTasks = options.trainingTasks
+			trainingTasks[0]()
+		}
+
+		else {
+			resumeQualify()
+		}
+
+		// if (options.trainingTasks != null) {
+
+				// 	options.trainingTasks.forEach(function(entry) {
+				// 		console.log(entry());
+				// 		if (entry == false) {
+				// 			return
+				// 		}
+
+				// 	});
+				// }
+
+		}
 
 
 
@@ -7900,7 +7926,8 @@ var gpaas = (function() {
 		nextTask: nextTask,
 		cancelTasks: endTasks,
 		errorAction: catchError,
-		nextQualification: nextQualification
+		nextQualification: nextQualification,
+		nextTraining: nextTraining
 	}
 
 
