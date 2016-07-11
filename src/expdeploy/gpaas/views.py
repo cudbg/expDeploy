@@ -284,7 +284,7 @@ def EditTaskNumberView(request, username, experiment):
 			exp.n = form.cleaned_data['number_of_assignments']
 			exp.save()
 			messages.add_message(request, 
-				messages.SUCCESS, experiment + ' - Number of Tasks Edited Successfully.')
+				messages.SUCCESS, experiment + ' - Number of Assignments Edited Successfully.')
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
