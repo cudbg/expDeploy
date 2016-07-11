@@ -652,7 +652,7 @@ def task(request):
 	n = int(request.GET.get('n', '1'));
 	print("test 1");
 
-	exps = ExperimentFile.objects.filter(username=usrId);
+	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
 	if len(exps)==0:
 		return HttpResponse("No experiments with those specs found")
 
