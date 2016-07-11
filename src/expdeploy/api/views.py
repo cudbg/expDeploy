@@ -679,6 +679,12 @@ def task(request):
 			print(find_tasks);
 			if (len(find_tasks) == 0):
 				
+				
+
+				print >>sys.stderr, 'docfile below!'
+
+				print(exp.docfile.read())
+				
 				data = json.loads(exp.docfile.read())
 				print(data["tasks"])
 
