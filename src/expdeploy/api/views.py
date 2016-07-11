@@ -7,7 +7,8 @@ import simplejson as json
 from .models import WorkerTask
 from .models import HistoryEvent
 from .models import Metadata
-from copy import copy
+from copy import copyprint(pr)
+
 from zipfile import ZIP_DEFLATED, ZipFile
 
 import sys
@@ -584,7 +585,7 @@ def finishTasks(request):
 
 	print("bleh")
 
-	exps = ExperimentFile.objects.filter(username=usrId);
+	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
 	if len(exps)==0:
 		return HttpResponse("No experiments with those specs found")
 
@@ -662,6 +663,7 @@ def task(request):
 
 	if wid in wids:
 		return HttpResponse("Your WorkerID has been banned")
+
 
 
 	for exp in expsBackwards:
