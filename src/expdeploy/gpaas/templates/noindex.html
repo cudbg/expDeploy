@@ -10,19 +10,33 @@
 <body>
 
 	<div id="page-header">
-        <div id="current-user">
-            <p><h3> {{user}} </h3></p>
-        </div>
-
-        <div id="logout-button">
-        {% if current_user %}
-            <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
-                <p><input type="submit" class="btn btn-default" value ="Logout"></p>
-            </form>
-        {% endif %}
-        </div>
-
+        <div class="gpaas-logo">
+            <img src="{% static 'images/logo.png' %}" class="top-buffer" style="width:425px;height:133px;"/>
+            <div id="logout-button">
+                {% if current_user %}
+                    <form action="/gpaas/logout/" method="GET">
+                            <p><input type="submit" class="btn btn-default" value="Logout"/></p>
+                    </form>
+                {% else %}
+                    <form action="/gpaas/login/" method="GET">
+                            <p><input type="submit" class="btn btn-default" value="Login"/></p>
+                    </form>
+                {% endif %}
+            </div> <!-- logout button -->
+            
+            {% if current_user %}
+                <div id="view-profile-button">
+                    <div id="profile-user">
+                    <h3>{{current_user}}<h3>
+                    </div> <!-- profile user -->    
+                    <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
+                        <input type="submit" class="btn btn-default" value ="View Profile">
+                    </form>
+                </div>
+            {% endif %}  
+        </div>           
     </div>
+
 
     <div class ="form-box">
     	<p> Sorry, this experiment does not have an index.html file associated with it. </p>

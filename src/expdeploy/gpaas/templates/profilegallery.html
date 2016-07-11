@@ -22,15 +22,31 @@
 
     
 	<div id="page-header">
-        <div id="profile-user">
-            <p> {{username}} </p>
-        </div> <!-- profile header -->
-        <div id="logout-button">
-	        <form action="/gpaas/logout/" method="post" enctype="multipart/form-data">
-	            <p><input type="submit" class="btn btn-default" value ="Logout"></p>
-	        </form>
-        </div> <!-- logout button -->
-    </div> <!-- Page header -->
+        <div class="gpaas-logo">
+            <img src="{% static 'images/logo.png' %}" class="top-buffer" style="width:425px;height:133px;"/>
+            <div id="logout-button">
+                {% if username %}
+                    <form action="/gpaas/logout/" method="GET">
+                            <p><input type="submit" class="btn btn-default" value="Logout"/></p>
+                    </form>
+                {% else %}
+                    <form action="/gpaas/login/" method="GET">
+                            <p><input type="submit" class="btn btn-default" value="Login"/></p>
+                    </form>
+                {% endif %}
+            </div> <!-- logout button -->
+            
+            <div id="view-profile-button">
+                <div id="profile-user">
+                <h3>{{username}}<h3>
+                </div> <!-- profile user -->    
+                <form action="/gpaas/profile/" method="post" enctype="    multipart/form-data">
+                    <p><input type="submit" class="btn btn-default" value ="View Profile"></p>
+                </form>
+            </div>
+        </div>           
+    </div>
+
 
     <!-- Do not remove the comment below this one. Black magic ensues. -->
     <!-- {% load lookup %} -->
