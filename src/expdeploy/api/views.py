@@ -7,7 +7,7 @@ import simplejson as json
 from .models import WorkerTask
 from .models import HistoryEvent
 from .models import Metadata
-from copy import copyprint(pr)
+from copy import copy
 
 from zipfile import ZIP_DEFLATED, ZipFile
 
