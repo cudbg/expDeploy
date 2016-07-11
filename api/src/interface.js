@@ -407,6 +407,12 @@ var gpaas = (function() {
 				} else {
 
 					var xmlHttp = new XMLHttpRequest();
+
+					var gotoURL = serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox
+
+					console.log("HERE IS THE GOTOURL")
+					console.log(gotoURL)
+
 					xmlHttp.open("GET", serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, false); // false for synchronous request
 					xmlHttp.send(null);
 					resp = xmlHttp.responseText.replaceAll("'", '"');
