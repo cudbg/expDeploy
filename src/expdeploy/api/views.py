@@ -5,6 +5,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 import simplejson as json
 #from .models import Experiment
 from .models import WorkerTask
+
+from random import randint
 from .models import HistoryEvent
 from .models import Metadata
 from copy import copy
@@ -702,15 +704,27 @@ def task(request):
 										modify[p["name"]] = choice
 										gen2.append(modify)
 								gen = gen2
+
 								#param[p["name"]] = random.choice(p["options"])
 
 						param = gen[0]
 						seed(abs(hash(wid)) % (10 ** 8))
 						shuffle(gen)
 
+						while n > len(gen):
+							gen.append({})
+
+
+						
+
+
 						for i in range(0,n):
 							
 							param = gen.pop()
+
+							for p in task["params"]:
+								if p["type"] == "BalancedRange":
+									param[p["name"]] = randint(p["options"][0], p["options"][1])
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
