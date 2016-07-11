@@ -15,6 +15,7 @@ urlpatterns = patterns(
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitdescription/$', 'EditHitDescriptionView', name='hit_description'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitpayment/$', 'EditHitPaymentView', name='hit_payment'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/bonuspayment/$', 'EditBonusPaymentView', name='bonus_payment'),
+    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/submitpayment/$', 'EditTaskSubmissionPaymentView', name='submit_payment'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
     url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-]+)/config/$', 'EditConfigFileNameView', name='config_file'),

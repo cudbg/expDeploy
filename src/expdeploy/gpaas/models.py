@@ -18,9 +18,10 @@ class ExperimentModel(models.Model):
 	hit_description = models.CharField(max_length=120)
 	per_task_payment = models.FloatField(blank=0.1)
 	bonus_payment = models.FloatField(blank=0)
+	hit_submission_payment = models.FloatField(default = 0.01, blank=0.01)
 	hit_keywords = models.CharField(max_length=120)
 	sandbox = models.BooleanField(default=True)
-	n = models.IntegerField(default=5);
+	n = models.IntegerField(default=5)
 	published_mturk = models.BooleanField(default=False);
 	published_sandbox = models.BooleanField(default=False);	
 	banned = models.TextField(default='{"ids":[]}')

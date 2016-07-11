@@ -137,6 +137,10 @@ body{
 	margin-top:0%;
 }
 
+.pg-btn{
+    margin-top:2px;
+    width:170px;
+}
 
 .polaroid {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2),

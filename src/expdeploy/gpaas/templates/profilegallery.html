@@ -194,7 +194,7 @@
                                     {% csrf_token %}
                                     {% formlookup formdict experiment "config_file_form" %}
                                     <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update Config File Name"/>
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Config File Name"/>
                                     </div> <!-- close col -->
                                 </form>
                             </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
@@ -220,7 +220,7 @@
                                     {% formlookup formdict experiment "hit_description_form" %}
                                     <!-- {{ hit_description_form.as_p }} -->
                                     <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update HIT Description"/>
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Description"/>
                                     </div> <!-- close col -->
                                 </form>
                             </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
@@ -232,7 +232,7 @@
                                     {% csrf_token %}
                                     {% formlookup formdict experiment "hit_payment_form" %}
                                     <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update HIT Payment"/>
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Payment"/>
                                     </div> <!-- close col -->
                                 </form>
                             </div> <!-- close row -->
@@ -244,7 +244,19 @@
                                     {% csrf_token %}
                                     {% formlookup formdict experiment "bonus_payment_form" %}
                                     <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by"  style="margin-top:2px;" value="Update Bonus Payment"/>
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Bonus Payment"/>
+                                    </div> <!-- col -->
+                                </form>
+                            </div> <!-- close row -->
+                            <hr>
+
+                            <!-- task submission payment form -->
+                            <div class="row">
+                                <form action="{{url_base}}{{experiment}}{{submit_payment_url}}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {% formlookup formdict experiment "task_submission_payment_form" %}
+                                    <div class="col-md-4">
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Submission Payment"/>
                                     </div> <!-- col -->
                                 </form>
                             </div> <!-- close row -->
@@ -256,7 +268,7 @@
                                     {% csrf_token %}
                                     {% formlookup formdict experiment "hit_keywords_form" %}
                                     <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update Hit Keywords"/>
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Hit Keywords"/>
                                     </div> <!-- col -->
                                 </form>
                             </div> <!-- close row -->
@@ -268,7 +280,7 @@
                                     {% csrf_token %}
                                     {% formlookup formdict experiment "tasknumber_form" %}
                                     <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by" style="margin-top:2px;" value="Update Tasknumber"/>
+                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Tasknumber"/>
                                     </div>
                                 </form>
                             </div> <!-- close row -->

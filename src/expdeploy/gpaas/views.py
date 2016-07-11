@@ -15,7 +15,8 @@ from .models import Researcher
 from .forms import LoginForm, UploadForm, UserForm, ExperimentForm,\
 	QualificationsForm
 from .forms import HitDescriptionForm, HitPaymentForm, \
-	HitKeywordsForm, TaskNumberForm, BonusPaymentForm, ConfigFileForm
+	HitKeywordsForm, TaskNumberForm, BonusPaymentForm, \
+	ConfigFileForm, TaskSubmissionPaymentForm
 
 import os
 import json
@@ -112,6 +113,7 @@ def CreateExperimentView(request):
 			payment = form.cleaned_data['per_task_payment']
 			number_assignments = form.cleaned_data['number_of_assignments']
 			bonus = form.cleaned_data['bonus_payment']
+			hit_submission_payment = form.cleaned_data['task_submission_payment']
 			key = form.cleaned_data['hit_keywords']
 
 			#check if experiment already exists
@@ -289,6 +291,18 @@ def EditTaskNumberView(request, username, experiment):
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
 
+def EditTaskSubmissionPaymentView(request, username, experiment):
+	if request.method == "POST":
+		form = TaskSubmissionPaymentForm(request.POST)
+		if form.is_valid():
+			exp = GetExperiment(username, experiment)
+			exp.hit_submission_payment = form.cleaned_data['task_submission_payment']
+			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - Task Submission Payment Edited Successfully.')
+		return HttpResponseRedirect(reverse(profile_view))
+	else:
+		return HttpResponseRedirect(reverse(profile_view))
 
 def ExperimentView(request, username, experiment):
 	current_exp = GetExperiment(username, experiment)
@@ -408,12 +422,14 @@ def ProfileGalleryView(request):
 	formdict = {}
 	for exp in experiments_list:
 		inner_formdict = {}
-		hitdescriptionform = HitDescriptionForm({'hit_description': exp.hit_description})
-		inner_formdict["hit_description_form"] = hitdescriptionform.as_p()
+		inner_formdict["hit_description_form"] = HitDescriptionForm(
+			{'hit_description': exp.hit_description}).as_p()
 		inner_formdict["hit_payment_form"] = HitPaymentForm(
 			{'per_task_payment': exp.per_task_payment}).as_p()
 		inner_formdict["bonus_payment_form"] = BonusPaymentForm(
 			{'bonus_payment': exp.bonus_payment}).as_p()
+		inner_formdict["task_submission_payment_form"] = TaskSubmissionPaymentForm(
+			{'task_submission_payment':exp.hit_submission_payment}).as_p()
 		inner_formdict["hit_keywords_form"] = HitKeywordsForm(
 			{'hit_keywords': exp.hit_keywords}).as_p()
 		inner_formdict["tasknumber_form"] = TaskNumberForm(
@@ -436,6 +452,7 @@ def ProfileGalleryView(request):
 		'hit_description_url' : "/hitdescription/",
 		'hit_keywords_url'    : "/hitkeywords/", 
 		'hit_payment_url'     : "/hitpayment/",
+		'submit_payment_url'  : "/submitpayment/",
 		'sandbox_url'         : "/sandbox/", 
 		'tasknumber_url'      : "/tasknumber/",
 		'upload_url'          : "/",

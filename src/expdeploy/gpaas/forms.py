@@ -18,6 +18,7 @@ class ExperimentForm(forms.Form):
 	experiment = forms.CharField(max_length=120, required=True)
 	hit_description = forms.CharField(max_length=120, required=True)
 	per_task_payment = forms.FloatField(required=True, min_value = 0.01)
+	task_submission_payment= forms.FloatField(required=True, min_value=0)
 	bonus_payment = forms.FloatField(required=True, min_value = 0)
 	hit_keywords = forms.CharField(max_length=120, required=True)
 	number_of_assignments = forms.IntegerField(required=True)
@@ -98,6 +99,17 @@ class TaskNumberForm(forms.Form):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
 			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
+			error_row = u'%s',
+			row_ender = '',
+			help_text_html = u' <span class="helptext">%s</span>',
+			errors_on_separate_row = True)
+
+class TaskSubmissionPaymentForm(forms.Form):
+	task_submission_payment = forms.FloatField(required=True)
+	def as_p(self):
+	#"Returns this form rendered as HTML <p>s."
+		return self._html_output(
+			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s <b>(USD)</b> </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
 			error_row = u'%s',
 			row_ender = '',
 			help_text_html = u' <span class="helptext">%s</span>',
