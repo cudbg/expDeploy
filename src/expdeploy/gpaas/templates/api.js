@@ -7480,6 +7480,36 @@ var gpaas = (function() {
 
 	}
 
+
+
+	var nextTraining = function() {
+
+	}
+
+
+	var resumeStartup = null
+	var currentQualification = 0
+	var qualificationTasks = []
+	var failedQualSoFar = false
+
+	var nextQualification = function(succeeded) {
+
+		if (succeeded == false) {
+			resumeStartup(true)
+		}
+		else {
+
+		currentQualification+=1;
+		if (currentQualification == qualificationTasks.length) {
+			resumeStartup(false)
+		}
+		else {
+			qualificationTasks[currentQualification]()
+		}
+		}
+
+	}
+
 	var nextTask = function() {
 
 
@@ -7719,21 +7749,22 @@ var gpaas = (function() {
 
 			failed = false
 
+
+
 			if (options.qualificationTasks != null) {
-				options.qualificationTasks.forEach(function(entry) {
 
-					e = entry()
 
-					if (e == false) {
-						console.log("THIS IS WHERE I FAILED")
-							//console.log(entry)
-						console.log("BLEH")
-						failed = true
-					}
+				qualificationTasks = options.qualificationTasks
 
-				});
 
 			}
+
+
+
+			resumeStartup = function(failed) {
+
+
+
 
 			if (failed) {
 				if (options.failQualification != null) {
@@ -7831,6 +7862,21 @@ var gpaas = (function() {
 				alert("Unfortunately, based on prior qualification results, no tasks can be assigned to your Worker ID. Please return the HIT to end.")
 			}
 
+
+
+
+			}
+
+
+			if (options.qualificationTasks != null && qualificationTasks.length > 0) {
+				qualificationTasks[0]()
+			}
+			else {
+				resumeStartup(false)
+			}
+
+
+
 			//nextTask();
 		} catch (e) {
 			catchError(e)
@@ -7853,7 +7899,8 @@ var gpaas = (function() {
 		logData: logData,
 		nextTask: nextTask,
 		cancelTasks: endTasks,
-		errorAction: catchError
+		errorAction: catchError,
+		nextQualification: nextQualification
 	}
 
 
