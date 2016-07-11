@@ -27,6 +27,8 @@ class WorkerTask (models.Model):
 	wid = models.CharField(max_length=200)
 	identifier = models.CharField(max_length=200)
 
+	
+
 class HistoryEvent (models.Model):
 
 	workerTask = models.ForeignKey('WorkerTask',default=0,null=True,blank=True)
