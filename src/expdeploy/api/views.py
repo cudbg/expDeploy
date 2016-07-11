@@ -683,8 +683,6 @@ def task(request):
 				
 
 				print >>sys.stderr, 'docfile below!'
-
-				print(exp.docfile.read())
 				
 				data = json.loads(exp.docfile.read())
 				print(data["tasks"])
