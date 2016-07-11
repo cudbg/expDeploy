@@ -413,20 +413,18 @@ def mturk(request):
 	 
 	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
 
-	#experiment_quals = exp.qualificationsmodel_set
+	#get set of qualifications for specific experiment
+	experiment_quals = exp.qualificationsmodel_set
 	userperson = exp.username
-
-	# qualifications = Qualifications()
-
-	# q_set = qualifications.get(username=username)
-
+	q_set = experiment_quals.get(username=username)
 	
-	# approved_req = PercentAssignmentsApprovedRequirement(comparator = "GreaterThan",
-	# 	integer_value = q_set.percentage_hits_approved)
-	# submitted_req = PercentAssignmentsSubmittedRequirement(comparator = "GreaterThan",
-	# 	integer_value = q_set.percentage_assignments_submitted)
-	# qualifications.add(approved_req)
-	# qualifications.add(submitted_req)
+	approved_req = PercentAssignmentsApprovedRequirement(comparator = "GreaterThan",
+		integer_value = q_set.percentage_hits_approved)
+	submitted_req = PercentAssignmentsSubmittedRequirement(comparator = "GreaterThan",
+		integer_value = q_set.percentage_assignments_submitted)
+	qualifications = Qualifications()
+	qualifications.add(approved_req)
+	qualifications.add(submitted_req)
 	
 	 
 	create_hit_result = mturk.create_hit(
@@ -436,7 +434,7 @@ def mturk(request):
 	    question = questionform,
 	    reward = boto.mturk.price.Price( amount = amount),
 	    max_assignments=exp.n,
-	    #qualifications = qualifications,
+	    qualifications = qualifications,
 	    response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
 	)
 
