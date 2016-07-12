@@ -12,27 +12,27 @@ urlpatterns = patterns(
     url(r'^documentation/$', 'DocumentationView'),
     
     # username and experiment name passed to view from url.
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/hitdescription/$', 'EditHitDescriptionView', name='hit_description'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/hitpayment/$', 'EditHitPaymentView', name='hit_payment'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/bonuspayment/$', 'EditBonusPaymentView', name='bonus_payment'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/submitpayment/$', 'EditTaskSubmissionPaymentView', name='submit_payment'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/config/$', 'EditConfigFileNameView', name='config_file'),
-    url(r'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/$', 'UploadView', name='upload'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/hitdescription/$', 'EditHitDescriptionView', name='hit_description'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/hitpayment/$', 'EditHitPaymentView', name='hit_payment'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/bonuspayment/$', 'EditBonusPaymentView', name='bonus_payment'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/submitpayment/$', 'EditTaskSubmissionPaymentView', name='submit_payment'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/config/$', 'EditConfigFileNameView', name='config_file'),
+    url(ur'^edit/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/$', 'UploadView', name='upload'),
 
     # experiment view
-    url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/$', 'ExperimentView', name='experiment_page'),
+    url(ur'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/$', 'ExperimentView', name='experiment_page'),
 
     # HttpResponses to serve static files
-    url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/(?P<filename>[A-Za-z0-9\w,-._]+)/$', 'FileHttpResponse', name='file_http_response'),
-    url(r'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/(?P<filename>[A-Za-z0-9\w.,-_]+)$', 'FileHttpResponse', name='file_http_response'),
+    url(ur'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/(?P<filename>.*)/$', 'FileHttpResponse', name='file_http_response'),
+    url(ur'^experiment/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/(?P<filename>.*)$', 'FileHttpResponse', name='file_http_response'),
     
     # login and logout
     url(r'^login/$', 'LoginView', name='login'),
     url(r'^logout/$', 'LogoutView', name='logout'),
 
-    url(r'^qualification/(?P<username>[A-Za-z0-9]+)/(?P<experiment>[A-Za-z0-9,.-_]+)/$', 'QualificationView', name='qualification'),
+    url(ur'^qualification/(?P<username>[A-Za-z0-9]+)/(?P<experiment>.*)/$', 'QualificationView', name='qualification'),
 
     url(r'^profile/$', 'ProfileGalleryView', name='user_profile'),
     url(r'^$', 'WelcomeView', name="welcome"),
