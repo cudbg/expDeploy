@@ -7910,7 +7910,9 @@ var gpaas = (function() {
 		cancelTasks: endTasks,
 		errorAction: catchError,
 		nextQualification: nextQualification,
-		nextTraining: nextTraining
+		nextTraining: nextTraining,
+		currentTraining:currentTraining,
+		currentQualification:currentQualification
 	}
 
 
