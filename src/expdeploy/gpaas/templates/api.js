@@ -7422,6 +7422,8 @@ var gpaas = (function() {
 
 	var success = true
 
+	var earned = 0
+
 	/*
 	CONFIG
 	*/
@@ -7480,6 +7482,42 @@ var gpaas = (function() {
 
 	}
 
+
+
+	var resumeQualify = null
+	var currentTraining = 0
+	var trainingTasks = []
+	var nextTraining = function() {
+		currentTraining += 1;
+		if (currentTraining == trainingTasks.length) {
+			resumeQualify()
+		} else {
+			trainingTasks[currentTraining]()
+		}
+	}
+
+
+	var resumeStartup = null
+	var currentQualification = 0
+	var qualificationTasks = []
+	var failedQualSoFar = false
+
+	var nextQualification = function(succeeded) {
+
+		if (succeeded == false) {
+			resumeStartup(true)
+		} else {
+
+			currentQualification += 1;
+			if (currentQualification == qualificationTasks.length) {
+				resumeStartup(false)
+			} else {
+				qualificationTasks[currentQualification]()
+			}
+		}
+
+	}
+
 	var nextTask = function() {
 
 
@@ -7525,84 +7563,80 @@ var gpaas = (function() {
 
 			//console.log(".......THIS IS THE ID DJKDHKSJHDKJDH SKJDHSJKDH SJKDH D" + currentId)
 
-		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
-		xmlhttp.open("POST", serverurl + "/api/log/");
-		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
+			xmlhttp.open("POST", serverurl + "/api/log/");
+			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-		xmlhttp.responseType = 'text';
+			xmlhttp.responseType = 'text';
 
 
-		var postData = {
-			data: dataToSend,
-			worker_id: wid,
-			experiment_name: n,
-			researcher_id: researcher,
-			task_name: task,
-			task_id: currentId,
-			metaData: {
-				"userAgent": navigator.userAgent,
-				"dimension": "" + window.outerWidth + "x" + window.outerHeight,
-				"taskStart": taskStart,
-				"taskFinish": Math.round(new Date().getTime() / 1000)
+			var postData = {
+				data: dataToSend,
+				worker_id: wid,
+				experiment_name: n,
+				researcher_id: researcher,
+				task_name: task,
+				task_id: currentId,
+				metaData: {
+					"userAgent": navigator.userAgent,
+					"dimension": "" + window.outerWidth + "x" + window.outerHeight,
+					"taskStart": taskStart,
+					"taskFinish": Math.round(new Date().getTime() / 1000)
 
+				}
 			}
-		}
 
 
 
 
 
-		xmlhttp.onload = function() {
-			if (xmlhttp.readyState === xmlhttp.DONE) {
-				if (xmlhttp.status === 200) {
+			xmlhttp.onload = function() {
+				if (xmlhttp.readyState === xmlhttp.DONE) {
+					if (xmlhttp.status === 200) {
 
-					if (xmlhttp.responseText == "success") {
+						if (xmlhttp.responseText == "success") {
 
 
-						dataToSend = []
+							dataToSend = []
 
-						localNextTask()
+							localNextTask()
 
-					}
-					else {
+						} else {
+							catchError(new Error("Server error when logging data"))
+						}
+					} else {
 						catchError(new Error("Server error when logging data"))
 					}
+				} else {
+
 				}
-				else {
-					catchError(new Error("Server error when logging data"))
-				}
-			}
-			else {
-				
-			}
-		};
+			};
 
 
-		//hamedn: I tried using ajax but got a key error/it wouldn't load the JSON data
+			//hamedn: I tried using ajax but got a key error/it wouldn't load the JSON data
 
-		// $.ajax({
-		// 		type: "POST",
-		// 		url: serverurl + "/api/log/",
-		// 		data: postData,
-		// 		success: function (data, status, jqXHR) {
-		// 			localNextTask()
-		// 		},
-		// 		error: function (jqXHR, status, err) {
-		// 			catchError(new Error("Server error when logging data"))
-		// 		},
-		// 		dataType: "json",
-		  //      contentType: "application/json"
+			// $.ajax({
+			// 		type: "POST",
+			// 		url: serverurl + "/api/log/",
+			// 		data: postData,
+			// 		success: function (data, status, jqXHR) {
+			// 			localNextTask()
+			// 		},
+			// 		error: function (jqXHR, status, err) {
+			// 			catchError(new Error("Server error when logging data"))
+			// 		},
+			// 		dataType: "json",
+			//      contentType: "application/json"
 
-		  //DJANGO SERVER ERROR: KeyError: 'worker_id'
-		// });
+			//DJANGO SERVER ERROR: KeyError: 'worker_id'
+			// });
 
-		
+
 			console.log(JSON.stringify(postData));
 			xmlhttp.send(JSON.stringify(postData));
-	
 
-		} 
-		else {
+
+		} else {
 			localNextTask()
 		}
 
@@ -7719,117 +7753,134 @@ var gpaas = (function() {
 
 			failed = false
 
+
+
 			if (options.qualificationTasks != null) {
-				options.qualificationTasks.forEach(function(entry) {
 
-					e = entry()
 
-					if (e == false) {
-						console.log("THIS IS WHERE I FAILED")
-							//console.log(entry)
-						console.log("BLEH")
-						failed = true
+				qualificationTasks = options.qualificationTasks
+
+
+			}
+
+
+
+			resumeStartup = function(failed) {
+
+
+
+
+				if (failed) {
+					if (options.failQualification != null) {
+						options.failQualification()
+					} else {
+						throw new Error("failQualification method not provided by researcher")
 					}
-
-				});
-
-			}
-
-			if (failed) {
-				if (options.failQualification != null) {
-					options.failQualification()
-				} else {
-					throw new Error("failQualification method not provided by researcher")
 				}
-			}
 
-			if (failed == false) {
+				if (failed == false) {
 
-				if (options.trainingTasks != null) {
 
-					options.trainingTasks.forEach(function(entry) {
-						console.log(entry());
-						if (entry == false) {
-							return
+
+					if (local) {
+						console.log("local setup of experiment")
+
+
+						temp = options.params
+
+						obj = { "params": [], "pay": 1.0, "bonus": 1.0 }
+
+						console.log(n)
+						for (k = 0; k < numberTasks; k++) {
+							console.log(k)
+
+							trial = {}
+							temp["params"].forEach(function(entry) {
+
+								name = entry["name"]
+								choice = entry["options"][Math.floor(Math.random() * entry["options"].length)]
+								trial[name] = choice
+							});
+
+							obj["params"].push(trial)
 						}
 
-					});
-				}
+						completed = 0
 
+						perTaskPay = obj["pay"]
+						bonusPay = obj["bonus"]
 
-				if (local) {
-					console.log("local setup of experiment")
+						console.log(obj)
 
+						obj["params"].forEach(function(entry) {
 
-					temp = options.params
+							tasks.push(entry);
 
-					obj = { "params": [], "pay": 1.0, "bonus": 1.0 }
-
-					console.log(n)
-					for (k = 0; k < numberTasks; k++) {
-						console.log(k)
-
-						trial = {}
-						temp["params"].forEach(function(entry) {
-
-							name = entry["name"]
-							choice = entry["options"][Math.floor(Math.random() * entry["options"].length)]
-							trial[name] = choice
 						});
 
-						obj["params"].push(trial)
+					} else {
+
+						var xmlHttp = new XMLHttpRequest();
+
+						var gotoURL = serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox
+
+						console.log("HERE IS THE GOTOURL")
+						console.log(gotoURL)
+
+						xmlHttp.open("GET", serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, false); // false for synchronous request
+						xmlHttp.send(null);
+						resp = xmlHttp.responseText.replaceAll("'", '"');
+
+						obj = JSON.parse(resp);
+						console.log(obj["params"]);
+
+						obj["params"].forEach(function(entry) {
+
+							tasks.push(entry);
+
+						});
+
+						perTaskPay = obj["pay"]
+						bonusPay = obj["bonus"]
+
+						completed = numberTasks - obj["params"].length
+						console.log('..........this is how many completed' + completed)
+
+
 					}
-
-					completed = 0
-
-					perTaskPay = obj["pay"]
-					bonusPay = obj["bonus"]
-
-					console.log(obj)
-
-					obj["params"].forEach(function(entry) {
-
-						tasks.push(entry);
-
-					});
-
 				} else {
-
-					var xmlHttp = new XMLHttpRequest();
-
-					var gotoURL = serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox
-
-					console.log("HERE IS THE GOTOURL")
-					console.log(gotoURL)
-
-					xmlHttp.open("GET", serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, false); // false for synchronous request
-					xmlHttp.send(null);
-					resp = xmlHttp.responseText.replaceAll("'", '"');
-
-					obj = JSON.parse(resp);
-					console.log(obj["params"]);
-
-					obj["params"].forEach(function(entry) {
-
-						tasks.push(entry);
-
+					$.get(serverurl + "/api/ban?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, function(data) {
+						console.log("BANNED")
 					});
 
-					perTaskPay = obj["pay"]
-					bonusPay = obj["bonus"]
-
-					completed = numberTasks - obj["params"].length
-					console.log('..........this is how many completed' + completed)
-
-
+					alert("Unfortunately, based on prior qualification results, no tasks can be assigned to your Worker ID. Please return the HIT to end.")
 				}
-			} else {
-				$.get(serverurl + "/api/ban?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, function(data) {
-					console.log("BANNED")
-				});
 
-				alert("Unfortunately, based on prior qualification results, no tasks can be assigned to your Worker ID. Please return the HIT to end.")
+
+
+
 			}
+
+			resumeQualify = function () {
+
+
+				if (options.qualificationTasks != null && qualificationTasks.length > 0) {
+					qualificationTasks[0]()
+				} else {
+					resumeStartup(false)
+				}
+
+
+			}
+
+
+			trainingTasks = options.trainingTasks
+			if (options.trainingTasks != null && trainingTasks.length > 0) {
+				trainingTasks[0]()
+			} else {
+				resumeQualify()
+			}
+
 
 			//nextTask();
 		} catch (e) {
@@ -7853,7 +7904,9 @@ var gpaas = (function() {
 		logData: logData,
 		nextTask: nextTask,
 		cancelTasks: endTasks,
-		errorAction: catchError
+		errorAction: catchError,
+		nextQualification: nextQualification,
+		nextTraining: nextTraining
 	}
 
 

@@ -44,6 +44,8 @@ from wsgiref.util import FileWrapper
 import os
 import pwd
 
+import heapq
+
 def approve(request):
 	researcher = Researcher.objects.filter(user__username="hn2284")[0];
 	key = researcher.aws_key_id;
@@ -717,14 +719,35 @@ def task(request):
 
 						
 
+						balanced_history = json.loads(EX.balanced_history)
+						for p in task["params"]:
+							if p["type"] == "BalancedRange":
+								if p["name"] not in balanced_history:
+									balanced_history[p["name"]] = {}
+									for i in range(p["options"][0], p["options"][1]):
+										balanced_history[p["name"]][i] = 0
+
 
 						for i in range(0,n):
 							
 							param = gen.pop()
 
 							for p in task["params"]:
+
 								if p["type"] == "BalancedRange":
-									param[p["name"]] = randint(p["options"][0], p["options"][1])
+
+									sorter = []
+
+									historical_data = balanced_history[p["name"]]
+
+									for key in historical_data:
+										heapq.heappush(sorter,(historical_data[key], key))
+
+									numchoose = heapq.heappop(sorter)
+
+									balanced_history[p["name"]][numchoose[1]]+=1
+
+									param[p["name"]] = numchoose[1]
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
@@ -743,6 +766,9 @@ def task(request):
 
 							#print(NewTask.experiment)
 							return_tasks.append(NewTask);
+
+						EX.balanced_history=json.dumps(balanced_history)
+						EX.save()
 
 
 			#return HttpResponse('{"params":' + str(params) + "}")

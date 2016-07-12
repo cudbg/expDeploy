@@ -28,6 +28,8 @@ class ExperimentModel(models.Model):
 	hitID = models.CharField(max_length=120)
 	config_file = models.CharField(max_length=120,default="config.json")
 
+	balanced_history = models.TextField(default="{}")
+
 	def __str__(self):
 		return str(self.name)
 
