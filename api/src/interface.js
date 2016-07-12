@@ -113,6 +113,15 @@ var gpaas = (function() {
 	var qualificationTasks = []
 	var failedQualSoFar = false
 
+
+	var getCurrentTraining = function (){
+		return currentTraining
+	}
+	var getCurrentQualification = function (){
+		return currentQualification
+	}
+
+
 	var nextQualification = function(succeeded) {
 
 		if (succeeded == false) {
@@ -522,8 +531,8 @@ var gpaas = (function() {
 		errorAction: catchError,
 		nextQualification: nextQualification,
 		nextTraining: nextTraining,
-		currentTraining:currentTraining,
-		currentQualification:currentQualification
+		currentTraining:getCurrentTraining,
+		currentQualification:getCurrentQualification
 	}
 
 
