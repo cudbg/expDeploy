@@ -471,6 +471,7 @@ var gpaas = (function() {
 				}
 
 
+				nextTask()
 
 
 			}
