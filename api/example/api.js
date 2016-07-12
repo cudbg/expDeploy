@@ -7509,6 +7509,9 @@ var gpaas = (function() {
 		} else {
 
 			currentQualification += 1;
+			console.log("qual-log")
+			console.log(currentQualification)
+			console.log(qualificationTasks.length)
 			if (currentQualification == qualificationTasks.length) {
 				resumeStartup(false)
 			} else {
