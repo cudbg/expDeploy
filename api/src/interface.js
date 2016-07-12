@@ -33,6 +33,8 @@ var gpaas = (function() {
 
 	var success = true
 
+	var earned = 0
+
 	/*
 	CONFIG
 	*/
