@@ -47,7 +47,8 @@ import pwd
 import heapq
 
 def logAnalytics(request):
-	print(request.POST)
+	print(request.POST["data"])
+	return HttpResponse(request.POST)
 
 def approve(request):
 	researcher = Researcher.objects.filter(user__username="hn2284")[0];
