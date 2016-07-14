@@ -7464,6 +7464,12 @@ var gpaas = (function() {
 		dataToSend.push(d)
 	}
 
+	var logAnalytics = function(d) {
+		$.post( serverurl + "/api/logAnalytics/", { data: d, usrId:researcher, expId:experiment}, function( data ) {
+		  console.log('successfully logged data')
+		}, "json");
+	}
+
 
 
 	var submit = function() {
@@ -7921,7 +7927,8 @@ var gpaas = (function() {
 		nextQualification: nextQualification,
 		nextTraining: nextTraining,
 		currentTraining:getCurrentTraining,
-		currentQualification:getCurrentQualification
+		currentQualification:getCurrentQualification,
+		logAnalytics:logAnalytics
 	}
 
 

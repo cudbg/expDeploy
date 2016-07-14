@@ -46,6 +46,9 @@ import pwd
 
 import heapq
 
+def logAnalytics(request):
+	print(request.POST)
+
 def approve(request):
 	researcher = Researcher.objects.filter(user__username="hn2284")[0];
 	key = researcher.aws_key_id;
