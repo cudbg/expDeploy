@@ -76,7 +76,7 @@ var gpaas = (function() {
 	}
 
 	var logAnalytics = function(d) {
-		$.post( serverurl + "/api/logAnalytics/", { data: d, usrId:researcher, expId:experiment}, function( data ) {
+		$.post( serverurl + "/api/logAnalytics/", { data: d, usrId:researcher, expId: n}, function( data ) {
 		  console.log('successfully logged data')
 		}, "json");
 	}
