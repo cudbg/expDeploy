@@ -7398,7 +7398,7 @@ var gpaas = (function() {
 	};
 
 
-	var wid = "haskdhdsddfsf";
+	var wid = "undefined";
 	var task = "";
 	var researcher = "";
 	var n = "";
@@ -7430,6 +7430,9 @@ var gpaas = (function() {
 	//var serverurl = "https://192.241.179.74:8000"
 	//var serverurl = "https://localhost:8000"
 
+	var workerID = function (){
+		return wid
+	}
 
 	var catchError = function(e) {
 		alert(e)
@@ -7496,9 +7499,11 @@ var gpaas = (function() {
 	var nextTraining = function() {
 		currentTraining += 1;
 		if (currentTraining == trainingTasks.length) {
+			logAnalytics(wid + " has finished their training tasks")
 			resumeQualify()
 		} else {
 			trainingTasks[currentTraining]()
+			logAnalytics(wid + " has started a training task, " + (trainingTasks.length -(currentTraining+1)) + " remaining")
 		}
 	}
 
@@ -7520,6 +7525,7 @@ var gpaas = (function() {
 	var nextQualification = function(succeeded) {
 
 		if (succeeded == false) {
+			logAnalytics(wid + " has finished their qualification tasks")
 			resumeStartup(true)
 		} else {
 
@@ -7532,6 +7538,8 @@ var gpaas = (function() {
 			} else {
 				qualificationTasks[currentQualification]()
 			}
+
+			logAnalytics(wid + " has started a qualification task, " + (qualificationTasks.length -(currentQualification+1)) + " remaining")
 		}
 
 	}
@@ -7757,6 +7765,7 @@ var gpaas = (function() {
 			var hitID = getUrlParameter("hitId")
 			var assignmentID = getUrlParameter("assignmentId")
 			wid = getUrlParameter("workerId")
+			logAnalytics(wid + " has started the experiment")
 
 			if (local) {
 				wid = "exampleWorker"
@@ -7928,7 +7937,8 @@ var gpaas = (function() {
 		nextTraining: nextTraining,
 		currentTraining:getCurrentTraining,
 		currentQualification:getCurrentQualification,
-		logAnalytics:logAnalytics
+		logAnalytics:logAnalytics,
+		workerID: workerID
 	}
 
 
