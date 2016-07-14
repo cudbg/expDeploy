@@ -48,6 +48,13 @@ import heapq
 
 def logAnalytics(request):
 	print(request.POST["data"])
+	usrId = request.POST.get(request.POST["usrId"], '');
+	expId = request.POST.get('expId', '');	
+	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+	js = json.loads(exp.analytics)
+	js["log"].append(request.POST["data"])
+	exp.analytics = json.dumps(js)
+	exp.save()
 	return HttpResponse(request.POST)
 
 def approve(request):
