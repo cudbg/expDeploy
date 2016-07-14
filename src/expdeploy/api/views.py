@@ -48,7 +48,7 @@ import heapq
 
 def logAnalytics(request):
 	print(request.POST["data"])
-	usrId = request.POST.get(request.POST["usrId"], '');
+	usrId = request.POST.get("usrId", '');
 	expId = request.POST.get('expId', '');	
 	print(request.POST)
 	print(usrId)
