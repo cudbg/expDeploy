@@ -46,6 +46,29 @@ import pwd
 
 import heapq
 
+def hasStarted(request):
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	taskName = request.GET.get('task', '');
+	wid = request.GET.get('wid', '');
+
+
+	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+
+	find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment__name=expId);
+	
+	taskCount = 0
+	for task in find_tasks:
+		if (task.experiment == expModel):
+			taskCount+=1
+
+	if (taskCount > 0):
+		return HttpResponse('true')
+	else:
+		return HttpResponse('false')
+
+
+
 def logAnalytics(request):
 	print(request.POST["data"])
 	usrId = request.POST.get("usrId", '');
