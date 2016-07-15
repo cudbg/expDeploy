@@ -7927,7 +7927,7 @@ var gpaas = (function() {
 
 
 			$.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data){
-			    if (data == "false") {
+			    if (data == "true") {
 			    	
 			    	resumeStartup(false)
 
