@@ -538,17 +538,24 @@ var gpaas = (function() {
 
 
 			$.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data){
-			    console.log("beloowwwwww")
-			    console.log(data)
+			    if (data == "false") {
+			    	
+			    	resumeStartup(false)
+
+			    }
+			    else {
+
+			    	trainingTasks = options.trainingTasks
+					if (options.trainingTasks != null && trainingTasks.length > 0) {
+						trainingTasks[0]()
+					} else {
+						resumeQualify()
+					}
+
+
+			    }
 			  });
 
-
-			trainingTasks = options.trainingTasks
-			if (options.trainingTasks != null && trainingTasks.length > 0) {
-				trainingTasks[0]()
-			} else {
-				resumeQualify()
-			}
 
 
 			//nextTask();
