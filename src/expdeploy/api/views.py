@@ -52,6 +52,9 @@ def hasStarted(request):
 	taskName = request.GET.get('task', '');
 	wid = request.GET.get('wid', '');
 
+	print(wid)
+	print(expId)
+	print(usrId)
 
 	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
