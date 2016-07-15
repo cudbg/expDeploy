@@ -7503,7 +7503,7 @@ var gpaas = (function() {
 			resumeQualify()
 		} else {
 			trainingTasks[currentTraining]()
-			logAnalytics(wid + " has started a training task, " + (trainingTasks.length -(currentTraining+1)) + " remaining")
+			logAnalytics(wid + " has started a training task, " + (trainingTasks.length -(currentTraining)) + " remaining")
 		}
 	}
 
@@ -7539,7 +7539,7 @@ var gpaas = (function() {
 				qualificationTasks[currentQualification]()
 			}
 
-			logAnalytics(wid + " has started a qualification task, " + (qualificationTasks.length -(currentQualification+1)) + " remaining")
+			logAnalytics(wid + " has started a qualification task, " + (qualificationTasks.length -(currentQualification)) + " remaining")
 		}
 
 	}
@@ -7684,10 +7684,30 @@ var gpaas = (function() {
 			clearTask()
 			console.log("TASK CLEARED")
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, false); // false for synchronous request
-			xmlHttp.send(null);
 
-			submit()
+
+
+			xmlhttp.onload = function() {
+							if (xmlhttp.readyState === xmlhttp.DONE) {
+								if (xmlhttp.status === 200) {
+									submit()
+								} else {
+									catchError(new Error("Server error when logging data"))
+								}
+							} else {
+
+							}
+						};
+
+
+
+
+
+
+			xmlHttp.open("GET", serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, false); // false for synchronous request
+			xmlHttp.send(null)
+
+
 		} catch (e) {
 			catchError(e)
 		}
@@ -7900,6 +7920,11 @@ var gpaas = (function() {
 
 
 			}
+
+			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
+			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
+			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
+
 
 
 			trainingTasks = options.trainingTasks
