@@ -608,51 +608,42 @@ def finishTasks(request):
 	if len(exps)==0:
 		return HttpResponse("No experiments with those specs found")
 
-	expsBackwards = reversed(exps);
-	for exp in expsBackwards:
-		if (exp.original_filename == (expId + ".py")):
-			print("test 2");
 
-			EX = exp.experiment
-			print("n2222"+EX.name);
-			
-			return_tasks = []
-			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
-			print(find_tasks);
-			
-				#return HttpResponse('{"params":' + str(params) + "}")
-			for workertask in find_tasks:
-				return_tasks.append(workertask);
+	
+	return_tasks = []
+	find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment__name=expId);
+	print(find_tasks);
+	
+		#return HttpResponse('{"params":' + str(params) + "}")
+	for workertask in find_tasks:
+		return_tasks.append(workertask);
 
-			params_list = []
+	params_list = []
 
-			print("THESE ARE THE STOPPED TASKS")
-			print(return_tasks)
+	print("THESE ARE THE STOPPED TASKS")
+	print(return_tasks)
 
-			response = "";
+	response = "";
 
-			for task in return_tasks:
-				params = task.params
-				params_json = byteify(json.loads(params));
+	for task in return_tasks:
+		params = task.params
+		params_json = byteify(json.loads(params));
 
-				results = json.loads(task.results)
-				if (len(results["data"]) == 0):
-					task.currentStatus = "Stopped"
-					params_list.append(params_json);
+		results = json.loads(task.results)
+		if (len(results["data"]) == 0):
+			task.currentStatus = "Stopped"
+			params_list.append(params_json);
 
-					history = json.loads(task.history)
-					timestamp_string = format(datetime.datetime.now(), u'U')
+			timestamp_string = format(datetime.datetime.now(), u'U')
+			event = HistoryEvent(newStatus="Stopped", timeStamp=int(timestamp_string))
+			event.workerTask = task
+			event.save()
 
 
-					event = {"type":"changeStatus","newStatus":"Stopped","timestamp":timestamp_string}
-					history["events"].append(event)
-					
-					task.history = json.dumps(history)
-					task.save()
-					print('heh"')
-					print(params_json);
+			task.save()
+			print(params_json);
 
-			return HttpResponse('{"params":' + str(params_list) + "}")
+	return HttpResponse('{"params":' + str(params_list) + "}")
 
 def task(request):
 	mturk_hitId = request.GET.get('hitId', '');
