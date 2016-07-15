@@ -7687,9 +7687,9 @@ var gpaas = (function() {
 
 
 
-			xmlhttp.onload = function() {
-							if (xmlhttp.readyState === xmlhttp.DONE) {
-								if (xmlhttp.status === 200) {
+			xmlHttp.onload = function() {
+							if (xmlHttp.readyState === xmlHttp.DONE) {
+								if (xmlHttp.status === 200) {
 									submit()
 								} else {
 									catchError(new Error("Server error when logging data"))
