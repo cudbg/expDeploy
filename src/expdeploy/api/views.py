@@ -442,7 +442,7 @@ def mturk(request):
 
 
 	url = request.GET.get('URL', '');
-	title = expId
+	title = expId.replace("_"," ")
 	description = exp.hit_description
 
 
