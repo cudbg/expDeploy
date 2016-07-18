@@ -258,7 +258,7 @@ def payout(request):
 
 			approve = mturk.approve_assignment(assignmentId)
 			
-			bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
+			bon = mturk.grant_bonus(wid, assignmentId, p, "GREAT WORK! bonus + per task payments")
 
 
 			# print >>sys.stderr, (bon)
