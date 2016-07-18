@@ -785,7 +785,7 @@ def task(request):
 									print(numchoose[0])
 									balanced_history[p["name"]][numchoose[1]]+=1
 
-									param[p["name"]] = 0#numchoose[1]
+									param[p["name"]] = numchoose[1]
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
