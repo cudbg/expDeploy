@@ -758,12 +758,12 @@ def task(request):
 						balanced_history = json.loads(EX.balanced_history)
 						for p in task["params"]:
 							if p["type"] == "BalancedRange":
-								if p["name"] not in balanced_history:
+								if True:#p["name"] not in balanced_history:
 									balanced_history[p["name"]] = {}
 									for i in range(p["options"][0], p["options"][1]):
 										balanced_history[p["name"]][i] = 0
 
-
+						balanced_history = json.loads(json.dumps(balanced_history))
 						pickedsofar = {}
 
 						for i in range(0,n):
@@ -793,7 +793,7 @@ def task(request):
 
 									print(numchoose)
 									print(pickedsofar[p["name"]])
-									
+
 									while numchoose[1] in pickedsofar[p["name"]]:
 										numchoose = heapq.heappop(sorter)
 
