@@ -758,7 +758,7 @@ def task(request):
 						balanced_history = json.loads(EX.balanced_history)
 						for p in task["params"]:
 							if p["type"] == "BalancedRange":
-								if True:#p["name"] not in balanced_history:
+								if p["name"] not in balanced_history:
 									balanced_history[p["name"]] = {}
 									for i in range(p["options"][0], p["options"][1]):
 										balanced_history[p["name"]][i] = 0
