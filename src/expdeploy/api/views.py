@@ -777,7 +777,7 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(int(historical_data[key])//3, key))
+										heapq.heappush(sorter,(int(historical_data[key])//1, key))
 
 
 
