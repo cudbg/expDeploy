@@ -454,7 +454,7 @@ def mturk(request):
 	for k in keys:
 		keywords.append(k.strip());
 	frame_height = 500 # the height of the iframe holding the external hit
-	amount = exp.bonus_payment
+	amount = exp.hit_submission_payment
 	 
 	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
 
