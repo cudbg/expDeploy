@@ -764,13 +764,19 @@ def task(request):
 										balanced_history[p["name"]][i] = 0
 
 
+						pickedsofar = {}
+
 						for i in range(0,n):
 							
 							param = gen.pop()
 
+							
+
 							for p in task["params"]:
 
-								pickedsofar = []
+								if p["name"] not in pickedsofar:
+									pickedsofar[p["name"]] = []
+								
 
 								if p["type"] == "BalancedRange":
 
@@ -785,13 +791,10 @@ def task(request):
 
 									numchoose = heapq.heappop(sorter)
 
-									print(numchoose)
-									print(pickedsofar)
-
-									while numchoose[1] in pickedsofar:
+									while numchoose[1] in pickedsofar[p["name"]]:
 										numchoose = heapq.heappop(sorter)
 
-									pickedsofar.append(numchoose[1])
+									pickedsofar[p["name"]].append(numchoose[1])
 
 									#print(numchoose[1])
 									#print(numchoose[0])
