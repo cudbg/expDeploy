@@ -776,7 +776,7 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(historical_data[key], key))
+										heapq.heappush(sorter,int((historical_data[key])/3, key))
 
 									numchoose = heapq.heappop(sorter)
 
