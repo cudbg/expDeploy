@@ -481,7 +481,7 @@ def QualificationView(request, username, experiment):
 		q_set = qualifications.get(username=username)
 
 		form = QualificationsForm(
-			{'adult_requirement': q_set.adult_requirement,
+			{'us_residents_only': q_set.US_only,
 			'percentage_hits_approved': q_set.percentage_hits_approved,
 			'percentage_assignments_submitted':
 				q_set.percentage_assignments_submitted,
@@ -504,7 +504,8 @@ def QualificationView(request, username, experiment):
 		#Update experiment qualifications
 		if form.is_valid():
 			# adult = form.cleaned_data['adult_requirement']
-			qualifications.adult_requirement = form.cleaned_data['adult_requirement']
+			print("\n" + str(form.cleaned_data['us_residents_only']) + "\n")
+			qualifications.US_only = form.cleaned_data['us_residents_only']
 			# percentage_appr = form.cleaned_data['percentage_hits_approved']
 			qualifications.percentage_hits_approved = (
 				form.cleaned_data['percentage_hits_approved'])

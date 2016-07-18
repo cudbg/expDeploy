@@ -81,7 +81,7 @@ class LoginForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput())
 
 class QualificationsForm(forms.Form):
-	adult_requirement = forms.BooleanField(required=True) # adults only
+	us_residents_only = forms.BooleanField(required=False) # adults only
 	percentage_hits_approved = forms.IntegerField(required=True)
 	percentage_assignments_submitted = forms.IntegerField(required=True)
 	def as_p(self):

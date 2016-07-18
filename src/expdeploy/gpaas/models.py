@@ -44,7 +44,7 @@ class ExperimentFile(models.Model):
 		return str(self.docfile)
 
 class QualificationsModel(models.Model):
-	adult_requirement = models.BooleanField(default=True) # adults only
+	US_only = models.BooleanField(default=True) # adults only
 	experiment = models.ForeignKey(ExperimentModel)
 	percentage_hits_approved = models.IntegerField(default=95)
 	percentage_assignments_submitted = models.IntegerField(default=95)
