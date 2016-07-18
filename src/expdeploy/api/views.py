@@ -805,8 +805,7 @@ def task(request):
 							#print(NewTask.experiment)
 							return_tasks.append(NewTask);
 
-						for key in balanced_history:
-							balanced_history[key] = 0
+						#for key in balanced_history:
 						EX.balanced_history=json.dumps(balanced_history)
 						EX.save()
 
