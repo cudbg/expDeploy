@@ -784,20 +784,16 @@ def task(request):
 
 
 									numchoose = heapq.heappop(sorter)
-									
-									while True:
-										localVar = numchoose
-										if numchoose[1] in pickedsofar:
-											localVar = heapq.heappop(sorter)
-										else:
-											numchoose = localVar
-											break
 
+									print(numchoose)
+									print(pickedsofar)
 
+									while numchoose[1] in pickedsofar:
+										numchoose = heapq.heappop(sorter)
 
 									pickedsofar.append(numchoose[1])
 
-									print(numchoose[1])
+									#print(numchoose[1])
 									#print(numchoose[0])
 									balanced_history[p["name"]][numchoose[1]]+=1
 
