@@ -1,3 +1,4 @@
+__future__ import division
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
@@ -776,7 +777,7 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(int(historical_data[key])/3, key))
+										heapq.heappush(sorter,(int(historical_data[key])//3, key))
 
 									numchoose = heapq.heappop(sorter)
 
