@@ -770,6 +770,8 @@ def task(request):
 
 							for p in task["params"]:
 
+								pickedsofar = []
+
 								if p["type"] == "BalancedRange":
 
 									sorter = []
@@ -777,12 +779,15 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(int(historical_data[key])//1, key))
+										heapq.heappush(sorter,(int(historical_data[key])//3, key))
 
 
 
 									numchoose = heapq.heappop(sorter)
-									print(numchoose[0])
+									while numchoose[1] in pickedsofar:
+										numchoose = heapq.heappop(sorter)
+									pickedsofar.append(numchoose[1])
+									#print(numchoose[0])
 									balanced_history[p["name"]][numchoose[1]]+=1
 
 									param[p["name"]] = numchoose[1]
