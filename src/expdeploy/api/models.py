@@ -39,7 +39,8 @@ class HistoryEvent (models.Model):
 
 
 class Metadata (models.Model):
-
+	wid = models.TextField(default="")
+	ip_address = models.TextField(default="")
 	userAgent = models.TextField(default="")
 	dimensions = models.TextField(default="")
 	start = models.IntegerField(default=0)

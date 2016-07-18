@@ -8,7 +8,6 @@ var gpaas = (function() {
 		return target.replace(new RegExp(search, 'g'), replacement);
 	};
 
-
 	var wid = "undefined";
 	var task = "";
 	var researcher = "";

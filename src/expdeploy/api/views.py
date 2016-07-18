@@ -507,7 +507,13 @@ def mturk(request):
 	return HttpResponseRedirect(reverse(ProfileGalleryView));
 	# return HttpResponse("Successfully posted to MTurk");
 
-
+def get_client_ip(request):
+	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+	if x_forwarded_for:
+		ip = x_forwarded_for.split(',')[0]
+	else:
+		ip = request.META.get('REMOTE_ADDR')
+	return ip
 
 def result(request):
 	expId = request.GET.get('experiment', '');
@@ -553,7 +559,7 @@ def log(request):
 
 
 
-		m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"])
+		m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"],ip_address=get_client_ip(request),wid=body["worker_id"])
 
 		m.save()
 
