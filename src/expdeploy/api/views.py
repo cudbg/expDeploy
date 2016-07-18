@@ -791,8 +791,13 @@ def task(request):
 
 									numchoose = heapq.heappop(sorter)
 
+									print(numchoose)
+									print(pickedsofar[p["name"]])
+									
 									while numchoose[1] in pickedsofar[p["name"]]:
 										numchoose = heapq.heappop(sorter)
+
+									
 
 									pickedsofar[p["name"]].append(numchoose[1])
 
