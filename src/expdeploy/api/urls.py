@@ -3,6 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+	url(r'^logAnalytics', views.logAnalytics, name='logAnalytics'),
 	url(r'^approve', views.approve, name='approve'),
 	url(r'^ban', views.ban, name='ban'),
 	url(r'^allPay', views.allPay, name='allPay'),
@@ -16,5 +17,6 @@ urlpatterns = [
 	url(r'^experiment', views.experiment, name='experiment'),
 	url(r'^log/', views.log, name='log'),
 	url(r'^export', views.export, name='export'),
+	url(r'^hasStarted', views.hasStarted, name='hasStarted'),
     url(r'^$', views.index, name='index'),
 ]

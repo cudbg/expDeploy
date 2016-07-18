@@ -7398,7 +7398,7 @@ var gpaas = (function() {
 	};
 
 
-	var wid = "haskdhdsddfsf";
+	var wid = "undefined";
 	var task = "";
 	var researcher = "";
 	var n = "";
@@ -7430,6 +7430,9 @@ var gpaas = (function() {
 	//var serverurl = "https://192.241.179.74:8000"
 	//var serverurl = "https://localhost:8000"
 
+	var workerID = function (){
+		return wid
+	}
 
 	var catchError = function(e) {
 		alert(e)
@@ -7464,6 +7467,12 @@ var gpaas = (function() {
 		dataToSend.push(d)
 	}
 
+	var logAnalytics = function(d) {
+		$.post( serverurl + "/api/logAnalytics/", { data: d, usrId:researcher, expId: n}, function( data ) {
+		  console.log('successfully logged data')
+		}, "json");
+	}
+
 
 
 	var submit = function() {
@@ -7490,9 +7499,11 @@ var gpaas = (function() {
 	var nextTraining = function() {
 		currentTraining += 1;
 		if (currentTraining == trainingTasks.length) {
+			logAnalytics(wid + " has finished their training tasks")
 			resumeQualify()
 		} else {
 			trainingTasks[currentTraining]()
+			logAnalytics(wid + " has started a training task, " + (trainingTasks.length -(currentTraining)) + " remaining")
 		}
 	}
 
@@ -7502,18 +7513,33 @@ var gpaas = (function() {
 	var qualificationTasks = []
 	var failedQualSoFar = false
 
+
+	var getCurrentTraining = function (){
+		return currentTraining
+	}
+	var getCurrentQualification = function (){
+		return currentQualification
+	}
+
+
 	var nextQualification = function(succeeded) {
 
 		if (succeeded == false) {
+			logAnalytics(wid + " has finished their qualification tasks")
 			resumeStartup(true)
 		} else {
 
 			currentQualification += 1;
+			console.log("qual-log")
+			console.log(currentQualification)
+			console.log(qualificationTasks.length)
 			if (currentQualification == qualificationTasks.length) {
 				resumeStartup(false)
 			} else {
 				qualificationTasks[currentQualification]()
 			}
+
+			logAnalytics(wid + " has started a qualification task, " + (qualificationTasks.length -(currentQualification)) + " remaining")
 		}
 
 	}
@@ -7658,10 +7684,30 @@ var gpaas = (function() {
 			clearTask()
 			console.log("TASK CLEARED")
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, false); // false for synchronous request
-			xmlHttp.send(null);
 
-			submit()
+
+
+			xmlHttp.onload = function() {
+							if (xmlHttp.readyState === xmlHttp.DONE) {
+								if (xmlHttp.status === 200) {
+									submit()
+								} else {
+									catchError(new Error("Server error when logging data"))
+								}
+							} else {
+
+							}
+						};
+
+
+
+
+
+
+			xmlHttp.open("GET", serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, false); // false for synchronous request
+			xmlHttp.send(null)
+
+
 		} catch (e) {
 			catchError(e)
 		}
@@ -7739,6 +7785,7 @@ var gpaas = (function() {
 			var hitID = getUrlParameter("hitId")
 			var assignmentID = getUrlParameter("assignmentId")
 			wid = getUrlParameter("workerId")
+			logAnalytics(wid + " has started the experiment")
 
 			if (local) {
 				wid = "exampleWorker"
@@ -7857,6 +7904,7 @@ var gpaas = (function() {
 				}
 
 
+				nextTask()
 
 
 			}
@@ -7873,13 +7921,35 @@ var gpaas = (function() {
 
 			}
 
+			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
+			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
+			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
 
-			trainingTasks = options.trainingTasks
-			if (options.trainingTasks != null && trainingTasks.length > 0) {
-				trainingTasks[0]()
-			} else {
-				resumeQualify()
-			}
+
+			$.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data){
+			    
+				console.log(data)
+				console.log(data=="true")
+				console.log(data=="false")
+
+			    if (data == "true") {
+			    	
+			    	resumeStartup(false)
+
+			    }
+			    else {
+
+			    	trainingTasks = options.trainingTasks
+					if (options.trainingTasks != null && trainingTasks.length > 0) {
+						trainingTasks[0]()
+					} else {
+						resumeQualify()
+					}
+
+
+			    }
+			  });
+
 
 
 			//nextTask();
@@ -7906,7 +7976,11 @@ var gpaas = (function() {
 		cancelTasks: endTasks,
 		errorAction: catchError,
 		nextQualification: nextQualification,
-		nextTraining: nextTraining
+		nextTraining: nextTraining,
+		currentTraining:getCurrentTraining,
+		currentQualification:getCurrentQualification,
+		logAnalytics:logAnalytics,
+		workerID: workerID
 	}
 
 

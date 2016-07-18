@@ -1,3 +1,4 @@
+from __future__ import division
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
@@ -46,6 +47,47 @@ import os
 import pwd
 
 import heapq
+
+def hasStarted(request):
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	taskName = request.GET.get('task', '');
+	wid = request.GET.get('wid', '');
+
+	print(wid)
+	print(expId)
+	print(usrId)
+
+	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+
+	find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment__name=expId);
+	
+	taskCount = 0
+	for task in find_tasks:
+		if (task.experiment == expModel):
+			taskCount+=1
+
+	if (taskCount > 0):
+		return HttpResponse('true')
+	else:
+		return HttpResponse('false')
+
+
+
+def logAnalytics(request):
+	print(request.POST["data"])
+	usrId = request.POST.get("usrId", '');
+	expId = request.POST.get('expId', '');	
+	print(request.POST)
+	print(usrId)
+	print(expId)
+
+	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+	js = json.loads(exp.analytics)
+	js["log"].append(request.POST["data"])
+	exp.analytics = json.dumps(js)
+	exp.save()
+	return HttpResponse(request.POST)
 
 def approve(request):
 	researcher = Researcher.objects.filter(user__username="hn2284")[0];
@@ -209,13 +251,16 @@ def payout(request):
 			p = mturk.get_price_as_price(PERTASK * float(completed))
 			if completions[assignmentId]:
 				p = mturk.get_price_as_price(BONUS + PERTASK * float(completed))
+				if PERTASK * float(completed) + BONUS > balance:
+					return HttpResponse("Insufficient funds. Please refill your account on Amazon.")
 
-			if p + BONUS > balance:
+
+			if PERTASK * float(completed) > balance:
 				return HttpResponse("Insufficient funds. Please refill your account on Amazon.")
 
 			approve = mturk.approve_assignment(assignmentId)
 			
-			bon = mturk.grant_bonus(wid, assignmentId, p, "bonus + per task payments")
+			bon = mturk.grant_bonus(wid, assignmentId, p, "GREAT WORK! bonus + per task payments")
 
 
 			# print >>sys.stderr, (bon)
@@ -402,7 +447,7 @@ def mturk(request):
 
 
 	url = request.GET.get('URL', '');
-	title = expId
+	title = expId.replace("_"," ")
 	description = exp.hit_description
 
 
@@ -414,7 +459,7 @@ def mturk(request):
 	for k in keys:
 		keywords.append(k.strip());
 	frame_height = 500 # the height of the iframe holding the external hit
-	amount = exp.bonus_payment
+	amount = exp.hit_submission_payment
 	 
 	questionform = boto.mturk.question.ExternalQuestion( url, frame_height )
 
@@ -466,7 +511,13 @@ def mturk(request):
 	return HttpResponseRedirect(reverse(ProfileGalleryView));
 	# return HttpResponse("Successfully posted to MTurk");
 
-
+def get_client_ip(request):
+	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+	if x_forwarded_for:
+		ip = x_forwarded_for.split(',')[0]
+	else:
+		ip = request.META.get('REMOTE_ADDR')
+	return ip
 
 def result(request):
 	expId = request.GET.get('experiment', '');
@@ -512,7 +563,7 @@ def log(request):
 
 
 
-		m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"])
+		m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"],ip_address=get_client_ip(request),wid=body["worker_id"])
 
 		m.save()
 
@@ -597,51 +648,42 @@ def finishTasks(request):
 	if len(exps)==0:
 		return HttpResponse("No experiments with those specs found")
 
-	expsBackwards = reversed(exps);
-	for exp in expsBackwards:
-		if (exp.original_filename == (expId + ".py")):
-			print("test 2");
 
-			EX = exp.experiment
-			print("n2222"+EX.name);
-			
-			return_tasks = []
-			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
-			print(find_tasks);
-			
-				#return HttpResponse('{"params":' + str(params) + "}")
-			for workertask in find_tasks:
-				return_tasks.append(workertask);
+	
+	return_tasks = []
+	find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment__name=expId);
+	print(find_tasks);
+	
+		#return HttpResponse('{"params":' + str(params) + "}")
+	for workertask in find_tasks:
+		return_tasks.append(workertask);
 
-			params_list = []
+	params_list = []
 
-			print("THESE ARE THE STOPPED TASKS")
-			print(return_tasks)
+	print("THESE ARE THE STOPPED TASKS")
+	print(return_tasks)
 
-			response = "";
+	response = "";
 
-			for task in return_tasks:
-				params = task.params
-				params_json = byteify(json.loads(params));
+	for task in return_tasks:
+		params = task.params
+		params_json = byteify(json.loads(params));
 
-				results = json.loads(task.results)
-				if (len(results["data"]) == 0):
-					task.currentStatus = "Stopped"
-					params_list.append(params_json);
+		results = json.loads(task.results)
+		if (len(results["data"]) == 0):
+			task.currentStatus = "Stopped"
+			params_list.append(params_json);
 
-					history = json.loads(task.history)
-					timestamp_string = format(datetime.datetime.now(), u'U')
+			timestamp_string = format(datetime.datetime.now(), u'U')
+			event = HistoryEvent(newStatus="Stopped", timeStamp=int(timestamp_string))
+			event.workerTask = task
+			event.save()
 
 
-					event = {"type":"changeStatus","newStatus":"Stopped","timestamp":timestamp_string}
-					history["events"].append(event)
-					
-					task.history = json.dumps(history)
-					task.save()
-					print('heh"')
-					print(params_json);
+			task.save()
+			print(params_json);
 
-			return HttpResponse('{"params":' + str(params_list) + "}")
+	return HttpResponse('{"params":' + str(params_list) + "}")
 
 def task(request):
 	mturk_hitId = request.GET.get('hitId', '');
@@ -731,12 +773,20 @@ def task(request):
 									for i in range(p["options"][0], p["options"][1]):
 										balanced_history[p["name"]][i] = 0
 
+						balanced_history = json.loads(json.dumps(balanced_history))
+						pickedsofar = {}
 
 						for i in range(0,n):
 							
 							param = gen.pop()
 
+							
+
 							for p in task["params"]:
+
+								if p["name"] not in pickedsofar:
+									pickedsofar[p["name"]] = []
+								
 
 								if p["type"] == "BalancedRange":
 
@@ -745,10 +795,24 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(historical_data[key], key))
+										heapq.heappush(sorter,(int(historical_data[key])//1, key))
+
+
 
 									numchoose = heapq.heappop(sorter)
 
+									print(numchoose)
+									print(pickedsofar[p["name"]])
+
+									while numchoose[1] in pickedsofar[p["name"]]:
+										numchoose = heapq.heappop(sorter)
+
+									
+
+									pickedsofar[p["name"]].append(numchoose[1])
+
+									#print(numchoose[1])
+									#print(numchoose[0])
 									balanced_history[p["name"]][numchoose[1]]+=1
 
 									param[p["name"]] = numchoose[1]
@@ -771,6 +835,7 @@ def task(request):
 							#print(NewTask.experiment)
 							return_tasks.append(NewTask);
 
+						#for key in balanced_history:
 						EX.balanced_history=json.dumps(balanced_history)
 						EX.save()
 
