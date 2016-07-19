@@ -769,7 +769,7 @@ def task(request):
 								if p["name"] not in balanced_history:
 									balanced_history[p["name"]] = {}
 									for i in range(p["options"][0], p["options"][1]):
-										balanced_history[p["name"]][i] = 0
+										balanced_history[p["name"]][str(i)] = 0
 
 						balanced_history = json.loads(json.dumps(balanced_history))
 						pickedsofar = {}
@@ -801,8 +801,8 @@ def task(request):
 									if len(sorter) == 0:
 										balanced_history[p["name"]] = {}
 										for i in range(p["options"][0], p["options"][1]):
-											balanced_history[p["name"]][i] = 0
-											
+											balanced_history[p["name"]][str(i)] = 0
+
 										historical_data = balanced_history[p["name"]]
 
 										for key in historical_data:
