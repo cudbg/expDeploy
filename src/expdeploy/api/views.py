@@ -50,6 +50,10 @@ import heapq
 
 def showResults(request):
 	wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
+	expId = request.GET.get('wid', '');
+	if expId != '':
+		wids = [expId]
+		
 	tasks = []
 	for wid in wids:
 		find_tasks = WorkerTask.objects.filter(wid=wid)
