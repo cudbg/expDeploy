@@ -53,7 +53,7 @@ def showResults(request):
 	expId = request.GET.get('wid', '');
 	if expId != '':
 		wids = [expId]
-		
+
 	tasks = []
 	for wid in wids:
 		find_tasks = WorkerTask.objects.filter(wid=wid)
@@ -511,7 +511,7 @@ def mturk(request):
 	
 	 
 	create_hit_result = mturk.create_hit(
-	    title = title,
+	    title = "Label Snippets of Laptop Reviews from Amazon",
 	    description = description,
 	    keywords = keywords,
 	    question = questionform,
