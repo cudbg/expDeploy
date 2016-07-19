@@ -19,17 +19,15 @@
     </script>
     <style>
         body{
-           min-width:800px; /* suppose you want minimun width of 1000px */
-           width: auto !important;  /* Firefox will set width as auto */
-           width:1000px;             /* As IE ignores !important it will set width as 1000px; */
+           min-width:800px;        
+           width: auto !important;   /* Firefox support*/
+           width:1000px;             /* IE support*/
            overflow-x: hidden; 
         }
     </style>
-
 </head>
-<body>
 
-    
+<body>
 	<div id="page-header">
         <div class="gpaas-logo">
             <img src="{% static 'images/logo.png' %}" class="top-buffer" style="width:425px;height:133px;"/>
@@ -55,7 +53,6 @@
             </div>
         </div>           
     </div>
-
 
     <!-- Do not remove the comment below this one. Black magic ensues. -->
     <!-- {% load lookup %} -->
@@ -86,6 +83,8 @@
 	    		</div> <!-- column -->
 	    	</div> <!-- row -->
     	</div> <!-- experiment-header -->
+
+        <!-- contains list of experiments and edit buttons -->
         <div>
         	<div class="box box-left">
         		{% for experiment, files in filedict.items %}
@@ -96,13 +95,12 @@
                         <div class="col-md-1">
                                 <button id="{{experiment}}-edit-link" class="btn btn-expedit"> edit </button>
                         </div> <!-- close col -->
-                        <!-- edit button -->
-                        
     				</div> <!-- close row -->
                     <hr>
         		{% endfor %}
         	</div><!-- close box -->
-            <!-- Form box div for each experiment -->
+
+            <!-- box div for each experiment -->
             {% for experiment, files in filedict.items %}
                  <div class="box box-right edit-form" id="{{experiment}}-form"> 
                     <div class="tab-space">
@@ -113,8 +111,6 @@
 
                         <!-- Post/Delete MTurk buttons -->
                         <div class="row">
-                            
-                            <!-- post to MTurk -->
                             {% publishlookup publishdict experiment as published %}
                             {% if published %}
                                 <div class="col-sm-4">
@@ -125,7 +121,6 @@
                                     <form action="/api/mturk" method="get">
                             {% endif %}
                             
-
                                 <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
                                 <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
                                 <input type="hidden" value="{{description}}" name="description" id = "id3" />
@@ -150,7 +145,6 @@
                                     <form action="/api/mturk" method="get">
                             {% endif %}
                             
-
                                 <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
                                 <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
                                 <input type="hidden" value="{{description}}" name="description" id = "id3" />
@@ -165,9 +159,9 @@
                                 </form>
                             </div> <!-- close col -->
                         </div> <!-- close row -->
+
                         <div class="row">
                             <div class="col-sm-4">
-
                                 <!-- Download Data -->
                                 <form action="/api/export" method="get">
                                     <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
@@ -175,9 +169,7 @@
                                     <input type="submit" class="btn btn-by" style ="width:150px" value="Download Data" />
                                 </form>
                             </div>
-
                             <div class="col-sm-3">
-
                                 <!-- Download Data -->
                                 <form action="/api/payout" method="get">
                                     <input type="hidden" value="{{experiment}}" name="exp" id = "id2" />
@@ -185,15 +177,8 @@
                                     <input type="submit" class="btn btn-by" style ="width:150px" value="Pay Out All" />
                                 </form>
                             </div>
-
-
                         </div> <!--  close row -->
-
                         <hr>
-
-                        <!-- post/delete MTurk buttons -->
-                        <!-- post to Sandbox button -->
-                        <!-- Download Data button -->
 
                         <!-- Upload Files form/button -->
                         <p><h3>Upload files</h3></p>
@@ -223,10 +208,6 @@
 
                         <p> All files assocaited with this experiment: </p>
                         <ul>
-                            <!-- Link files -->
-                            <!-- {% for file in files %}
-                                <li><a href="{{ file.docfile.url }}">{{file.original_filename}}</a></li>
-                            {% endfor %} -->
                             {% for file in files %}
                                 <li><a href="/gpaas/experiment/{{username}}/{{experiment}}/{{file.original_filename}}">{{file.original_filename}}</a></li>
                             {% endfor %}
@@ -317,26 +298,18 @@
 
                         <p>This page will update the worker qualifications of the experiment. A reasonable set of defaults exists already for each experiment. You can read more about what these qualifications are <a href="http://boto.cloudhackers.com/en/latest/ref/mturk.html#module-boto.mturk.qualification">here.</a> </p>
                         <p> They ensure that only MTurk workers with a good record of reliability will be able to view your HITs. </p>
-                        <div class="tab-space bottom-buffer">
+                        <div class="tab-space">
                             <form action="{% explink q_linkdict experiment %}" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {% formlookup formdict experiment "qualification_form" %}
                                 <p><input type="submit" class="btn btn-by top-buffer" value="Update Qualifications"/></p>
                             </form>
                         </div>
-                            <!-- <div class = "col-md-1"></div>
-                            <div class = "col-md-1">
-                                Link:
-                            </div>
-                            <div class = "col-md-3">
-                                <a href = "{% explink q_linkdict experiment %}"> {% explink q_linkdict experiment %} </a> 
-                            </div>  close col --> 
+                        <hr>
                         </div> <!-- close row -->
                     </div> <!-- close tab-space -->                
                 </div> <!-- close box edit-form-->
             {% endfor %}
-            <!-- </div> close col -->
-        <!-- </div> close row with boxes -->
         </div>
     </div> <!-- container -->
 </body>
