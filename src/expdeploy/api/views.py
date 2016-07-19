@@ -799,6 +799,7 @@ def task(request):
 									shuffle(sorter)
 
 									if len(sorter) == 0:
+										balanced_history[p["name"]] = {}
 										for i in range(p["options"][0], p["options"][1]):
 											balanced_history[p["name"]][i] = 0
 
