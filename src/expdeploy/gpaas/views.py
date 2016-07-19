@@ -341,7 +341,8 @@ def FileHttpResponse(request, username, experiment, filename):
 	if filename=="api.js" and DEBUG==False:
 
 		print("\n\n\n\n TRYING TO GET THE API.")
-		return render_to_response('api.js',	{'username':username,'experiment':experiment})
+		return render_to_response('api.js',	{'username':username,
+			'experiment':experiment})
 
 
 	exp = GetExperiment(username, experiment)
@@ -425,11 +426,33 @@ def ProfileGalleryView(request):
 		q_linkdict[exp.name] = "/gpaas/qualification/"+\
 			str(username)+"/"+exp.name+"/"
 
+	# if request.method != 'POST':
+	# 	# populate qualifications form
+	# 	exp = AuthenticateExperiment(username,experiment)
+	# 	qualifications = exp.qualificationsmodel_set
+	# 	# userperson = exp.username
+	# 	q_set = qualifications.get(username=username)
+
+	# 	form = QualificationsForm(
+	# 		{'us_residents_only': q_set.US_only,
+	# 		'percentage_hits_approved': q_set.percentage_hits_approved,
+	# 		'percentage_assignments_submitted':
+	# 			q_set.percentage_assignments_submitted,
+	# 		})
+
+	# 	post_url = "/gpaas/qualification/"+username+"/"+experiment+"/"
+
+	# 	return render_to_response('qualification.html',
+	# 		{'qualform': form, 'user': username, 
+	# 		'experiment':experiment, 'post_url': post_url,},
+	# 		)
 
 	#Populate formdict {'experiment.name':{'FormName': form, ... }, ...}
 	formdict = {}
 	for exp in experiments_list:
 		inner_formdict = {}
+		
+		#main experiment forms
 		inner_formdict["hit_description_form"] = HitDescriptionForm(
 			{'hit_description': exp.hit_description}).as_p()
 		inner_formdict["hit_payment_form"] = HitPaymentForm(
@@ -444,6 +467,16 @@ def ProfileGalleryView(request):
 			{'number_of_assignments': exp.n}).as_p()
 		inner_formdict["config_file_form"] = ConfigFileForm(
 			{'config_file_name': exp.config_file}).as_p()
+
+		#qualifications form
+	 	qualifications = exp.qualificationsmodel_set
+		q_set = qualifications.get(username=username)
+		inner_formdict["qualification_form"] = QualificationsForm(
+			{'us_residents_only': q_set.US_only,
+			'percentage_hits_approved': q_set.percentage_hits_approved,
+			'percentage_assignments_submitted': q_set.percentage_assignments_submitted,
+			}).as_p()
+
 		#add inner_formdict to outer formdict
 		formdict[exp.name] = inner_formdict
 
@@ -477,7 +510,7 @@ def QualificationView(request, username, experiment):
 		# populate qualifications form
 		exp = AuthenticateExperiment(username,experiment)
 		qualifications = exp.qualificationsmodel_set
-		userperson = exp.username
+		# userperson = exp.username
 		q_set = qualifications.get(username=username)
 
 		form = QualificationsForm(

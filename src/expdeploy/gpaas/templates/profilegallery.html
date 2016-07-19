@@ -312,16 +312,25 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <h3> Edit Qualifications: </h3> 
-                            </div> <!-- close col -->
+                            </div> <!-- close col -->                            
                         </div><!--  close row -->
-                        <div class="row top-bottom-spacing">
-                            <div class = "col-md-1"></div>
+
+                        <p>This page will update the worker qualifications of the experiment. A reasonable set of defaults exists already for each experiment. You can read more about what these qualifications are <a href="http://boto.cloudhackers.com/en/latest/ref/mturk.html#module-boto.mturk.qualification">here.</a> </p>
+                        <p> They ensure that only MTurk workers with a good record of reliability will be able to view your HITs. </p>
+                        <div class="tab-space bottom-buffer">
+                            <form action="{% explink q_linkdict experiment %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "qualification_form" %}
+                                <p><input type="submit" class="btn btn-by top-buffer" value="Update Qualifications"/></p>
+                            </form>
+                        </div>
+                            <!-- <div class = "col-md-1"></div>
                             <div class = "col-md-1">
                                 Link:
                             </div>
                             <div class = "col-md-3">
                                 <a href = "{% explink q_linkdict experiment %}"> {% explink q_linkdict experiment %} </a> 
-                            </div> <!-- close col -->
+                            </div>  close col --> 
                         </div> <!-- close row -->
                     </div> <!-- close tab-space -->                
                 </div> <!-- close box edit-form-->
