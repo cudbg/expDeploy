@@ -802,6 +802,18 @@ def task(request):
 										for i in range(p["options"][0], p["options"][1]):
 											balanced_history[p["name"]][i] = 0
 
+									minHist = 999
+									for key in sorter:
+										minHist = min(minHist, balanced_history[p["name"]][key])
+
+									sorter2 = []
+									for key in sorter:
+										if balanced_history[p["name"]][key] <= minHist:
+											sorter2.append(key)
+
+									shuffle(sorter2)
+									sorter = sorter2
+									
 									numchoose = sorter[0]
 
 									print(numchoose)
