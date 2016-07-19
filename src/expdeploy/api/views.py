@@ -52,7 +52,7 @@ def showResults(request):
 	wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
 	tasks = []
 	for wid in wids:
-		find_tasks = WorkerTask.objects.filter(wid="A26Y58YECZUZZG")
+		find_tasks = WorkerTask.objects.filter(wid=wid)
 		for task in find_tasks:
 			tasks.append(task)
 
