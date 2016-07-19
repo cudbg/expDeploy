@@ -2,6 +2,7 @@
 from django.contrib import admin
 from expdeploy.gpaas.models import ExperimentFile
 from expdeploy.gpaas.models import ExperimentModel
+from expdeploy.gpaas.models import Researcher
 
 #register models
 
@@ -15,5 +16,13 @@ class ExperimentAdmin(admin.ModelAdmin):
 	class Meta:
 		model = ExperimentModel
 
+
+class ResearcherAdmin(admin.ModelAdmin):
+	list_display = ["aws_key_id", "aws_secret_key","user__name"]
+	class Meta:
+		model = ExperimentModel
+
+
 admin.site.register(ExperimentFile, FileAdmin)
 admin.site.register(ExperimentModel, ExperimentAdmin)
+admin.site.register(Researcher, ResearcherAdmin)
