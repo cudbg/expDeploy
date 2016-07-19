@@ -810,13 +810,13 @@ def task(request):
 
 									
 
-									pickedsofar[p["name"]].append(numchoose[1])
+									pickedsofar[p["name"]].append(numchoose)
 
 									#print(numchoose[1])
 									#print(numchoose[0])
-									balanced_history[p["name"]][numchoose[1]]+=1
+									balanced_history[p["name"]][numchoose]+=1
 
-									param[p["name"]] = numchoose[1]
+									param[p["name"]] = numchoose
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
