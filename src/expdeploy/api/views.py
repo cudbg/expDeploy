@@ -28,7 +28,7 @@ import boto.mturk.connection
 from boto.mturk.qualification import Qualifications, \
 	PercentAssignmentsApprovedRequirement,\
 	PercentAssignmentsSubmittedRequirement,\
-	LocaleRequirement
+	LocaleRequirement, NumberHitsApprovedRequirement
 	#get function from qualifications 
 import datetime
 import csv
@@ -474,10 +474,13 @@ def mturk(request):
 		integer_value = q_set.percentage_assignments_submitted)
 	if q_set.US_only:
 		locale_req = LocaleRequirement("EqualTo", "US")
+	#Hardcoded qualification for now. Will change later.
+	number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "500")
 	qualifications = Qualifications()
 	qualifications.add(approved_req)
 	qualifications.add(submitted_req)
 	qualifications.add(locale_req)
+	qualifications.add(number_approved_req)
 	
 	 
 	create_hit_result = mturk.create_hit(
