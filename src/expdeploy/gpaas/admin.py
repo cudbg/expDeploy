@@ -18,7 +18,7 @@ class ExperimentAdmin(admin.ModelAdmin):
 
 
 class ResearcherAdmin(admin.ModelAdmin):
-	list_display = ["aws_key_id", "aws_secret_key","user__name"]
+	list_display = ["aws_key_id", "aws_secret_key","user"]
 	class Meta:
 		model = ExperimentModel
 
