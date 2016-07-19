@@ -217,15 +217,14 @@
                         <!-- Hit Description Form -->
                         <p><h3>Edit Experiment</h3></p>
                         <p> Here you can edit the parameters associated with this experiment. </p>
-                        <hr>
-                            <form action="{{url_base}}{{experiment}}{{hit_description_url}}" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                {% formlookup formdict experiment "hit_description_form" %}
-                                <!-- {{ hit_description_form.as_p }} -->
-                                <div class="col-md-4">
-                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Description"/>
-                                </div> <!-- close col -->
-                            </form>
+                        <form action="{{url_base}}{{experiment}}{{hit_description_url}}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% formlookup formdict experiment "hit_description_form" %}
+                            <!-- {{ hit_description_form.as_p }} -->
+                            <div class="col-md-4">
+                                <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Description"/>
+                            </div> <!-- close col -->
+                        </form>
                         </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
                         <hr>
 
@@ -291,7 +290,7 @@
 
                         <!-- Edit Qualifications -->
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                                 <h3> Edit Qualifications: </h3> 
                             </div> <!-- close col -->                            
                         </div><!--  close row -->
@@ -306,7 +305,6 @@
                             </form>
                         </div>
                         <hr>
-                        </div> <!-- close row -->
                     </div> <!-- close tab-space -->                
                 </div> <!-- close box edit-form-->
             {% endfor %}
