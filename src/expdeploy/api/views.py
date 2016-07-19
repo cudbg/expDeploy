@@ -62,9 +62,10 @@ def showResults(request):
 		#print(task.results)
 		js = json.loads(task.results)
 		data = js["data"]
-		lastResult = data[len(data)-1]
-		print(lastResult["summaryModel"])
-		print(lastResult["summary"])
+		if len(data) > 0:
+			lastResult = data[len(data)-1]
+			print(lastResult["summaryModel"])
+			print(lastResult["summary"])
 
 		
 	return HttpResponse("hello world")
