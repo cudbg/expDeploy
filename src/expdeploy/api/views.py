@@ -697,8 +697,6 @@ def task(request):
 	wid = request.GET.get('wid', '');
 	isSandbox = request.GET.get('sandbox', '');
 
-	
-	
 
 
 	print(wid)
@@ -774,7 +772,7 @@ def task(request):
 								if p["name"] not in balanced_history:
 									balanced_history[p["name"]] = {}
 									for i in range(p["options"][0], p["options"][1]):
-										balanced_history[p["name"]][i] = 0
+										balanced_history[p["name"]][str(i)] = 0
 
 						balanced_history = json.loads(json.dumps(balanced_history))
 						pickedsofar = {}
@@ -798,27 +796,51 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(int(historical_data[key])//1, key))
+										if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+											sorter.append(key)
 
+									shuffle(sorter)
 
+									if len(sorter) == 0:
+										balanced_history[p["name"]] = {}
+										for i in range(p["options"][0], p["options"][1]):
+											balanced_history[p["name"]][str(i)] = 0
 
-									numchoose = heapq.heappop(sorter)
+										historical_data = balanced_history[p["name"]]
+
+										for key in historical_data:
+											if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+												sorter.append(key)
+
+									shuffle(sorter)
+
+									minHist = 999
+									for key in sorter:
+										minHist = min(minHist, balanced_history[p["name"]][key])
+
+									sorter2 = []
+									for key in sorter:
+										if balanced_history[p["name"]][key] <= minHist:
+											sorter2.append(key)
+
+									shuffle(sorter2)
+									sorter = sorter2
+
+									numchoose = sorter[0]
 
 									print(numchoose)
 									print(pickedsofar[p["name"]])
 
-									while numchoose[1] in pickedsofar[p["name"]]:
-										numchoose = heapq.heappop(sorter)
 
 									
 
-									pickedsofar[p["name"]].append(numchoose[1])
+									pickedsofar[p["name"]].append(numchoose)
 
 									#print(numchoose[1])
 									#print(numchoose[0])
-									balanced_history[p["name"]][numchoose[1]]+=1
+									balanced_history[p["name"]][numchoose]+=1
 
-									param[p["name"]] = numchoose[1]
+									param[p["name"]] = int(numchoose)
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
