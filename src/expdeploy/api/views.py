@@ -60,6 +60,7 @@ def showResults(request):
 
 	for task in tasks:
 		#print(task.results)
+		print(task.wid)
 		js = json.loads(task.results)
 		data = js["data"]
 		if len(data) > 0:
