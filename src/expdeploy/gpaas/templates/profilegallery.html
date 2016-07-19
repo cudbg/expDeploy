@@ -17,6 +17,15 @@
             {% endfor %}
         })
     </script>
+    <style>
+        body{
+           min-width:800px; /* suppose you want minimun width of 1000px */
+           width: auto !important;  /* Firefox will set width as auto */
+           width:1000px;             /* As IE ignores !important it will set width as 1000px; */
+           overflow-x: hidden; 
+        }
+    </style>
+
 </head>
 <body>
 
@@ -52,7 +61,7 @@
     <!-- {% load lookup %} -->
      
     <!-- Create experiment and Payment buttons -->
-    <div class="container"> 
+    <div class="container" style="width:1300px !important;"> 
         {% if messages %}   
             {% for message in messages %}
                 <div class="experiment-header-left"> 
@@ -60,16 +69,16 @@
                 </div>  
             {% endfor %}
         {% endif %}
-    	<div class="experiment-header-left">
+    	<div class="experiment-header-left tab-space">
     		<b><h1> Experiments</h1> </b>
     		<div class = "row">
-	    		<div class = "col-sm-5" style="max-width:200px">
+	    		<div class = "col-sm-2">
 	    			<!-- create new experiment -->
 				    <form action="/gpaas/createexperiment/" method="GET" enctype="multipart/form-data">
 				    	<p><input type="submit" class="btn btn-by" value ="Create New Experiment"></p>
 				    </form>
 	    		</div> <!-- column -->
-	    		<div class = "col-sm-4">
+	    		<div class = "col-sm-4 tab-space-triple">
 	    			<!-- Payments -->
 	    			<form action="/gpaas/viewresults?researcher={{username}}" method="post" enctype="multipart/form-data">
 				    	<p><input type="submit" class="btn btn-by" value ="Payments"></p>
@@ -77,251 +86,249 @@
 	    		</div> <!-- column -->
 	    	</div> <!-- row -->
     	</div> <!-- experiment-header -->
-        <div class="row">
-            <div class="col-md-2" style="width:145px">
-            	<div class="form-box form-box-left">
-            		{% for experiment, files in filedict.items %}
-        	    		<div class="row">
-                            <div class="col-md-6">
-            					<h4> <a href = "{% explink linkdict experiment %}"> {{experiment}} </a>  </h4> 
-                            </div>
-                            <div class="col-md-1">
-                                    <button id="{{experiment}}-edit-link" class="btn btn-expedit"> edit </button>
-                            </div> <!-- close col -->
-                            <!-- edit button -->
+        <div>
+        	<div class="box box-left">
+        		{% for experiment, files in filedict.items %}
+    	    		<div class="row">
+                        <div class="col-md-6">
+        					<h4> <a href = "{% explink linkdict experiment %}"> {{experiment}} </a>  </h4> 
+                        </div>
+                        <div class="col-md-1">
+                                <button id="{{experiment}}-edit-link" class="btn btn-expedit"> edit </button>
+                        </div> <!-- close col -->
+                        <!-- edit button -->
+                        
+    				</div> <!-- close row -->
+                    <hr>
+        		{% endfor %}
+        	</div><!-- close box -->
+            <!-- Form box div for each experiment -->
+            {% for experiment, files in filedict.items %}
+                 <div class="box box-right edit-form" id="{{experiment}}-form"> 
+                    <div class="tab-space">
+                        <h3><b>{{experiment}}</b></h3> 
+                        <!-- link experiment -->
+                        <p> Link to "{{experiment}}":
+                        <a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
+
+                        <!-- Post/Delete MTurk buttons -->
+                        <div class="row">
                             
-        				</div> <!-- close row -->
-                        <hr>
-            		{% endfor %}
-            	</div><!-- close form-box -->
-            </div> <!-- close column -->
-            <div class="col-md-5">
-                <!-- Form box div for each experiment -->
-                {% for experiment, files in filedict.items %}
-                     <div class="form-box edit-form" id="{{experiment}}-form"> 
-                        <div class="tab-space">
-                            <h3><b>{{experiment}}</b></h3> 
-                            <!-- link experiment -->
-                            <p> Link to "{{experiment}}":
-                            <a href = "{% explink linkdict experiment %}"> {% explink linkdict experiment %} </a> </p>
-
-                            <!-- Post/Delete MTurk buttons -->
-                            <div class="row">
-                                
-                                <!-- post to MTurk -->
-                                {% publishlookup publishdict experiment as published %}
-                                {% if published %}
-                                    <div class="col-sm-4">
-                                        <form action="/api/removemturk" method="get">
-                                {% else %}
-                                    <!-- different column sizes for different buttons -->
-                                    <div class="col-sm-4">
-                                        <form action="/api/mturk" method="get">
-                                {% endif %}
-                                
-
-                                    <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
-                                    <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
-                                    <input type="hidden" value="{{description}}" name="description" id = "id3" />
-                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-                                    <input type="hidden" value="False" name="isSandbox" id="id5"/>
-
-                                    {% if published %}
-                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Remove from MTurk" />
-                                    {% else %}
-                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Post to MTurk" />
-                                    {% endif %}
-                                    </form>
-                                </div> <!-- close col -->
-
-                                <!-- post to Sandbox -->
-                                {% publishlookup pub_sandbox experiment as sndbx_pub %}
-                                {% if sndbx_pub %}
-                                    <div class="col-sm-5">
-                                        <form action="/api/removemturk" method="get">
-                                {% else %}
-                                    <div class="col-sm-3 tab-space">
-                                        <form action="/api/mturk" method="get">
-                                {% endif %}
-                                
-
-                                    <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
-                                    <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
-                                    <input type="hidden" value="{{description}}" name="description" id = "id3" />
-                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-                                    <input type="hidden" value="True" name="isSandbox" id="id5"/>
-
-                                    {% if published %}
-                                        <input type="submit" class="btn btn-by" style ="width:170px" value="Remove from Sandbox" />
-                                    {% else %}
-                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Post to Sandbox" />
-                                    {% endif %}
-                                    </form>
-                                </div> <!-- close col -->
-                            </div> <!-- close row -->
-                            <div class="row">
+                            <!-- post to MTurk -->
+                            {% publishlookup publishdict experiment as published %}
+                            {% if published %}
                                 <div class="col-sm-4">
+                                    <form action="/api/removemturk" method="get">
+                            {% else %}
+                                <!-- different column sizes for different buttons -->
+                                <div class="col-sm-4">
+                                    <form action="/api/mturk" method="get">
+                            {% endif %}
+                            
 
-                                    <!-- Download Data -->
-                                    <form action="/api/export" method="get">
-                                        <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
-                                        <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Download Data" />
-                                    </form>
-                                </div>
+                                <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
+                                <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                <input type="hidden" value="{{description}}" name="description" id = "id3" />
+                                <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                <input type="hidden" value="False" name="isSandbox" id="id5"/>
 
-                                  <div class="col-sm-4">
-
-                                    <!-- Download Data -->
-                                    <form action="/api/payout" method="get">
-                                        <input type="hidden" value="{{experiment}}" name="exp" id = "id2" />
-                                        <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
-                                        <input type="submit" class="btn btn-by" style ="width:150px" value="Pay Out All" />
-                                    </form>
-                                </div>
-
-
-                            </div> <!--  close row -->
-
-                            <hr>
-
-                            <!-- post/delete MTurk buttons -->
-                            <!-- post to Sandbox button -->
-                            <!-- Download Data button -->
-
-                            <!-- Upload Files form/button -->
-                            <p><h3>Upload files</h3></p>
-                            <p>  The files uploaded will be the same files posted to MTurk. The home-page of the experiment must be named "index.html". All files must be in one directory. Duplicate file uploads will be overwritten. </p>
-                            <!-- upload form -->
-                            <div class = "row" style = "margin-top:15px; margin-bottom:15px;">
-                                <div class = "col-md-7">
-                                    <form action="{{url_base}}{{experiment}}{{upload_url}}" method="post" enctype="multipart/form-data" >
-                                
-                                        {% csrf_token %}
-                                        {{ uploadform }}
-                                </div> <!-- col -->
-                                <div class = "col-md-4">
-                                        <p><input type="submit" style = "margin-top: 5px" class="btn btn-by" value="Upload"/></p>
-                                    </form>
-                                </div>
-                            </div> <!-- row -->
-
-                                <form action="{{url_base}}{{experiment}}{{config_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "config_file_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Config File Name"/>
-                                    </div> <!-- close col -->
+                                {% if published %}
+                                    <input type="submit" class="btn btn-by" style ="width:150px" value="Remove from MTurk" />
+                                {% else %}
+                                    <input type="submit" class="btn btn-by" style ="width:150px" value="Post to MTurk" />
+                                {% endif %}
                                 </form>
-                            </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
-
-                            <p> All files assocaited with this experiment: </p>
-                            <ul>
-                                <!-- Link files -->
-                                <!-- {% for file in files %}
-                                    <li><a href="{{ file.docfile.url }}">{{file.original_filename}}</a></li>
-                                {% endfor %} -->
-                                {% for file in files %}
-                                    <li><a href="/gpaas/experiment/{{username}}/{{experiment}}/{{file.original_filename}}">{{file.original_filename}}</a></li>
-                                {% endfor %}
-                            </ul>
-                            <hr>
-
-                            <!-- Hit Description Form -->
-                            <p><h3>Edit Experiment</h3></p>
-                            <p> Here you can edit the parameters associated with this experiment. </p>
-                            <hr>
-                                <form action="{{url_base}}{{experiment}}{{hit_description_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "hit_description_form" %}
-                                    <!-- {{ hit_description_form.as_p }} -->
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Description"/>
-                                    </div> <!-- close col -->
-                                </form>
-                            </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
-                            <hr>
-
-                            <!-- Hit Payment Form -->
-                            <div class="row">
-                                <form action="{{url_base}}{{experiment}}{{hit_payment_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "hit_payment_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Payment"/>
-                                    </div> <!-- close col -->
-                                </form>
-                            </div> <!-- close row -->
-                            <hr>
-
-                            <!-- Bonus Payment Form -->
-                            <div class="row">
-                                <form action="{{url_base}}{{experiment}}{{bonus_payment_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "bonus_payment_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Bonus Payment"/>
-                                    </div> <!-- col -->
-                                </form>
-                            </div> <!-- close row -->
-                            <hr>
-
-                            <!-- task submission payment form -->
-                            <div class="row">
-                                <form action="{{url_base}}{{experiment}}{{submit_payment_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "task_submission_payment_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Submission Payment"/>
-                                    </div> <!-- col -->
-                                </form>
-                            </div> <!-- close row -->
-                            <hr>
-
-                            <!-- Hit Keywords form -->
-                            <div class="row">
-                                <form action="{{url_base}}{{experiment}}{{hit_keywords_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "hit_keywords_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Hit Keywords"/>
-                                    </div> <!-- col -->
-                                </form>
-                            </div> <!-- close row -->
-                            <hr>
-
-                            <!-- TaskNumber Form -->
-                            <div class="row">
-                                <form action="{{url_base}}{{experiment}}{{tasknumber_url}}" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% formlookup formdict experiment "tasknumber_form" %}
-                                    <div class="col-md-4">
-                                        <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Tasknumber"/>
-                                    </div>
-                                </form>
-                            </div> <!-- close row -->
-                            <hr>
-
-                            <!-- Edit Qualifications -->
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h3> Edit Qualifications: </h3> 
-                                </div> <!-- close col -->
-                            </div><!--  close row -->
-                            <div class="row top-bottom-spacing">
-                                <div class = "col-md-1"></div>
-                                <div class = "col-md-1">
-                                    Link:
-                                </div>
-                                <div class = "col-md-3">
-                                    <a href = "{% explink q_linkdict experiment %}"> {% explink q_linkdict experiment %} </a> 
-                                </div> <!-- close col -->
-                            </div> <!-- close row -->
-                        </div> <!-- close tab-space -->                
-                    </div> <!-- close form-box edit-form-->
-                {% endfor %}
                             </div> <!-- close col -->
-        </div> <!-- close row with form-boxes -->
+
+                            <!-- post to Sandbox -->
+                            {% publishlookup pub_sandbox experiment as sndbx_pub %}
+                            {% if sndbx_pub %}
+                                <div class="col-sm-5">
+                                    <form action="/api/removemturk" method="get">
+                            {% else %}
+                                <div class="col-sm-3">
+                                    <form action="/api/mturk" method="get">
+                            {% endif %}
+                            
+
+                                <input type="hidden" value="{% expfullink linkdict experiment %}" name="URL" id = "id1" />
+                                <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                <input type="hidden" value="{{description}}" name="description" id = "id3" />
+                                <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                <input type="hidden" value="True" name="isSandbox" id="id5"/>
+
+                                {% if sndbx_pub %}
+                                    <input type="submit" class="btn btn-by" style ="width:170px" value="Remove from Sandbox" />
+                                {% else %}
+                                    <input type="submit" class="btn btn-by" style ="width:150px" value="Post to Sandbox" />
+                                {% endif %}
+                                </form>
+                            </div> <!-- close col -->
+                        </div> <!-- close row -->
+                        <div class="row">
+                            <div class="col-sm-4">
+
+                                <!-- Download Data -->
+                                <form action="/api/export" method="get">
+                                    <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                    <input type="submit" class="btn btn-by" style ="width:150px" value="Download Data" />
+                                </form>
+                            </div>
+
+                            <div class="col-sm-3">
+
+                                <!-- Download Data -->
+                                <form action="/api/payout" method="get">
+                                    <input type="hidden" value="{{experiment}}" name="exp" id = "id2" />
+                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                    <input type="submit" class="btn btn-by" style ="width:150px" value="Pay Out All" />
+                                </form>
+                            </div>
+
+
+                        </div> <!--  close row -->
+
+                        <hr>
+
+                        <!-- post/delete MTurk buttons -->
+                        <!-- post to Sandbox button -->
+                        <!-- Download Data button -->
+
+                        <!-- Upload Files form/button -->
+                        <p><h3>Upload files</h3></p>
+                        <p>  The files uploaded will be the same files posted to MTurk. The home-page of the experiment must be named "index.html". All files must be in one directory. Duplicate file uploads will be overwritten. </p>
+                        <!-- upload form -->
+                        <div class = "row" style = "margin-top:15px; margin-bottom:15px;">
+                            <div class = "col-md-7">
+                                <form action="{{url_base}}{{experiment}}{{upload_url}}" method="post" enctype="multipart/form-data" >
+                            
+                                    {% csrf_token %}
+                                    {{ uploadform }}
+                            </div> <!-- col -->
+                            <div class = "col-md-4">
+                                    <p><input type="submit" style = "margin-top: 5px" class="btn btn-by" value="Upload"/></p>
+                                </form>
+                            </div>
+                        </div> <!-- row -->
+
+                            <form action="{{url_base}}{{experiment}}{{config_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "config_file_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Config File Name"/>
+                                </div> <!-- close col -->
+                            </form>
+                        </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
+
+                        <p> All files assocaited with this experiment: </p>
+                        <ul>
+                            <!-- Link files -->
+                            <!-- {% for file in files %}
+                                <li><a href="{{ file.docfile.url }}">{{file.original_filename}}</a></li>
+                            {% endfor %} -->
+                            {% for file in files %}
+                                <li><a href="/gpaas/experiment/{{username}}/{{experiment}}/{{file.original_filename}}">{{file.original_filename}}</a></li>
+                            {% endfor %}
+                        </ul>
+                        <hr>
+
+                        <!-- Hit Description Form -->
+                        <p><h3>Edit Experiment</h3></p>
+                        <p> Here you can edit the parameters associated with this experiment. </p>
+                        <hr>
+                            <form action="{{url_base}}{{experiment}}{{hit_description_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "hit_description_form" %}
+                                <!-- {{ hit_description_form.as_p }} -->
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Description"/>
+                                </div> <!-- close col -->
+                            </form>
+                        </div> <!-- close row  !!!!! row opened in as_p function of form in gpaas/forms.py -->
+                        <hr>
+
+                        <!-- Hit Payment Form -->
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{hit_payment_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "hit_payment_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Payment"/>
+                                </div> <!-- close col -->
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
+                        <!-- Bonus Payment Form -->
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{bonus_payment_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "bonus_payment_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Bonus Payment"/>
+                                </div> <!-- col -->
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
+                        <!-- task submission payment form -->
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{submit_payment_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "task_submission_payment_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Submission Payment"/>
+                                </div> <!-- col -->
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
+                        <!-- Hit Keywords form -->
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{hit_keywords_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "hit_keywords_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Hit Keywords"/>
+                                </div> <!-- col -->
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
+                        <!-- TaskNumber Form -->
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{tasknumber_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "tasknumber_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Tasknumber"/>
+                                </div>
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
+                        <!-- Edit Qualifications -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3> Edit Qualifications: </h3> 
+                            </div> <!-- close col -->
+                        </div><!--  close row -->
+                        <div class="row top-bottom-spacing">
+                            <div class = "col-md-1"></div>
+                            <div class = "col-md-1">
+                                Link:
+                            </div>
+                            <div class = "col-md-3">
+                                <a href = "{% explink q_linkdict experiment %}"> {% explink q_linkdict experiment %} </a> 
+                            </div> <!-- close col -->
+                        </div> <!-- close row -->
+                    </div> <!-- close tab-space -->                
+                </div> <!-- close box edit-form-->
+            {% endfor %}
+            <!-- </div> close col -->
+        <!-- </div> close row with boxes -->
+        </div>
     </div> <!-- container -->
 </body>
 </html>

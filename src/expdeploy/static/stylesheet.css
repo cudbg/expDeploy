@@ -27,6 +27,55 @@ body{
 	margin-bottom:5px; 
 }
 
+.box{
+	background-color: #fffbfb;
+	border: 3px solid #9BDDFF;
+	border-radius: 7.5px;
+    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.2);
+    padding: 12px;
+}
+
+.box-basic{
+	margin-bottom:10px;
+	margin-left: 10%;
+	margin-top: 2px;
+    width: 70%;
+    min-width: 500px;
+    max-width:900px;
+}
+
+.box-center{
+	margin-bottom:5%;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 2px;
+    width: 70%;
+}
+
+.box-login{
+	margin-bottom:10px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 2px;
+    width: 375px;
+}
+
+.box-left{
+	float:left;
+	margin-bottom:10px;
+	margin-left: 1%;
+	margin-top: 2px;
+    width: 200px;
+}
+
+.box-right{
+	float:left;
+	margin-bottom:10px;
+	margin-left: 1%;
+	margin-top: 2px;
+    width: 500px;
+}
+
 .btn{
 	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 }
@@ -62,7 +111,7 @@ body{
 
 #experiment-header{
 	margin-bottom:0;
-	margin-left: 10%;
+	margin-left: 0%;
     padding: 5px;
     width: 70%;
 }
@@ -79,53 +128,6 @@ body{
 	margin-left: 0%;
     padding: 5px;
     width: 70%;
-}
-
-.form-box{
-	background-color: #fffbfb;
-	border: 3px solid #9BDDFF;
-	border-radius: 7.5px;
-    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.2);
-	margin-bottom:10px;
-	margin-left: 10%;
-	margin-top: 2px;
-    padding: 12px;
-    width: 70%;
-    min-width: 500px;
-    max-width:900px;
-}
-
-.form-box-center{
-	background-color: #fffbfb;
-	border: 3px solid #9BDDFF;
-	border-radius: 7.5px;
-    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.2);
-	margin-bottom:5%;
-	margin-left:auto;
-	margin-right:auto;
-	margin-top: 2px;
-	padding: 12px;
-    width: 70%;
-}
-
-.form-box-login{
-	background-color: #fffbfb;
-	border: 3px solid #9BDDFF;
-	border-radius: 7.5px;
-    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.2);
-	margin-bottom:10px;
-	margin-left:auto;
-	margin-right:auto;
-	margin-top: 2px;
-	padding: 12px;
-    width: 375px;
-}
-
-.form-box-left{
-	margin-left: 1%;
-    width: 15%;
-    min-width: 170px;
-    max-width:400px;
 }
 
 .gallery-min-width{
