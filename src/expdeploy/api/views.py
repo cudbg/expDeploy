@@ -802,6 +802,8 @@ def task(request):
 										balanced_history[p["name"]] = {}
 										for i in range(p["options"][0], p["options"][1]):
 											balanced_history[p["name"]][i] = 0
+											
+										historical_data = balanced_history[p["name"]]
 
 										for key in historical_data:
 											if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
