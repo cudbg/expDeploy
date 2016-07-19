@@ -54,17 +54,17 @@ def showResults(request):
 	for wid in wids:
 		find_tasks = WorkerTask.objects.filter(wid="A26Y58YECZUZZG")
 		for task in find_tasks:
-			tasks.append(tasks)
+			tasks.append(task)
 
 
 
 	for task in tasks:
-		print(task.results)
-		# js = json.loads(task.results)
-		# data = js["data"]
-		# lastResult = data[len(data)-1]
-		# print(lastResult["summaryModel"])
-		# print(lastResult["summary"])
+		#print(task.results)
+		js = json.loads(task.results)
+		data = js["data"]
+		lastResult = data[len(data)-1]
+		print(lastResult["summaryModel"])
+		print(lastResult["summary"])
 
 		
 	return HttpResponse("hello world")
