@@ -694,8 +694,6 @@ def task(request):
 	wid = request.GET.get('wid', '');
 	isSandbox = request.GET.get('sandbox', '');
 
-	
-	
 
 
 	print(wid)
@@ -795,17 +793,20 @@ def task(request):
 									historical_data = balanced_history[p["name"]]
 
 									for key in historical_data:
-										heapq.heappush(sorter,(int(historical_data[key])//1, key))
+										if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+											sorter.append(key)
 
+									shuffle(sorter)
 
+									if len(sorter) == 0:
+										for i in range(p["options"][0], p["options"][1]):
+											balanced_history[p["name"]][i] = 0
 
-									numchoose = heapq.heappop(sorter)
+									numchoose = sorter[0]
 
 									print(numchoose)
 									print(pickedsofar[p["name"]])
 
-									while numchoose[1] in pickedsofar[p["name"]]:
-										numchoose = heapq.heappop(sorter)
 
 									
 
