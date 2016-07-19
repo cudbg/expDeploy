@@ -48,6 +48,26 @@ import pwd
 
 import heapq
 
+def showResults(request):
+	wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
+	tasks = []
+	for wid in wids:
+		find_tasks = WorkerTask.objects.filter(wid="A26Y58YECZUZZG")
+		for task in find_tasks:
+			tasks.append(tasks)
+
+
+
+	for task in tasks:
+		js = json.loads(task.results)
+		data = js["data"]
+		lastResult = data[len(data)-1]
+		print(lastResult["summaryModel"])
+		print(lastResult["summary"])
+
+		
+	return HttpResponse("hello world")
+
 def hasStarted(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');
