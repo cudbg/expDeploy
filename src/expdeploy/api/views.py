@@ -68,7 +68,7 @@ def showResults(request):
 				paramList[str(lastResult["segmentID"])]+=1
 	output = ""
 	for i in range(0,500):
-		output = output + "\n" + paramList[str(i)]
+		output = output + "\n" + str(paramList[str(i)])
 	return HttpResponse(output)
 	# wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
 	# expId = request.GET.get('wid', '');
