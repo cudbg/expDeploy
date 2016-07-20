@@ -69,7 +69,9 @@ def showResults(request):
 		data = js["data"]
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
-			print(lastResult["summaryModel"])
+			if "summaryModel" in lastResult:
+				print(lastResult["summaryModel"])
+
 			print(lastResult["summary"])
 
 		
@@ -739,10 +741,6 @@ def task(request):
 	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 	wids = json.loads(expModel.banned)["ids"]
 
-	if wid in wids:
-		return HttpResponse("Your WorkerID has been banned")
-
-
 
 	for exp in expsBackwards:
 
@@ -753,6 +751,16 @@ def task(request):
 			EX = exp.experiment
 			print("n2222"+EX.name);
 			
+
+
+			if wid in wids:
+				return HttpResponse("Your WorkerID has been banned")
+
+			his = json.loads(EX.analytics)
+			if "wids" not in his:
+				his["wids"] = []
+
+
 			return_tasks = []
 			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
 			print(find_tasks);
@@ -803,6 +811,8 @@ def task(request):
 
 						balanced_history = json.loads(json.dumps(balanced_history))
 						pickedsofar = {}
+
+
 
 						for i in range(0,n):
 							
@@ -872,6 +882,9 @@ def task(request):
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
 							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
+							
+
+
 							param["identifier"] = task_id;
 							NewTask.params = json.dumps(param);
 
@@ -885,8 +898,9 @@ def task(request):
 							NewTask.save();
 
 							#print(NewTask.experiment)
-							return_tasks.append(NewTask);
 
+
+						EX.analytics = json.dumps(his)
 						#for key in balanced_history:
 						EX.balanced_history=json.dumps(balanced_history)
 						EX.save()

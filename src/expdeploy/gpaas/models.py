@@ -27,7 +27,7 @@ class ExperimentModel(models.Model):
 	banned = models.TextField(default='{"ids":[]}')
 	hitID = models.CharField(max_length=120)
 	config_file = models.CharField(max_length=120,default="config.json")
-	analytics = models.TextField(default='{"log":[]}')
+	analytics = models.TextField(default='{"log":[],"wids":[]}')
 	balanced_history = models.TextField(default="{}")
 
 	def __str__(self):

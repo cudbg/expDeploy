@@ -14,7 +14,7 @@ class WorkerTask (models.Model):
 	workerId = models.TextField(default="")
 	params = models.TextField(default="{}")
 	results = models.TextField(default='{"data":[], "metadata":[]}')
-	history = models.TextField(default='{"events":[] }')
+	history = models.TextField(default='{"events":[]}')
 	experiment = models.ForeignKey(ExperimentModel)
 	params = models.TextField(default="PaidAssignment")#PaidAssignment, QualificationTask, TrainingTask
 	metaData = models.ForeignKey('Metadata',default="",null=True,blank=True)
