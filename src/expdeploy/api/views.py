@@ -896,6 +896,9 @@ def task(request):
 							#print(NewTask.history)
 							NewTask.isSandbox = isSandbox
 							NewTask.save();
+							
+							return_tasks.append(NewTask);
+
 
 							#print(NewTask.experiment)
 
