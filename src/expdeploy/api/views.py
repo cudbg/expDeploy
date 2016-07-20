@@ -49,34 +49,44 @@ import pwd
 
 import heapq
 
+
 def showResults(request):
-	wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
-	expId = request.GET.get('wid', '');
-	if expId != '':
-		wids = [expId]
 
-	tasks = []
-	for wid in wids:
-		find_tasks = WorkerTask.objects.filter(wid=wid)
-		for task in find_tasks:
-			tasks.append(task)
+	
+	paramList = {}
+	for i in range(0,500):
+		paramList[str(i)] = 0
+
+	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
+
+	return HttpResponse(str(len(find_tasks)))
+	# wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
+	# expId = request.GET.get('wid', '');
+	# if expId != '':
+	# 	wids = [expId]
+
+	# tasks = []
+	# for wid in wids:
+	# 	find_tasks = WorkerTask.objects.filter(wid=wid)
+	# 	for task in find_tasks:
+	# 		tasks.append(task)
 
 
 
-	for task in tasks:
-		#print(task.results)
-		print(task.wid)
-		js = json.loads(task.results)
-		data = js["data"]
-		if len(data) > 0:
-			lastResult = data[len(data)-1]
-			if "summaryModel" in lastResult:
-				print(lastResult["summaryModel"])
+	# for task in tasks:
+	# 	#print(task.results)
+	# 	print(task.wid)
+	# 	js = json.loads(task.results)
+	# 	data = js["data"]
+	# 	if len(data) > 0:
+	# 		lastResult = data[len(data)-1]
+	# 		if "summaryModel" in lastResult:
+	# 			print(lastResult["summaryModel"])
 
-			print(lastResult["summary"])
+	# 		print(lastResult["summary"])
 
 		
-	return HttpResponse("hello world")
+	# return HttpResponse("hello world")
 
 def hasStarted(request):
 	expId = request.GET.get('experiment', '');
