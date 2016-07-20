@@ -25,6 +25,7 @@ import importlib;
 import random
 import string
 import boto.mturk.connection
+from boto.mturk.connection import MTurkRequestError
 from boto.mturk.qualification import Qualifications, \
 	PercentAssignmentsApprovedRequirement,\
 	PercentAssignmentsSubmittedRequirement,\
@@ -287,7 +288,10 @@ def payout(request):
 			if PERTASK * float(completed) > balance:
 				return HttpResponse("Insufficient funds. Please refill your account on Amazon.")
 
-			approve = mturk.approve_assignment(assignmentId)
+			try: 
+				approve = mturk.approve_assignment(assignmentId)
+			except MTurkRequestError as e:
+				print(e)
 			
 			bon = mturk.grant_bonus(wid, assignmentId, p, "GREAT WORK! bonus + per task payments")
 
@@ -708,7 +712,7 @@ def finishTasks(request):
 
 			timestamp_string = format(datetime.datetime.now(), u'U')
 			event = HistoryEvent(newStatus="Stopped", timeStamp=int(timestamp_string))
-			event.workerTask = task
+			event.workerTask = taskMTurkRequestError 
 			event.save()
 
 
