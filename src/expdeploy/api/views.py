@@ -513,7 +513,7 @@ def mturk(request):
 	
 	 
 	create_hit_result = mturk.create_hit(
-	    title = "Read, Analyze, and Label Snippets of Reviews as Helpful or Unhelpful",
+	    title = title,
 	    description = description,
 	    keywords = keywords,
 	    question = questionform,
@@ -896,7 +896,7 @@ def task(request):
 							#print(NewTask.history)
 							NewTask.isSandbox = isSandbox
 							NewTask.save();
-							
+
 							return_tasks.append(NewTask);
 
 
