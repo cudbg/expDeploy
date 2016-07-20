@@ -61,7 +61,8 @@ def showResults(request):
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
 	for task in find_tasks:
-		if task.wid in wids
+		if task.wid not in wids:
+			continue
 		js = json.loads(task.results)
 		data = js["data"]
 		if len(data) > 0:
