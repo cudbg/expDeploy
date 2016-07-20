@@ -294,7 +294,7 @@ def payout(request):
 			balance = mturk.get_account_balance() 
 
 
-			#assignmnet = mturk.get_assignment(assignmentId)
+			assignmnet = mturk.get_assignment(assignmentId)
 
 			#print(assignmnet.AssignmentStatus)
 
