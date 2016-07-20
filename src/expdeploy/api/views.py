@@ -59,7 +59,7 @@ def showResults(request):
 
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
-	for task in tasks:
+	for task in find_tasks:
 		js = json.loads(task.results)
 		data = js["data"]
 		if len(data) > 0:
