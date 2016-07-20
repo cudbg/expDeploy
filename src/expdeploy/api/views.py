@@ -59,7 +59,17 @@ def showResults(request):
 
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
-	return HttpResponse(str(len(find_tasks)))
+	for task in tasks:
+		js = json.loads(task.results)
+		data = js["data"]
+		if len(data) > 0:
+			lastResult = data[len(data)-1]
+			if "summaryModel" in lastResult:
+				paramList[lastResult["segmentID"]]+=1
+	output = ""
+	for i in range(0,500):
+		output = output + "\n" + paramList[str(i)]
+	return HttpResponse(output)
 	# wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
 	# expId = request.GET.get('wid', '');
 	# if expId != '':
