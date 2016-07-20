@@ -52,7 +52,8 @@ import heapq
 
 def showResults(request):
 
-	
+	wids = ["A37S96RT1P1IT2", "A18TCR555RWUZV", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
+
 	paramList = {}
 	for i in range(0,500):
 		paramList[str(i)] = 0
@@ -60,6 +61,7 @@ def showResults(request):
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
 	for task in find_tasks:
+		if task.wid in wids
 		js = json.loads(task.results)
 		data = js["data"]
 		if len(data) > 0:
@@ -291,7 +293,7 @@ def payout(request):
 			balance = mturk.get_account_balance() 
 
 
-			assignmnet = mturk.get_assignment(assignmentId)
+			#assignmnet = mturk.get_assignment(assignmentId)
 
 			#print(assignmnet.AssignmentStatus)
 
