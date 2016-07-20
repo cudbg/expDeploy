@@ -65,7 +65,7 @@ def showResults(request):
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
 			if "summaryModel" in lastResult:
-				paramList[lastResult["segmentID"]]+=1
+				paramList[str(lastResult["segmentID"])]+=1
 	output = ""
 	for i in range(0,500):
 		output = output + "\n" + paramList[str(i)]
