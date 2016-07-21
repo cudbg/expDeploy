@@ -84,7 +84,7 @@ def showResults(request):
 
 			vote = max(set(votes1), key=votes1.count)
 
-			output = output + "\n" + str(votes)
+			output = output + "\n" + str(vote)
 
 
 
