@@ -497,6 +497,7 @@ var gpaas = (function() {
 							type: "GET",
 							url:  serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
 							success: function(data, status, jqXHR) {
+								obj = JSON.parse(data);
 								obj["params"].forEach(function(entry) {
 
 									tasks.push(entry);
@@ -515,9 +516,9 @@ var gpaas = (function() {
 							//	catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu"))
 							//	catchError(err)
 								console.log(err)
-							},
-							dataType: "json",
-							contentType: "application/json"
+							}//,
+							//dataType: "json",
+							//contentType: "application/json"
 
 						});
 
@@ -532,7 +533,7 @@ var gpaas = (function() {
 						// xmlHttp.send(null);
 						// resp = xmlHttp.responseText.replaceAll("'", '"');
 
-						// obj = JSON.parse(resp);
+						// 
 						// console.log(obj["params"]);
 
 						// obj["params"].forEach(function(entry) {
