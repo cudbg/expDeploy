@@ -84,7 +84,7 @@ def showResults(request):
 					if "summaryModel" in dat:
 						votes1.append(dat["summaryModel"])
 
-			if votes1[1] == votes[0]:
+			if votes1[1] == votes1[0]:
 
 				output = output + "\n" + str(votes1)
 
