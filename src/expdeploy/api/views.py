@@ -172,7 +172,11 @@ def hasStarted(request):
 			taskCount+=1
 
 	if (taskCount > 0):
-		return HttpResponse('true')
+		for task in find_tasks:
+			if task.currentStatus=="Waiting":
+				return HttpResponse('true')
+			
+		return HttpResponse('done')
 	else:
 		return HttpResponse('false')
 
