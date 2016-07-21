@@ -256,8 +256,6 @@ var gpaas = (function() {
 				data: ddd,
 				tryCount: 0,
 				retryLimit: 9,
-				dataType: "json",
-				contentType: "application/json",
 				success: function(json) {
 					dataToSend = []
 					localNextTask()
@@ -265,7 +263,7 @@ var gpaas = (function() {
 				error: function(xhr, textStatus, errorThrown) {
 					
 					console.log(errorThrown)
-					
+
 					this.tryCount++;
 					if (this.tryCount <= this.retryLimit) {
 						//try again
