@@ -94,7 +94,7 @@ def showResults(request):
 
 
 	for i in range(0,500):
-		if paramList[str(i)] == 3:
+		if paramList[str(i)] == 3 or paramList[str(i)] == 3:
 			votes1 = []
 			votes2 = []
 
@@ -104,6 +104,9 @@ def showResults(request):
 						votes1.append(dat["summaryModel"])
 						votes2.append(dat["labeledHelpful"])
 
+			if len(votes1) == 4:
+ 				votes1 = [votes1[0],votes1[1],votes1[2]]
+ 				votes2 = [votes2[0],votes2[1],votes2[2]]
 			if len(votes1) == 3:
 				vote = max(set(votes1), key=votes1.count)
 				vote2 = max(set(votes2), key=votes2.count)
