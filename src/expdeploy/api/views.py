@@ -60,7 +60,7 @@ def showResults(request):
 
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
-	data = []
+	dataZ = []
 	for task in find_tasks:
 		if task.wid not in wids:
 			continue
@@ -68,7 +68,7 @@ def showResults(request):
 		data = js["data"]
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
-			data.append(lastResult)
+			dataZ.append(lastResult)
 			if "summaryModel" in lastResult:
 				paramList[str(lastResult["segmentID"])]+=1
 	output = ""
@@ -79,15 +79,12 @@ def showResults(request):
 		if paramList[str(i)] == 3:
 			votes1 = []
 
-			for dat in data:
-				print >>sys.stderr, "data-----" + str(dat["segmentID"])
-				print >>sys.stderr, i
-		
-#					votes1.append(dat["summaryModel"])
+			for dat in dataZ:
+				votes1.append(dat["summaryModel"])
 
-			#vote = max(set(votes1), key=votes1.count)
+			vote = max(set(votes1), key=votes1.count)
 
-			output = output + "\n" + str(votes1)
+			output = output + "\n" + str(votes)
 
 
 
