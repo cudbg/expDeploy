@@ -120,7 +120,7 @@ def showResults(request):
 	hist["pickFrom"] = remaining
 	expModel.balanced_history = json.dumps(hist)
 	expModel.save()
-	
+
 	return HttpResponse(output)
 
 
@@ -916,53 +916,64 @@ def task(request):
 									sorter = []
 
 									historical_data = balanced_history[p["name"]]
+									pickFrom = balanced_history["pickFrom"]
+									shuffle(pickFrom)
 
-									for key in historical_data:
-										if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
-											sorter.append(key)
+									picked = pickFrom[0]
+									while picked in pickedsofar[p["name"]]:
+										shuffle(pickFrom)
+										picked = pickFrom[0]
 
-									shuffle(sorter)
 
-									if len(sorter) == 0:
-										balanced_history[p["name"]] = {}
-										for i in range(p["options"][0], p["options"][1]):
-											balanced_history[p["name"]][str(i)] = 0
+									# for key in historical_data:
+									# 	if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+									# 		sorter.append(key)
 
-										historical_data = balanced_history[p["name"]]
+									# shuffle(sorter)
 
-										for key in historical_data:
-											if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
-												sorter.append(key)
+									# if len(sorter) == 0:
+									# 	balanced_history[p["name"]] = {}
+									# 	for i in range(p["options"][0], p["options"][1]):
+									# 		balanced_history[p["name"]][str(i)] = 0
 
-									shuffle(sorter)
+									# 	historical_data = balanced_history[p["name"]]
 
-									minHist = 999
-									for key in sorter:
-										minHist = min(minHist, balanced_history[p["name"]][key])
+									# 	for key in historical_data:
+									# 		if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+									# 			sorter.append(key)
 
-									sorter2 = []
-									for key in sorter:
-										if balanced_history[p["name"]][key] <= minHist:
-											sorter2.append(key)
+									# shuffle(sorter)
 
-									shuffle(sorter2)
-									sorter = sorter2
+									# minHist = 999
+									# for key in sorter:
+									# 	minHist = min(minHist, balanced_history[p["name"]][key])
 
-									numchoose = sorter[0]
+									# sorter2 = []
+									# for key in sorter:
+									# 	if balanced_history[p["name"]][key] <= minHist:
+									# 		sorter2.append(key)
 
-									print(numchoose)
-									print(pickedsofar[p["name"]])
+									# shuffle(sorter2)
+									# sorter = sorter2
+
+									# numchoose = sorter[0]
+
+									# print(numchoose)
+									# print(pickedsofar[p["name"]])
 
 
 									
 
-									pickedsofar[p["name"]].append(numchoose)
+									# pickedsofar[p["name"]].append(numchoose)
 
-									#print(numchoose[1])
-									#print(numchoose[0])
-									balanced_history[p["name"]][numchoose]+=1
+									# #print(numchoose[1])
+									# #print(numchoose[0])
+									# balanced_history[p["name"]][numchoose]+=1
 
-									param[p["name"]] = int(numchoose)
+									param[p["name"]] = picked
+									pickedsofar[p["name"]].append(picked)
+									pickFrom.pop(0)
+									balanced_history["pickFrom"] = pickFrom
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
