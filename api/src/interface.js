@@ -264,6 +264,8 @@ var gpaas = (function() {
 				},
 				error: function(xhr, textStatus, errorThrown) {
 					
+					console.log(errorThrown)
+					
 					this.tryCount++;
 					if (this.tryCount <= this.retryLimit) {
 						//try again

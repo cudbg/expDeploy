@@ -599,8 +599,8 @@ def log(request):
 
 		
 
-		print(request.POST)
-		print(request.body)
+		#print(request.POST)
+		#print(request.body)
 		print(request.POST.get("worker_id", ''))
 
 		body_unicode = request.body.decode('utf-8')
