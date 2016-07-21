@@ -7886,7 +7886,7 @@ var gpaas = (function() {
 							type: "GET",
 							url:  serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
 							success: function(data, status, jqXHR) {
-								obj = JSON.parse(data);
+								obj = JSON.parse(data.responseText.replaceAll("'", '"'););
 								obj["params"].forEach(function(entry) {
 
 									tasks.push(entry);
