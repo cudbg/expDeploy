@@ -114,13 +114,15 @@ def showResults(request):
 
 					
 	print >>sys.stderr, len(remaining)
-	return HttpResponse(output)
 
 	expModel = ExperimentModel.objects.filter(name="Label_Product_Review_Snippets")[0];
 	hist = json.loads(expModel.balanced_history)
 	hist["pickFrom"] = remaining
 	expModel.balanced_history = json.dumps(hist)
 	expModel.save()
+	
+	return HttpResponse(output)
+
 
 	# wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
 	# expId = request.GET.get('wid', '');
