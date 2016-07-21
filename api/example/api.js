@@ -7612,8 +7612,7 @@ var gpaas = (function() {
 			}
 
 
-
-
+			ddd = JSON.stringify(postData)
 
 			// xmlhttp.onload = function() {
 			// 	if (xmlhttp.readyState === xmlhttp.DONE) {
@@ -7643,7 +7642,7 @@ var gpaas = (function() {
 			$.ajax({
 				url: serverurl + "/api/log/",
 				type: 'POST',
-				data: postData,
+				data: ddd,
 				tryCount: 0,
 				retryLimit: 9,
 				dataType: "json",
