@@ -489,6 +489,8 @@ var gpaas = (function() {
 
 						});
 
+						nextTask()
+
 					} else {
 
 
@@ -512,6 +514,7 @@ var gpaas = (function() {
 								completed = numberTasks - obj["params"].length
 								console.log('..........this is how many completed' + completed)
 
+								nextTask()
 
 							},
 							error: function(jqXHR, status, err) {
@@ -561,7 +564,7 @@ var gpaas = (function() {
 				}
 
 
-				nextTask()
+				
 
 
 			}
