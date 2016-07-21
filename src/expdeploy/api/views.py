@@ -765,7 +765,7 @@ def finishTasks(request):
 
 			timestamp_string = format(datetime.datetime.now(), u'U')
 			event = HistoryEvent(newStatus="Stopped", timeStamp=int(timestamp_string))
-			event.workerTask = taskMTurkRequestError 
+			event.workerTask = task
 			event.save()
 
 
