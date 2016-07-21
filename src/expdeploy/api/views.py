@@ -80,7 +80,7 @@ def showResults(request):
 			votes1 = []
 
 			for dat in data:
-				print >>sys.stderr, dat["segmentID"]
+				print >>sys.stderr, "data-----" + str(dat["segmentID"])
 				print >>sys.stderr, i
 		
 #					votes1.append(dat["summaryModel"])
