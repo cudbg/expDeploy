@@ -82,7 +82,7 @@ def showResults(request):
 				if dat["segmentID"] == i:
 					votes1.append(dat["summaryModel"])
 
-			vote = max(set(votes), key=vost1.count)
+			vote = max(set(votes1), key=votes1.count)
 
 			output = output + "\n" + vote
 
