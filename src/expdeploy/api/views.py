@@ -81,13 +81,15 @@ def showResults(request):
 
 			for dat in dataZ:
 				if dat["segmentID"] == i:
-					votes1.append(dat["summary"])
+					if "summaryModel" in dat:
+						votes1.append(dat["summaryModel"])
 
-			vote = max(set(votes1), key=votes1.count)
+			if len(votes1) == 3:
+				vote = max(set(votes1), key=votes1.count)
 
-			output = output + "\n" + str(vote)
+				output = output + "\n" + str(vote)
 
-			print >>sys.stderr, "\n" + str(votes1)
+				print >>sys.stderr, "\n" + str(votes1)
 
 
 
