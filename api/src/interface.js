@@ -535,7 +535,7 @@ var gpaas = (function() {
 								retryLimit: 9,
 								success: function(data, status, jqXHR) {
 									obj = JSON.parse(data.replaceAll("'", '"'));
-									alert(obj)
+								//alert(obj)
 									console.log(obj)
 									obj["params"].forEach(function(entry) {
 
