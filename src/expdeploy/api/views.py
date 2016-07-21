@@ -61,6 +61,9 @@ def showResults(request):
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
 	dataZ = []
+
+	remaining = []
+
 	for task in find_tasks:
 		if task.wid not in wids:
 			continue
@@ -74,6 +77,20 @@ def showResults(request):
 	output = ""
 	for i in range(0,500):
 		output = output + "\n" + str(paramList[str(i)])
+
+	for i in range(0,500):
+		if paramList[str(i)] == 2:
+			remaining.append(i)
+		if paramList[str(i)] == 1:
+			remaining.append(i)
+			remaining.append(i)
+		if paramList[str(i)] == 0:
+			remaining.append(i)
+			remaining.append(i)
+			remaining.append(i)
+
+	shuffle(remaining)
+
 
 	for i in range(0,500):
 		if paramList[str(i)] == 3:
@@ -93,7 +110,7 @@ def showResults(request):
 
 				print >>sys.stderr, "\n" + str(votes1)
 
-
+	print >>sys.stderr, remaining
 
 					
 
