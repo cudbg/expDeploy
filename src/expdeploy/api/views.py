@@ -596,6 +596,13 @@ def result(request):
 
 def log(request):
 	if request.method == 'POST':
+
+		
+
+		print(request.POST)
+		print(request.POST.body)
+		print(request.POST.get("worker_id", ''))
+		
 		body_unicode = request.body.decode('utf-8')
 		body = request.POST#json.loads(body_unicode)
 		#body = request.POST.dict()
