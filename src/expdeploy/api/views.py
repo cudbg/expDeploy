@@ -745,216 +745,215 @@ def finishTasks(request):
 	return HttpResponse('{"params":' + str(params_list) + "}")
 
 def task(request):
-	test = 1
-# 	mturk_hitId = request.GET.get('hitId', '');
-# 	mturk_assignmentId = request.GET.get('assignmentId', '');
-# 	expId = request.GET.get('experiment', '');
-# 	usrId = request.GET.get('researcher', '');
-# 	taskName = request.GET.get('task', '');
-# 	wid = request.GET.get('wid', '');
-# 	isSandbox = request.GET.get('sandbox', '');
+	mturk_hitId = request.GET.get('hitId', '');
+	mturk_assignmentId = request.GET.get('assignmentId', '');
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	taskName = request.GET.get('task', '');
+	wid = request.GET.get('wid', '');
+	isSandbox = request.GET.get('sandbox', '');
 
 
 
-# 	print(wid)
-# 	n = int(request.GET.get('n', '1'));
-# 	print("test 1");
+	print(wid)
+	n = int(request.GET.get('n', '1'));
+	print("test 1");
 
-# 	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
-# 	if len(exps)==0:
-# 		return HttpResponse("No experiments with those specs found")
+	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
+	if len(exps)==0:
+		return HttpResponse("No experiments with those specs found")
 
-# 	expsBackwards = reversed(exps);
+	expsBackwards = reversed(exps);
 
-# 	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
-# 	wids = json.loads(expModel.banned)["ids"]
+	expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+	wids = json.loads(expModel.banned)["ids"]
 
 
-# 	for exp in expsBackwards:
+	for exp in expsBackwards:
 
-# 		print(exp.original_filename)
-# 		if (exp.original_filename == (expModel.config_file)):
-# 			print("test 2");
+		print(exp.original_filename)
+		if (exp.original_filename == (expModel.config_file)):
+			print("test 2");
 
-# 			EX = exp.experiment
-# 			print("n2222"+EX.name);
+			EX = exp.experiment
+			print("n2222"+EX.name);
 			
 
 
-# 			if wid in wids:
-# 				return HttpResponse("Your WorkerID has been banned")
+			if wid in wids:
+				return HttpResponse("Your WorkerID has been banned")
 
-# 			his = json.loads(EX.analytics)
-# 			if "wids" not in his:
-# 				his["wids"] = []
+			his = json.loads(EX.analytics)
+			if "wids" not in his:
+				his["wids"] = []
 
 
-# 			return_tasks = []
-# 			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
-# 			print(find_tasks);
-# 			if (len(find_tasks) == 0):
+			return_tasks = []
+			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
+			print(find_tasks);
+			if (len(find_tasks) == 0):
 				
 				
 
-# 				print >>sys.stderr, 'docfile below!'
+				print >>sys.stderr, 'docfile below!'
 				
-# 				data = json.loads(exp.docfile.read())
-# 				print(data["tasks"])
+				data = json.loads(exp.docfile.read())
+				print(data["tasks"])
 
-# 				for task in data["tasks"]:
-# 					if task["name"] == taskName:
+				for task in data["tasks"]:
+					if task["name"] == taskName:
 
-# 						param = {}
-# 						gen = [{}]
+						param = {}
+						gen = [{}]
 
-# 						for p in task["params"]:
-# 							if p["type"] == "UniformChoice":
-# 								gen2 = []
-# 								for inProgress in gen:
-# 									for choice in p["options"]:
-# 										modify = copy(inProgress)
-# 										modify[p["name"]] = choice
-# 										gen2.append(modify)
-# 								gen = gen2
+						for p in task["params"]:
+							if p["type"] == "UniformChoice":
+								gen2 = []
+								for inProgress in gen:
+									for choice in p["options"]:
+										modify = copy(inProgress)
+										modify[p["name"]] = choice
+										gen2.append(modify)
+								gen = gen2
 
-# 								#param[p["name"]] = random.choice(p["options"])
+								#param[p["name"]] = random.choice(p["options"])
 
-# 						param = gen[0]
-# 						seed(abs(hash(wid)) % (10 ** 8))
-# 						shuffle(gen)
+						param = gen[0]
+						seed(abs(hash(wid)) % (10 ** 8))
+						shuffle(gen)
 
-# 						while n > len(gen):
-# 							gen.append({})
+						while n > len(gen):
+							gen.append({})
 
 
 						
 
-# 						balanced_history = json.loads(EX.balanced_history)
-# 						for p in task["params"]:
-# 							if p["type"] == "BalancedRange":
-# 								if p["name"] not in balanced_history:
-# 									balanced_history[p["name"]] = {}
-# 									for i in range(p["options"][0], p["options"][1]):
-# 										balanced_history[p["name"]][str(i)] = 0
+						balanced_history = json.loads(EX.balanced_history)
+						for p in task["params"]:
+							if p["type"] == "BalancedRange":
+								if p["name"] not in balanced_history:
+									balanced_history[p["name"]] = {}
+									for i in range(p["options"][0], p["options"][1]):
+										balanced_history[p["name"]][str(i)] = 0
 
-# 						balanced_history = json.loads(json.dumps(balanced_history))
-# 						pickedsofar = {}
+						balanced_history = json.loads(json.dumps(balanced_history))
+						pickedsofar = {}
 
 
 
-# 						for i in range(0,n):
+						for i in range(0,n):
 							
-# 							param = gen.pop()
+							param = gen.pop()
 
 							
 
-# 							for p in task["params"]:
+							for p in task["params"]:
 
-# 								if p["name"] not in pickedsofar:
-# 									pickedsofar[p["name"]] = []
+								if p["name"] not in pickedsofar:
+									pickedsofar[p["name"]] = []
 								
 
-# 								if p["type"] == "BalancedRange":
+								if p["type"] == "BalancedRange":
 
-# 									sorter = []
+									sorter = []
 
-# 									historical_data = balanced_history[p["name"]]
+									historical_data = balanced_history[p["name"]]
 
-# 									for key in historical_data:
-# 										if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
-# 											sorter.append(key)
+									for key in historical_data:
+										if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+											sorter.append(key)
 
-# 									shuffle(sorter)
+									shuffle(sorter)
 
-# 									if len(sorter) == 0:
-# 										balanced_history[p["name"]] = {}
-# 										for i in range(p["options"][0], p["options"][1]):
-# 											balanced_history[p["name"]][str(i)] = 0
+									if len(sorter) == 0:
+										balanced_history[p["name"]] = {}
+										for i in range(p["options"][0], p["options"][1]):
+											balanced_history[p["name"]][str(i)] = 0
 
-# 										historical_data = balanced_history[p["name"]]
+										historical_data = balanced_history[p["name"]]
 
-# 										for key in historical_data:
-# 											if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
-# 												sorter.append(key)
+										for key in historical_data:
+											if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
+												sorter.append(key)
 
-# 									shuffle(sorter)
+									shuffle(sorter)
 
-# 									minHist = 999
-# 									for key in sorter:
-# 										minHist = min(minHist, balanced_history[p["name"]][key])
+									minHist = 999
+									for key in sorter:
+										minHist = min(minHist, balanced_history[p["name"]][key])
 
-# 									sorter2 = []
-# 									for key in sorter:
-# 										if balanced_history[p["name"]][key] <= minHist:
-# 											sorter2.append(key)
+									sorter2 = []
+									for key in sorter:
+										if balanced_history[p["name"]][key] <= minHist:
+											sorter2.append(key)
 
-# 									shuffle(sorter2)
-# 									sorter = sorter2
+									shuffle(sorter2)
+									sorter = sorter2
 
-# 									numchoose = sorter[0]
+									numchoose = sorter[0]
 
-# 									print(numchoose)
-# 									print(pickedsofar[p["name"]])
+									print(numchoose)
+									print(pickedsofar[p["name"]])
 
 
 									
 
-# 									pickedsofar[p["name"]].append(numchoose)
+									pickedsofar[p["name"]].append(numchoose)
 
-# 									#print(numchoose[1])
-# 									#print(numchoose[0])
-# 									balanced_history[p["name"]][numchoose]+=1
+									#print(numchoose[1])
+									#print(numchoose[0])
+									balanced_history[p["name"]][numchoose]+=1
 
-# 									param[p["name"]] = int(numchoose)
+									param[p["name"]] = int(numchoose)
 
-# 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
-# 							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
+							NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
 							
 
 
-# 							param["identifier"] = task_id;
-# 							NewTask.params = json.dumps(param);
+							param["identifier"] = task_id;
+							NewTask.params = json.dumps(param);
 
-# 							history = json.loads(NewTask.history)
-# 							timestamp_string = format(datetime.datetime.now(), u'U')
-# 							event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
-# 							history["events"].append(event)
-# 							NewTask.history = json.dumps(history)
-# 							#print(NewTask.history)
-# 							NewTask.isSandbox = isSandbox
-# 							NewTask.save();
+							history = json.loads(NewTask.history)
+							timestamp_string = format(datetime.datetime.now(), u'U')
+							event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+							history["events"].append(event)
+							NewTask.history = json.dumps(history)
+							#print(NewTask.history)
+							NewTask.isSandbox = isSandbox
+							NewTask.save();
 
-# 							return_tasks.append(NewTask);
-
-
-# 							#print(NewTask.experiment)
+							return_tasks.append(NewTask);
 
 
-# 						EX.analytics = json.dumps(his)
-# 						#for key in balanced_history:
-# 						EX.balanced_history=json.dumps(balanced_history)
-# 						EX.save()
+							#print(NewTask.experiment)
 
 
-# 			#return HttpResponse('{"params":' + str(params) + "}")
-# 			for workertask in find_tasks:
-# 				return_tasks.append(workertask);
+						EX.analytics = json.dumps(his)
+						#for key in balanced_history:
+						EX.balanced_history=json.dumps(balanced_history)
+						EX.save()
 
-# 			params_list = []
 
-# 			response = "";
+			#return HttpResponse('{"params":' + str(params) + "}")
+			for workertask in find_tasks:
+				return_tasks.append(workertask);
 
-# 			for task in return_tasks:
-# 				params = task.params
-# 				params_json = byteify(json.loads(params));
+			params_list = []
 
-# 				results = json.loads(task.results)
-# 				if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
-# 					params_list.append(params_json);
-# 					print(params_json);
+			response = "";
 
-# 			return HttpResponse('{"params":' + str(params_list) + ',"pay":' + str(EX.per_task_payment) + ',"bonus":' + str(EX.bonus_payment) + '}')
+			for task in return_tasks:
+				params = task.params
+				params_json = byteify(json.loads(params));
+
+				results = json.loads(task.results)
+				if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
+					params_list.append(params_json);
+					print(params_json);
+
+			return HttpResponse('{"params":' + str(params_list) + ',"pay":' + str(EX.per_task_payment) + ',"bonus":' + str(EX.bonus_payment) + '}')
 
 
 

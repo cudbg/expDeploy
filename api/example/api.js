@@ -7588,28 +7588,28 @@ var gpaas = (function() {
 
 			//console.log(".......THIS IS THE ID DJKDHKSJHDKJDH SKJDHSJKDH SJKDH D" + currentId)
 
-			var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
-			xmlhttp.open("POST", serverurl + "/api/log/");
-			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			// var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
+			// xmlhttp.open("POST", serverurl + "/api/log/");
+			// xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-			xmlhttp.responseType = 'text';
+			// xmlhttp.responseType = 'text';
 
 
-			var postData = {
-				data: dataToSend,
-				worker_id: wid,
-				experiment_name: n,
-				researcher_id: researcher,
-				task_name: task,
-				task_id: currentId,
-				metaData: {
-					"userAgent": navigator.userAgent,
-					"dimension": "" + window.outerWidth + "x" + window.outerHeight,
-					"taskStart": taskStart,
-					"taskFinish": Math.round(new Date().getTime() / 1000)
+			// var postData = {
+			// 	data: dataToSend,
+			// 	worker_id: wid,
+			// 	experiment_name: n,
+			// 	researcher_id: researcher,
+			// 	task_name: task,
+			// 	task_id: currentId,
+			// 	metaData: {
+			// 		"userAgent": navigator.userAgent,
+			// 		"dimension": "" + window.outerWidth + "x" + window.outerHeight,
+			// 		"taskStart": taskStart,
+			// 		"taskFinish": Math.round(new Date().getTime() / 1000)
 
-				}
-			}
+			// 	}
+			// }
 
 
 
@@ -7663,9 +7663,9 @@ var gpaas = (function() {
 					}
 					
 					if (xhr.status == 500) {
-						catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+						catchError(new Error("Server error when logging completion of task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
 					} else {
-						catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+						catchError(new Error("Server error when logging completion of task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
 					}
 				}
 			});
@@ -7695,30 +7695,79 @@ var gpaas = (function() {
 	var endTasks = function() {
 		try {
 			clearTask()
-			console.log("TASK CLEARED")
-			var xmlHttp = new XMLHttpRequest();
+			// console.log("TASK CLEARED")
+			// var xmlHttp = new XMLHttpRequest();
 
 
 
-			xmlHttp.onload = function() {
-				if (xmlHttp.readyState === xmlHttp.DONE) {
-					if (xmlHttp.status === 200) {
-						submit()
-					} else {
-						catchError(new Error("Server error when logging data"))
-					}
-				} else {
+			// xmlHttp.onload = function() {
+			// 	if (xmlHttp.readyState === xmlHttp.DONE) {
+			// 		if (xmlHttp.status === 200) {
+			// 			submit()
+			// 		} else {
+			// 			catchError(new Error("Server error when logging data"))
+			// 		}
+			// 	} else {
 
-				}
-			};
-
-
+			// 	}
+			// };
 
 
 
 
-			xmlHttp.open("GET", serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, false); // false for synchronous request
-			xmlHttp.send(null)
+
+
+			// xmlHttp.open("GET", serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid, false); // false for synchronous request
+			// xmlHttp.send(null)
+
+
+
+						$.ajax({
+								url: serverurl + "/api/finishTasks?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid,
+								type: 'GET',
+								tryCount: 0,
+								retryLimit: 9,
+								success: function(data, status, jqXHR) {
+								// 	obj = JSON.parse(data.replaceAll("'", '"'));
+								// //alert(obj)
+								// 	console.log(obj)
+								// 	obj["params"].forEach(function(entry) {
+
+								// 		tasks.push(entry);
+
+								// 	});
+
+								// 	perTaskPay = obj["pay"]
+								// 	bonusPay = obj["bonus"]
+
+								// 	completed = numberTasks - obj["params"].length
+								// 	console.log('..........this is how many completed' + completed)
+
+								// 	nextTask()
+
+								},
+								error: function(xhr, textStatus, errorThrown) {
+									
+									this.tryCount++;
+									if (this.tryCount <= this.retryLimit) {
+										//try again
+										console.log("tried once....")
+										$.ajax(this);
+										return;
+									}
+									
+									if (xhr.status == 500) {
+										catchError(new Error("Server error when logging completion of task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+									} else {
+										catchError(new Error("Server error when logging completion of task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+									}
+								}
+							});
+
+
+
+
+
 
 
 		} catch (e) {
@@ -7924,7 +7973,7 @@ var gpaas = (function() {
 								retryLimit: 9,
 								success: function(data, status, jqXHR) {
 									obj = JSON.parse(data.replaceAll("'", '"'));
-									alert(obj)
+								//alert(obj)
 									console.log(obj)
 									obj["params"].forEach(function(entry) {
 
@@ -7952,9 +8001,9 @@ var gpaas = (function() {
 									}
 									
 									if (xhr.status == 500) {
-										catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+										catchError(new Error("Server error when logging completion of task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
 									} else {
-										catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+										catchError(new Error("Server error when logging completion of task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
 									}
 								}
 							});
@@ -8018,28 +8067,78 @@ var gpaas = (function() {
 			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
 
 
-			$.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data) {
+					$.ajax({
+						url: serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
+						type: 'GET',
+						tryCount: 0,
+						retryLimit: 9,
+						success: function(data, status, jqXHR) {
+							
+							console.log(data)
+							console.log(data == "true")
+							console.log(data == "false")
 
-				console.log(data)
-				console.log(data == "true")
-				console.log(data == "false")
+							if (data == "true") {
 
-				if (data == "true") {
+								resumeStartup(false)
 
-					resumeStartup(false)
+							} else {
 
-				} else {
-
-					trainingTasks = options.trainingTasks
-					if (options.trainingTasks != null && trainingTasks.length > 0) {
-						trainingTasks[0]()
-					} else {
-						resumeQualify()
-					}
+								trainingTasks = options.trainingTasks
+								if (options.trainingTasks != null && trainingTasks.length > 0) {
+									trainingTasks[0]()
+								} else {
+									resumeQualify()
+								}
 
 
-				}
-			});
+							}
+
+						},
+						error: function(xhr, textStatus, errorThrown) {
+							
+							this.tryCount++;
+							if (this.tryCount <= this.retryLimit) {
+								//try again
+								console.log("tried once....")
+								$.ajax(this);
+								return;
+							}
+							
+							if (xhr.status == 500) {
+								catchError(new Error("Server error when starting task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+							} else {
+								catchError(new Error("Server error when starting task. Please refresh the page. If error persists please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+							}
+						}
+					});
+
+
+
+
+
+			// $.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data) {
+
+			// 	console.log(data)
+			// 	console.log(data == "true")
+			// 	console.log(data == "false")
+
+			// 	if (data == "true") {
+
+			// 		resumeStartup(false)
+
+			// 	} else {
+
+			// 		trainingTasks = options.trainingTasks
+			// 		if (options.trainingTasks != null && trainingTasks.length > 0) {
+			// 			trainingTasks[0]()
+			// 		} else {
+			// 			resumeQualify()
+			// 		}
+
+
+			// 	}
+			// });
 
 
 
