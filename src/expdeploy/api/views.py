@@ -76,17 +76,18 @@ def showResults(request):
 		output = output + "\n" + str(paramList[str(i)])
 
 	for i in range(0,500):
-		if paramList[str(i)] == 2:
+		if paramList[str(i)] == 3:
 			votes1 = []
 
 			for dat in dataZ:
 				if dat["segmentID"] == i:
 					if "summaryModel" in dat:
-						votes1.append(dat["summary"])
+						votes1.append(dat["summaryModel"])
 
-			if votes1[1] == votes1[0]:
+			if len(votes1) == 3:
+				vote = max(set(votes1), key=votes1.count)
 
-				output = output + "\n" + str(votes1[0])
+				output = output + "\n" + str(vote) + str(i)
 
 				print >>sys.stderr, "\n" + str(votes1)
 
