@@ -7397,7 +7397,6 @@ var gpaas = (function() {
 		return target.replace(new RegExp(search, 'g'), replacement);
 	};
 
-
 	var wid = "undefined";
 	var task = "";
 	var researcher = "";
@@ -7430,7 +7429,7 @@ var gpaas = (function() {
 	//var serverurl = "https://192.241.179.74:8000"
 	//var serverurl = "https://localhost:8000"
 
-	var workerID = function (){
+	var workerID = function() {
 		return wid
 	}
 
@@ -7468,8 +7467,8 @@ var gpaas = (function() {
 	}
 
 	var logAnalytics = function(d) {
-		$.post( serverurl + "/api/logAnalytics/", { data: d, usrId:researcher, expId: n}, function( data ) {
-		  console.log('successfully logged data')
+		$.post(serverurl + "/api/logAnalytics/", { data: d, usrId: researcher, expId: n }, function(data) {
+			console.log('successfully logged data')
 		}, "json");
 	}
 
@@ -7503,7 +7502,7 @@ var gpaas = (function() {
 			resumeQualify()
 		} else {
 			trainingTasks[currentTraining]()
-			logAnalytics(wid + " has started a training task, " + (trainingTasks.length -(currentTraining)) + " remaining")
+			logAnalytics(wid + " has started a training task, " + (trainingTasks.length - (currentTraining)) + " remaining")
 		}
 	}
 
@@ -7514,10 +7513,10 @@ var gpaas = (function() {
 	var failedQualSoFar = false
 
 
-	var getCurrentTraining = function (){
+	var getCurrentTraining = function() {
 		return currentTraining
 	}
-	var getCurrentQualification = function (){
+	var getCurrentQualification = function() {
 		return currentQualification
 	}
 
@@ -7539,7 +7538,7 @@ var gpaas = (function() {
 				qualificationTasks[currentQualification]()
 			}
 
-			logAnalytics(wid + " has started a qualification task, " + (qualificationTasks.length -(currentQualification)) + " remaining")
+			logAnalytics(wid + " has started a qualification task, " + (qualificationTasks.length - (currentQualification)) + " remaining")
 		}
 
 	}
@@ -7616,50 +7615,64 @@ var gpaas = (function() {
 
 
 
-			xmlhttp.onload = function() {
-				if (xmlhttp.readyState === xmlhttp.DONE) {
-					if (xmlhttp.status === 200) {
+			// xmlhttp.onload = function() {
+			// 	if (xmlhttp.readyState === xmlhttp.DONE) {
+			// 		if (xmlhttp.status === 200) {
 
-						if (xmlhttp.responseText == "success") {
+			// 			if (xmlhttp.responseText == "success") {
 
 
-							dataToSend = []
+			// 				dataToSend = []
 
-							localNextTask()
+			// 				localNextTask()
 
-						} else {
-							catchError(new Error("Server error when logging data"))
-						}
-					} else {
-						catchError(new Error("Server error when logging data"))
-					}
-				} else {
+			// 			} else {
+			// 				catchError(new Error("Server error when logging data"))
+			// 			}
+			// 		} else {
+			// 			catchError(new Error("Server error when logging data"))
+			// 		}
+			// 	} else {
 
-				}
-			};
+			// 	}
+			// };
 
 
 			//hamedn: I tried using ajax but got a key error/it wouldn't load the JSON data
 
-			// $.ajax({
-			// 		type: "POST",
-			// 		url: serverurl + "/api/log/",
-			// 		data: postData,
-			// 		success: function (data, status, jqXHR) {
-			// 			localNextTask()
-			// 		},
-			// 		error: function (jqXHR, status, err) {
-			// 			catchError(new Error("Server error when logging data"))
-			// 		},
-			// 		dataType: "json",
-			//      contentType: "application/json"
+			$.ajax({
+				url: serverurl + "/api/log/",
+				type: 'POST',
+				data: postData,
+				tryCount: 0,
+				retryLimit: 9,
+				dataType: "json",
+				contentType: "application/json",
+				success: function(json) {
+					dataToSend = []
+					localNextTask()
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					
+					this.tryCount++;
+					if (this.tryCount <= this.retryLimit) {
+						//try again
+						console.log("tried once....")
+						$.ajax(this);
+						return;
+					}
+					
+					if (xhr.status == 500) {
+						catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+					} else {
+						catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+					}
+				}
+			});
 
-			//DJANGO SERVER ERROR: KeyError: 'worker_id'
-			// });
 
-
-			console.log(JSON.stringify(postData));
-			xmlhttp.send(JSON.stringify(postData));
+			//console.log(JSON.stringify(postData));
+			//xmlhttp.send(JSON.stringify(postData));
 
 
 		} else {
@@ -7688,16 +7701,16 @@ var gpaas = (function() {
 
 
 			xmlHttp.onload = function() {
-							if (xmlHttp.readyState === xmlHttp.DONE) {
-								if (xmlHttp.status === 200) {
-									submit()
-								} else {
-									catchError(new Error("Server error when logging data"))
-								}
-							} else {
+				if (xmlHttp.readyState === xmlHttp.DONE) {
+					if (xmlHttp.status === 200) {
+						submit()
+					} else {
+						catchError(new Error("Server error when logging data"))
+					}
+				} else {
 
-							}
-						};
+				}
+			};
 
 
 
@@ -7909,7 +7922,7 @@ var gpaas = (function() {
 
 			}
 
-			resumeQualify = function () {
+			resumeQualify = function() {
 
 
 				if (options.qualificationTasks != null && qualificationTasks.length > 0) {
@@ -7926,20 +7939,19 @@ var gpaas = (function() {
 			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
 
 
-			$.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data){
-			    
+			$.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data) {
+
 				console.log(data)
-				console.log(data=="true")
-				console.log(data=="false")
+				console.log(data == "true")
+				console.log(data == "false")
 
-			    if (data == "true") {
-			    	
-			    	resumeStartup(false)
+				if (data == "true") {
 
-			    }
-			    else {
+					resumeStartup(false)
 
-			    	trainingTasks = options.trainingTasks
+				} else {
+
+					trainingTasks = options.trainingTasks
 					if (options.trainingTasks != null && trainingTasks.length > 0) {
 						trainingTasks[0]()
 					} else {
@@ -7947,8 +7959,8 @@ var gpaas = (function() {
 					}
 
 
-			    }
-			  });
+				}
+			});
 
 
 
@@ -7977,9 +7989,9 @@ var gpaas = (function() {
 		errorAction: catchError,
 		nextQualification: nextQualification,
 		nextTraining: nextTraining,
-		currentTraining:getCurrentTraining,
-		currentQualification:getCurrentQualification,
-		logAnalytics:logAnalytics,
+		currentTraining: getCurrentTraining,
+		currentQualification: getCurrentQualification,
+		logAnalytics: logAnalytics,
 		workerID: workerID
 	}
 

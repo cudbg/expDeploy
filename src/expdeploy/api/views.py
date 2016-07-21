@@ -597,7 +597,7 @@ def result(request):
 def log(request):
 	if request.method == 'POST':
 		body_unicode = request.body.decode('utf-8')
-		body = json.loads(body_unicode)
+		body = request.POST#json.loads(body_unicode)
 		#body = request.POST.dict()
 
 		#TODO: Filter by experiment name
