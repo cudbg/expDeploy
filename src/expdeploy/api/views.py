@@ -79,8 +79,9 @@ def showResults(request):
 		if paramList[str(i)] == 3:
 			votes1 = []
 			for dat in data:
-				if str(dat["segmentID"]) == str(i):
-					votes1.append(dat["summaryModel"])
+				print(dat["segmentID"])
+				print(i)
+#					votes1.append(dat["summaryModel"])
 
 			#vote = max(set(votes1), key=votes1.count)
 
