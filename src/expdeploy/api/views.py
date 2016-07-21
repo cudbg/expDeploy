@@ -80,7 +80,8 @@ def showResults(request):
 			votes1 = []
 
 			for dat in dataZ:
-				votes1.append(dat["summary"])
+				if dat["segmentID"] == i:
+					votes1.append(dat["summary"])
 
 			vote = max(set(votes1), key=votes1.count)
 
