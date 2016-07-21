@@ -93,8 +93,11 @@ def showResults(request):
 	shuffle(remaining)
 
 
+	ignores = []
+
 	for i in range(0,500):
-		if paramList[str(i)] == 3 or paramList[str(i)] == 4:
+
+		if paramList[str(i)] == 3 or paramList[str(i)] == 4 or paramList[str(i)] == 2:
 			votes1 = []
 			votes2 = []
 			votes3 = []
@@ -104,6 +107,7 @@ def showResults(request):
 						votes1.append(dat["summaryModel"])
 						votes2.append(dat["labeledHelpful"])
 						votes3.append(dat["summary"])
+
 
 			if len(votes1) == 4:
  				votes1 = [votes1[0],votes1[1],votes1[2]]
@@ -130,33 +134,35 @@ def showResults(request):
 	return HttpResponse(output)
 
 
-	# wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
-	# expId = request.GET.get('wid', '');
-	# if expId != '':
-	# 	wids = [expId]
-
-	# tasks = []
-	# for wid in wids:
-	# 	find_tasks = WorkerTask.objects.filter(wid=wid)
-	# 	for task in find_tasks:
-	# 		tasks.append(task)
+def showResults2(request):
 
 
+	wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
+	expId = request.GET.get('wid', '');
+	if expId != '':
+		wids = [expId]
 
-	# for task in tasks:
-	# 	#print(task.results)
-	# 	print(task.wid)
-	# 	js = json.loads(task.results)
-	# 	data = js["data"]
-	# 	if len(data) > 0:
-	# 		lastResult = data[len(data)-1]
-	# 		if "summaryModel" in lastResult:
-	# 			print(lastResult["summaryModel"])
+	tasks = []
+	for wid in wids:
+		find_tasks = WorkerTask.objects.filter(wid=wid)
+		for task in find_tasks:
+			tasks.append(task)
 
-	# 		print(lastResult["summary"])
+
+
+	for task in tasks:
+		#print(task.results)
+		print(task.wid)
+		js = json.loads(task.results)
+		data = js["data"]
+		if len(data) > 0:
+			lastResult = data[len(data)-1]
+			if "summaryModel" in lastResult:
+				print(lastResult["summaryModel"])
+
+			print(lastResult["summary"])
 
 		
-	# return HttpResponse("hello world")
 
 def hasStarted(request):
 	expId = request.GET.get('experiment', '');
