@@ -94,7 +94,7 @@ def showResults(request):
 
 
 	for i in range(0,500):
-		if paramList[str(i)] == 3 or paramList[str(i)] == 3:
+		if paramList[str(i)] == 3 or paramList[str(i)] == 4:
 			votes1 = []
 			votes2 = []
 
