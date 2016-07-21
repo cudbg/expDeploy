@@ -101,7 +101,7 @@ def showResults(request):
 			for dat in dataZ:
 				if dat["segmentID"] == i:
 					if "summaryModel" in dat:
-						votes1.append(dat["summary"])
+						votes1.append(dat["summaryModel"])
 						votes2.append(dat["labeledHelpful"])
 
 			if len(votes1) == 3:
