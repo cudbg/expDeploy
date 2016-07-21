@@ -52,7 +52,7 @@ import heapq
 
 def showResults(request):
 
-	wids = ["A37S96RT1P1IT2", "A18TCR555RWUZV", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH","A27PVIL93ZMY46","A1CA46R2A6TV9W","ANMXMEB55AGM6","A2DVZVTZOCUUB","A1909MOQZUXZZ5","A24NUJ0TMY0GBG","A377LTGWJKY2IW","A3VEGU07DAYV4T","A9JLQEN9J5WL3","A1MYLQQL8BBOYT","A1EQ2HDHF2WWSY","A1KWJ1MMFJB515","A1640H4RXH8NZE","A25N0K40JAZTN1"]
+	wids = ["A37S96RT1P1IT2", "A18TCR555RWUZV", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH","A27PVIL93ZMY46","A1CA46R2A6TV9W","ANMXMEB55AGM6","A2DVZVTZOCUUB","A1909MOQZUXZZ5","A24NUJ0TMY0GBG","A377LTGWJKY2IW","A3VEGU07DAYV4T","A9JLQEN9J5WL3","A1MYLQQL8BBOYT","A1EQ2HDHF2WWSY","A1KWJ1MMFJB515","A1640H4RXH8NZE","A25N0K40JAZTN1","A1T2NVE4DGCDFL"]
 
 	paramList = {}
 	for i in range(0,500):
@@ -60,6 +60,7 @@ def showResults(request):
 
 	find_tasks = WorkerTask.objects.filter(experiment__name='Label_Product_Review_Snippets')
 
+	data = []
 	for task in find_tasks:
 		if task.wid not in wids:
 			continue
@@ -67,11 +68,28 @@ def showResults(request):
 		data = js["data"]
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
+			data.append(lastResult)
 			if "summaryModel" in lastResult:
 				paramList[str(lastResult["segmentID"])]+=1
 	output = ""
 	for i in range(0,500):
 		output = output + "\n" + str(paramList[str(i)])
+
+	for i in range(0,500):
+		if paramList[str(i)] == 3:
+			votes1 = []
+			for dat in data:
+				if dat["segmentID"] == i:
+					votes1.append(dat["summaryModel"])
+
+			vote = max(set(votes), key=vost1.count)
+
+			output = output + "\n" + vote
+
+
+
+					
+
 	return HttpResponse(output)
 	# wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
 	# expId = request.GET.get('wid', '');
