@@ -8077,7 +8077,14 @@ var gpaas = (function() {
 							console.log(data == "true")
 							console.log(data == "false")
 
-							if (data == "true") {
+							if (data == "done") {
+
+								alert("This task can only be done once. Please end the task and return the HIT. Thank you.")
+
+							} 
+
+
+							else if (data == "true") {
 
 								resumeStartup(false)
 
