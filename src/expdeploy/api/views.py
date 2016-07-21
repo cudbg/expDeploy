@@ -86,7 +86,7 @@ def showResults(request):
 
 			output = output + "\n" + str(vote)
 
-			print >>sys.stderr, votes1
+			print >>sys.stderr, "\n" + votes1
 
 
 
