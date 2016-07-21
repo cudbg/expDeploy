@@ -7884,37 +7884,80 @@ var gpaas = (function() {
 
 
 
-						$.ajax({
-							type: "GET",
-							url:  serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
-							success: function(data, status, jqXHR) {
-								obj = JSON.parse(data.replaceAll("'", '"'));
-								alert(obj)
-								console.log(obj)
-								obj["params"].forEach(function(entry) {
+						// $.ajax({
+						// 	type: "GET",
+						// 	url:  serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
+						// 	success: function(data, status, jqXHR) {
+						// 		obj = JSON.parse(data.replaceAll("'", '"'));
+						// 		alert(obj)
+						// 		console.log(obj)
+						// 		obj["params"].forEach(function(entry) {
 
-									tasks.push(entry);
+						// 			tasks.push(entry);
 
-								});
+						// 		});
 
-								perTaskPay = obj["pay"]
-								bonusPay = obj["bonus"]
+						// 		perTaskPay = obj["pay"]
+						// 		bonusPay = obj["bonus"]
 
-								completed = numberTasks - obj["params"].length
-								console.log('..........this is how many completed' + completed)
+						// 		completed = numberTasks - obj["params"].length
+						// 		console.log('..........this is how many completed' + completed)
 
-								nextTask()
+						// 		nextTask()
 
-							},
-							error: function(jqXHR, status, err) {
-							//	catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu"))
-							//	catchError(err)
-								console.log(err)
-							}//,
-							//dataType: "json",
-							//contentType: "application/json"
+						// 	},
+						// 	error: function(jqXHR, status, err) {
+						// 	//	catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu"))
+						// 	//	catchError(err)
+						// 		console.log(err)
+						// 	}//,
+						// 	//dataType: "json",
+						// 	//contentType: "application/json"
 
-						});
+						// });
+
+
+							$.ajax({
+								url: serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
+								type: 'GET',
+								tryCount: 0,
+								retryLimit: 9,
+								success: function(data, status, jqXHR) {
+									obj = JSON.parse(data.replaceAll("'", '"'));
+									alert(obj)
+									console.log(obj)
+									obj["params"].forEach(function(entry) {
+
+										tasks.push(entry);
+
+									});
+
+									perTaskPay = obj["pay"]
+									bonusPay = obj["bonus"]
+
+									completed = numberTasks - obj["params"].length
+									console.log('..........this is how many completed' + completed)
+
+									nextTask()
+
+								},
+								error: function(xhr, textStatus, errorThrown) {
+									
+									this.tryCount++;
+									if (this.tryCount <= this.retryLimit) {
+										//try again
+										console.log("tried once....")
+										$.ajax(this);
+										return;
+									}
+									
+									if (xhr.status == 500) {
+										catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+									} else {
+										catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu with details so that this can be resolved. Please don't abort the task."))
+									}
+								}
+							});
 
 						// var xmlHttp = new XMLHttpRequest();
 
