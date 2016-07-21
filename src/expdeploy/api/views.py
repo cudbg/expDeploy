@@ -88,8 +88,8 @@ def showResults(request):
 
 			if len(votes1) == 3:
 				vote = max(set(votes1), key=votes1.count)
-
-				output = output + "\n" + str(vote) + str(i) + str(max(set(votes2), key=votes2.count))
+				vote2 = max(set(votes2), key=votes2.count)
+				output = output + "\n" + str(vote) + str(i) + str(vote2) + "hi"
 
 				print >>sys.stderr, "\n" + str(votes1)
 
