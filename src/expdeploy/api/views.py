@@ -86,7 +86,7 @@ def showResults(request):
 
 			if votes1[1] == votes1[0]:
 
-				output = output + "\n" + str(votes1)
+				output = output + "\n" + str(votes1[0])
 
 				print >>sys.stderr, "\n" + str(votes1)
 
