@@ -600,9 +600,9 @@ def log(request):
 		
 
 		print(request.POST)
-		print(request.POST.body)
+		print(request.body)
 		print(request.POST.get("worker_id", ''))
-		
+
 		body_unicode = request.body.decode('utf-8')
 		body = request.POST#json.loads(body_unicode)
 		#body = request.POST.dict()
