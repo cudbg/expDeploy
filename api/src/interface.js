@@ -491,31 +491,59 @@ var gpaas = (function() {
 
 					} else {
 
-						var xmlHttp = new XMLHttpRequest();
 
-						var gotoURL = serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox
 
-						console.log("HERE IS THE GOTOURL")
-						console.log(gotoURL)
+						$.ajax({
+							type: "GET",
+							url:  serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
+							success: function(data, status, jqXHR) {
+								obj["params"].forEach(function(entry) {
 
-						xmlHttp.open("GET", serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, false); // false for synchronous request
-						xmlHttp.send(null);
-						resp = xmlHttp.responseText.replaceAll("'", '"');
+									tasks.push(entry);
 
-						obj = JSON.parse(resp);
-						console.log(obj["params"]);
+								});
 
-						obj["params"].forEach(function(entry) {
+								perTaskPay = obj["pay"]
+								bonusPay = obj["bonus"]
 
-							tasks.push(entry);
+								completed = numberTasks - obj["params"].length
+								console.log('..........this is how many completed' + completed)
+
+
+							},
+							error: function(jqXHR, status, err) {
+								catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu"))
+							},
+							dataType: "json",
+							contentType: "application/json"
 
 						});
 
-						perTaskPay = obj["pay"]
-						bonusPay = obj["bonus"]
+						// var xmlHttp = new XMLHttpRequest();
 
-						completed = numberTasks - obj["params"].length
-						console.log('..........this is how many completed' + completed)
+						// var gotoURL = serverurl + "/api/task?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox
+
+						// console.log("HERE IS THE GOTOURL")
+						// console.log(gotoURL)
+
+						// xmlHttp.open("GET",, false); // false for synchronous request
+						// xmlHttp.send(null);
+						// resp = xmlHttp.responseText.replaceAll("'", '"');
+
+						// obj = JSON.parse(resp);
+						// console.log(obj["params"]);
+
+						// obj["params"].forEach(function(entry) {
+
+						// 	tasks.push(entry);
+
+						// });
+
+						// perTaskPay = obj["pay"]
+						// bonusPay = obj["bonus"]
+
+						// completed = numberTasks - obj["params"].length
+						// console.log('..........this is how many completed' + completed)
 
 
 					}
