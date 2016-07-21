@@ -512,7 +512,9 @@ var gpaas = (function() {
 
 							},
 							error: function(jqXHR, status, err) {
-								catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu"))
+							//	catchError(new Error("Server error when logging data. Please email hn2284@columbia.edu"))
+							//	catchError(err)
+								console.log(err)
 							},
 							dataType: "json",
 							contentType: "application/json"
