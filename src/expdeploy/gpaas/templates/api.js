@@ -7595,21 +7595,21 @@ var gpaas = (function() {
 			// xmlhttp.responseType = 'text';
 
 
-			// var postData = {
-			// 	data: dataToSend,
-			// 	worker_id: wid,
-			// 	experiment_name: n,
-			// 	researcher_id: researcher,
-			// 	task_name: task,
-			// 	task_id: currentId,
-			// 	metaData: {
-			// 		"userAgent": navigator.userAgent,
-			// 		"dimension": "" + window.outerWidth + "x" + window.outerHeight,
-			// 		"taskStart": taskStart,
-			// 		"taskFinish": Math.round(new Date().getTime() / 1000)
+			var postData = {
+				data: dataToSend,
+				worker_id: wid,
+				experiment_name: n,
+				researcher_id: researcher,
+				task_name: task,
+				task_id: currentId,
+				metaData: {
+					"userAgent": navigator.userAgent,
+					"dimension": "" + window.outerWidth + "x" + window.outerHeight,
+					"taskStart": taskStart,
+					"taskFinish": Math.round(new Date().getTime() / 1000)
 
-			// 	}
-			// }
+				}
+			}
 
 
 
