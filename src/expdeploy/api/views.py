@@ -78,9 +78,10 @@ def showResults(request):
 	for i in range(0,500):
 		if paramList[str(i)] == 3:
 			votes1 = []
-			for dat in data:
-				print(dat["segmentID"])
-				print(i)
+			print >>sys.stderr, 1
+			# for dat in data:
+			# 	print(dat["segmentID"])
+			# 	print(i)
 #					votes1.append(dat["summaryModel"])
 
 			#vote = max(set(votes1), key=votes1.count)
