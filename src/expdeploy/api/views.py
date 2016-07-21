@@ -80,7 +80,7 @@ def showResults(request):
 			votes1 = []
 
 			for dat in dataZ:
-				votes1.append(dat["summaryModel"])
+				votes1.append(dat["summary"])
 
 			vote = max(set(votes1), key=votes1.count)
 
