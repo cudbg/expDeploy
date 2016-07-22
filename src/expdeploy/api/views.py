@@ -142,11 +142,23 @@ def showResults(request):
 	if save != '':
 		expModel.save()
 
+	# myfile = StringIO.StringIO()
+	# for line in dataZ:
+	# 	myfile.write(json.dumps(line) + "\n")
+	# response = HttpResponse(FileWrapper(myfile.getvalue()), content_type='application/zip')
+	# response['Content-Disposition'] = 'attachment; filename=myfile.zip'
+
+
 	myfile = StringIO.StringIO()
 	for line in dataZ:
 		myfile.write(json.dumps(line) + "\n")
-	response = HttpResponse(FileWrapper(myfile.getvalue()), content_type='application/zip')
-	response['Content-Disposition'] = 'attachment; filename=myfile.zip'
+
+	response = HttpResponse(content_type='text/plain')
+	response['Content-Disposition'] = 'attachment; filename=authors_list.txt'
+	response.write(myfile.getvalue())
+	return response
+
+
 	return response
 
 
