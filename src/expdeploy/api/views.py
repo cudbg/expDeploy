@@ -37,6 +37,7 @@ from django.utils.encoding import smart_str
 from StringIO import StringIO
 from random import shuffle
 from random import seed
+import cStringIO as StringIO
 
 from django.db import connection
 from os import system
@@ -140,6 +141,14 @@ def showResults(request):
 	expModel.balanced_history = json.dumps(hist)
 	if save != '':
 		expModel.save()
+
+	myfile = StringIO.StringIO()
+	for line in dataZ:
+		myfile.write(json.dumps(line) + "\n")
+	response = HttpResponse(FileWrapper(myfile.getvalue()), content_type='application/zip')
+	response['Content-Disposition'] = 'attachment; filename=myfile.zip'
+	return response
+
 
 	return HttpResponse(output)
 
