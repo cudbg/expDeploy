@@ -113,8 +113,8 @@ def showResults(request):
 
 
 			if len(votes1) == 4:
- 				votes1 = [votes1[0],votes1[1],votes1[2]]
- 				votes2 = [votes2[0],votes2[1],votes2[2]]
+ 				votes1 = [votes1[1],votes1[2],votes1[3]]
+ 				votes2 = [votes2[1],votes2[2],votes2[3]]
 			if len(votes1) == 3 or len(votes1) == 5:
 				vote = max(set(votes1), key=votes1.count)
 				vote2 = max(set(votes2), key=votes2.count)
