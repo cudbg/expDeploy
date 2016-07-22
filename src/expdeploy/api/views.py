@@ -91,6 +91,9 @@ def showResults(request):
 			remaining.append(i)
 			remaining.append(i)
 			remaining.append(i)
+	for i in range(0,500):
+		if paramList[str(i)] == 4:
+			remaining.append(i)
 
 	shuffle(remaining)
 
