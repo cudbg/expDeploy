@@ -95,12 +95,12 @@ def showResults(request):
 			if lastResult["reviewHumanAgree"]:
 				lastResult["reviewVoteHelpful"] = lastResult["humanVoteHelpful"]
 			else:
-				lastResult["reviewVoteHelpful"] = !lastResult["humanVoteHelpful"]
+				lastResult["reviewVoteHelpful"] = not lastResult["humanVoteHelpful"]
 
 			if lastResult["modelHumanAgree"]:
 				lastResult["modelVoteHelpful"] = lastResult["humanVoteHelpful"]
 			else:
-				lastResult["modelVoteHelpful"] = !lastResult["humanVoteHelpful"]
+				lastResult["modelVoteHelpful"] =  not lastResult["humanVoteHelpful"]
 
 			lastResult["modelReviewAgree"] = lastResult["modelVoteHelpful"] == lastResult["reviewVoteHelpful"]
 		#	if lastResult[""]
