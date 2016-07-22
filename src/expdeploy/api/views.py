@@ -79,7 +79,7 @@ def showResults(request):
 				paramList[str(lastResult["segmentID"])]+=1
 	output = ""
 	for i in range(0,500):
-		output = output + "\n" + str(paramList[str(i)])
+		output = output + "\n" + str(paramList[str(i)]) + "\n" + str(i)
 
 	for i in range(0,500):
 		if paramList[str(i)] == 2:
