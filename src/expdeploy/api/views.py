@@ -941,11 +941,16 @@ def task(request):
 									pickFrom = balanced_history["pickFrom"]
 									shuffle(pickFrom)
 
-									picked = pickFrom[0]
-									while picked in pickedsofar[p["name"]]:
-										shuffle(pickFrom)
-										picked = pickFrom[0]
+									picked = 0
 
+									if len(pickFrom) > 0:
+
+										picked = pickFrom[0]
+										while picked in pickedsofar[p["name"]]:
+											shuffle(pickFrom)
+											picked = pickFrom[0]
+									else:
+										picked = random.randint(0,500)
 
 									# for key in historical_data:
 									# 	if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
