@@ -50,6 +50,10 @@ import pwd
 
 import heapq
 
+def changeKey(dictionary, oldKey, newKey):
+	dictionary[newKey] = dictionary[oldKey]
+	del dictionary[oldKey]
+	return dictionary
 
 def showResults(request):
 
@@ -75,6 +79,32 @@ def showResults(request):
 		data = js["data"]
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
+			lastResult["WID"] = task.wid
+			lastResult = changeKey(lastResult, "labeledHelpful", "humanVoteHelpful")
+			lastResult = changeKey(lastResult, "summaryModel", "modelHumanAgree")
+			if lastResult["modelHumanAgree"] == "LabeledMachineCorrectly":
+				lastResult["modelHumanAgree"] = True
+			else:
+				lastResult["modelHumanAgree"] = False
+			lastResult = changeKey(lastResult, "summary", "reviewHumanAgree")
+			if lastResult["reviewHumanAgree"] == "LabeledCorrectly":
+				lastResult["reviewHumanAgree"] = True
+			else:
+				lastResult["reviewHumanAgree"] = False
+
+			if lastResult["reviewHumanAgree"]:
+				lastResult["reviewVoteHelpful"] = lastResult["humanVoteHelpful"]
+			else:
+				lastResult["reviewVoteHelpful"] = !lastResult["humanVoteHelpful"]
+
+			if lastResult["modelHumanAgree"]:
+				lastResult["modelVoteHelpful"] = lastResult["humanVoteHelpful"]
+			else:
+				lastResult["modelVoteHelpful"] = !lastResult["humanVoteHelpful"]
+
+			lastResult["modelReviewAgree"] = lastResult["modelVoteHelpful"] == lastResult["reviewVoteHelpful"]
+		#	if lastResult[""]
+			#del dictionary[old_key]
 			dataZ.append(lastResult)
 			if "summaryModel" in lastResult:
 				paramList[str(lastResult["segmentID"])]+=1
