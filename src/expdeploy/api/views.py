@@ -115,6 +115,8 @@ def showResults(request):
 					votes1.append(votes1[0])
 					votes2.append(votes2[0])
 					votes3.append(votes3[0])
+				else:
+					output = output + "haaa" + str(i) + "haaaaaa"
 
 			if len(votes1) == 4:
  				votes1 = [votes1[1],votes1[2],votes1[3]]
