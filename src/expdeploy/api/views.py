@@ -100,7 +100,7 @@ def showResults(request):
 
 	for i in range(0,500):
 
-		if paramList[str(i)] == 3 or paramList[str(i)] == 4 or paramList[str(i)] == 2:
+		if paramList[str(i)] == 3 or paramList[str(i)] == 4 or paramList[str(i)] == 2 or paramList[str(i)] == 5:
 			votes1 = []
 			votes2 = []
 			votes3 = []
@@ -115,7 +115,7 @@ def showResults(request):
 			if len(votes1) == 4:
  				votes1 = [votes1[0],votes1[1],votes1[2]]
  				votes2 = [votes2[0],votes2[1],votes2[2]]
-			if len(votes1) == 3:
+			if len(votes1) == 3 or len(votes1) == 5:
 				vote = max(set(votes1), key=votes1.count)
 				vote2 = max(set(votes2), key=votes2.count)
 				vote3 = max(set(votes3), key=votes3.count)
