@@ -999,7 +999,8 @@ def task(request):
 
 									param[p["name"]] = picked
 									pickedsofar[p["name"]].append(picked)
-									pickFrom.pop(0)
+									if len(pickFrom) > 0:
+										pickFrom.pop(0)
 									balanced_history["pickFrom"] = pickFrom
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
