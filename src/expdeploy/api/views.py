@@ -68,7 +68,8 @@ def showResults(request):
 	spam = confidence_spam + explanation_spam
 
 	for sp in spam:
-		wids.remove(sp)
+		if sp in wids:
+			wids.remove(sp)
 
 	paramList = {}
 	for i in range(0,500):
