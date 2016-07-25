@@ -65,7 +65,7 @@ def showResults(request):
 	confidence_spam = ["A3O2NOP1NUWCWL", "A39W3PYK82IBAS", "A2JCHN90PRUWDH", "A2DVZVTZOCUUB", "A24NUJ0TMY0GBG"]
 	explanation_spam = ["A13HO1CD5GOQTQ", "A1640H4RXH8NZE", "A1909MOQZUXZZ5", "A24NUJ0TMY0GBG", "A25N0K40JAZTN1", "A2DVZVTZOCUUB", "A39W3PYK82IBAS", "A3VEGU07DAYV4T", "AN5W1383SSGO4"]
 
-	spam = confidence_spam
+	spam = explanation_spam
 
 	for sp in spam:
 		if sp in wids:
