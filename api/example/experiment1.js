@@ -4,44 +4,45 @@
 callback = function () {
 
 
-setupExperiment({
+var experiment = {
   
   name:"Experiment1",
   task:"VotingTask",
-  wid:"fsfsfsfsf",
-
   researcher:"admin",
+  wid: "fakeidfor test",
 
   viewTask: function (params) {
     var btn = document.createElement("BUTTON");
     btn.style.background = params["button_color"];
     var txt = document.createTextNode(params["button_text"]);  
     btn.appendChild(txt);  
-     document.getElementById("b").appendChild(btn); 
+    document.getElementById("b").appendChild(btn); 
 
-     var btn2 = document.createElement("BUTTON");
+    var btn2 = document.createElement("BUTTON");
     btn2.style.background = params["button_color"];
     var txt2 = document.createTextNode(params["button_text2"]);  
     btn2.appendChild(txt2);  
-     document.getElementById("b").appendChild(btn2); 
+    document.getElementById("b").appendChild(btn2); 
 
     btn.addEventListener("click", function(){
-        logData({"color":params["button_color"],"text":params["button_text"]})
-        nextTask();
+      logData({"color":params["button_color"],"text":params["button_text"]})
+      nextTask();
     });
     btn2.addEventListener("click", function(){
-        logData({"color":params["button_color"],"text":params["button_text2"]})
-        nextTask();
+      logData({"color":params["button_color"],"text":params["button_text2"]})
+      nextTask();
     });
   },
-  clearTask: function() {
-   document.getElementById("b").innerHTML = ''; 
+  clearTask: function(params) {
+    document.getElementById("b").innerHTML = ''; 
+  },
+  finish: function(params) {
+    console.log("done!");
   }
-})
+};
 
-
-
-
+var exp = gpaas.startExperiment(function() { return experiment; });
+exp.run();
 }
 
 

@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "button_color": ["red", "blue"],
+    "button_text": ["click me!", "don't click me"],
+    "button_text2": ["maybe click me!", "please click me"]
+  }
+}
