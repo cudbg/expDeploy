@@ -7433,7 +7433,7 @@ CONFIG
 //var serverurl = "https://192.241.179.74:8000"
 //var serverurl = "https://localhost:8000"
 
-var serverurl = "https://gpaas.xyz"
+var serverurl = "http://gpaas.xyz"
 
 tasks = [];
 
