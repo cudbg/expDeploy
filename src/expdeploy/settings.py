@@ -108,7 +108,7 @@ DATABASES = {
       # 'ENGINE': 'django.db.backends.sqlite3',
       # 'NAME': 'db.sqlite3',
      	'ENGINE': 'django.db.backends.postgresql_psycopg2',
-     	'NAME': 'gpaas',
+     	'NAME': 'gpaasdb',
      	'USER': 'gpaasteam',
      	'PASSWORD': 'gpaas',
      	'HOST': 'localhost',
