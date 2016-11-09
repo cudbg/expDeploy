@@ -250,6 +250,11 @@ var gpaas = (function() {
 
 			//hamedn: I tried using ajax but got a key error/it wouldn't load the JSON data
 
+			if (local) {
+					dataToSend = []
+					localNextTask()
+			}
+			else {
 			$.ajax({
 				url: serverurl + "/api/log/",
 				type: 'POST',
@@ -280,7 +285,7 @@ var gpaas = (function() {
 				}
 			});
 
-
+		}
 			//console.log(JSON.stringify(postData));
 			//xmlhttp.send(JSON.stringify(postData));
 
@@ -391,6 +396,8 @@ var gpaas = (function() {
 
 		try {
 
+			localAPI = false
+
 			console.log(window.location)
 			n = "{{experiment}}"
 			researcher = "{{username}}"
@@ -404,6 +411,8 @@ var gpaas = (function() {
 
 
 			if (n.includes("{{experiment}")) {
+				local = true
+				localAPI = true
 
 				if (options.name == null) {
 					throw new Error("No name parameter provided by researcher")
@@ -463,7 +472,7 @@ var gpaas = (function() {
 				wid = "exampleWorker"
 			}
 
-			if ("" + wid == "undefined") {
+			if ("" + wid == "undefined" && !localAPI) {
 				//alert("You must accept the HIT in order to start!!!")
 				success = false
 				throw new Error("You must accept the HIT in order to start");
@@ -663,8 +672,8 @@ var gpaas = (function() {
 			resumeQualify = function() {
 
 
-				if (options.qualificationTasks != null && qualificationTasks.length > 0) {
-					qualificationTasks[0]()
+				if (options.qualificationTasks != null && options.qualificationTasks.length > 0) {
+					options.qualificationTasks[0]()
 				} else {
 					resumeStartup(false)
 				}
@@ -675,7 +684,21 @@ var gpaas = (function() {
 			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
 			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
 			//#######Send a post request to server, see if there are any tasks COMPLETED. If there are, skip straight to ResumeStartup()
+			if (local) {
+				trainingTasks = options.trainingTasks
 
+				if (options.trainingTasks != null && trainingTasks.length > 0) {
+					options.trainingTasks[0]()
+					//alert("option 1")
+				} else {
+					resumeQualify()
+					//alert("option 2")
+					console.log(options)
+				}
+
+			}
+
+			else {
 
 					$.ajax({
 						url: serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox,
@@ -702,7 +725,7 @@ var gpaas = (function() {
 							} else {
 
 								trainingTasks = options.trainingTasks
-								if (options.trainingTasks != null && trainingTasks.length > 0) {
+								if (options.trainingTasks != null && options.trainingTasks.length > 0) {
 									trainingTasks[0]()
 								} else {
 									resumeQualify()
@@ -731,7 +754,7 @@ var gpaas = (function() {
 					});
 
 
-
+			}
 
 
 			// $.get(serverurl + "/api/hasStarted?researcher=" + researcher + "&experiment=" + n + "&task=" + task + "&wid=" + wid + "&n=" + numberTasks + "&hitId=" + hitID + "&assignmentId=" + assignmentID + "&isSandbox=" + sandbox, function(data) {

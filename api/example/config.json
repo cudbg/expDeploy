@@ -1,7 +1,10 @@
 {
-  "tasks": {
-    "button_color": ["red", "blue"],
-    "button_text": ["click me!", "don't click me"],
-    "button_text2": ["maybe click me!", "please click me"]
-  }
+
+"tasks":[ {
+"name":"seglabel",
+"params":[{"name": "seed", "type":"UniformChoice", "options":[0,1,2,3,4,5]}] 
+
+}  
+]
+
 }
