@@ -555,7 +555,7 @@ def export(request):
 	print >>sys.stderr, get_username()
 
 
-	system("pg_dump -d gpaas -f " + '/home/GPaaS/expDeploy/'+str(usrId)+'.dump ' + "-t api_metadata_temp -t api_workertask_temp")
+	system("pg_dump -d gpaasdb -f " + '/home/ubuntu/expDeploy/'+str(usrId)+'.dump ' + "-t api_metadata_temp -t api_workertask_temp")
 	filename = "/home/GPaaS/expDeploy/" + str(usrId) +".dump" # Select your file here.                                
 	wrapper = FileWrapper(file(filename))
 	response = HttpResponse(wrapper, content_type='mimetype=application/force-download')
