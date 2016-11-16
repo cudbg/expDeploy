@@ -668,13 +668,20 @@ def mturk(request):
 	if q_set.US_only:
 		locale_req = LocaleRequirement("EqualTo", "US")
 	#Hardcoded qualification for now. Will change later.
-	number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "500")
+	#number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "500")
 	qualifications = Qualifications()
-	qualifications.add(approved_req)
-	qualifications.add(submitted_req)
-	qualifications.add(locale_req)
-	qualifications.add(number_approved_req)
+	#qualifications.add(approved_req)
+	#qualifications.add(submitted_req)
+	#qualifications.add(locale_req)
+	#qualifications.add(number_approved_req)
 	
+
+	if (isSandbox == "False"):
+		number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "50")
+		qualifications.add(approved_req)
+		qualifications.add(submitted_req)
+		qualifications.add(locale_req)
+		qualifications.add(number_approved_req)
 	 
 	create_hit_result = mturk.create_hit(
 	    title = title,
