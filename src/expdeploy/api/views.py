@@ -556,7 +556,7 @@ def export(request):
 
 
 	system("pg_dump -d gpaasdb -f " + '/home/ubuntu/expDeploy/'+str(usrId)+'.dump ' + "-t api_metadata_temp -t api_workertask_temp")
-	filename = "/home/GPaaS/expDeploy/" + str(usrId) +".dump" # Select your file here.                                
+	filename = "/home/ubuntu/expDeploy/" + str(usrId) +".dump" # Select your file here.                                
 	wrapper = FileWrapper(file(filename))
 	response = HttpResponse(wrapper, content_type='mimetype=application/force-download')
 	response['Content-Length'] = os.path.getsize(filename)
