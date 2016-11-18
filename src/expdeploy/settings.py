@@ -141,3 +141,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "expdeploy/static"),
 ]
+
+
+
+try:
+  import sys
+  sys.path.append(".")
+  from private_settings import *
+except:
+  pass
