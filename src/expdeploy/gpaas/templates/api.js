@@ -7438,7 +7438,7 @@ var gpaas = (function() {
 		console.log("...caught error...")
 	}
 
-	var serverurl = "http://gpaas.xyz"
+	var serverurl = "https://gpaas.xyz"
 
 	var getUrlParameter = function getUrlParameter(sParam) {
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
