@@ -49,7 +49,7 @@ var gpaas = (function() {
 		console.log("...caught error...")
 	}
 
-	var serverurl = "https://www.gpaas.xyz"
+	var serverurl = "https://www.gpaas.xyz" //URL to send all requests to
 
 	var getUrlParameter = function getUrlParameter(sParam) {
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
