@@ -19,6 +19,8 @@ urlpatterns = [
 	url(r'^experiment', views.experiment, name='experiment'),
 	url(r'^log/', views.log, name='log'),
 	url(r'^export', views.export, name='export'),
+	url(r'^exportcsv', views.exportCSV, name='exportCSV'),
+
 	url(r'^hasStarted', views.hasStarted, name='hasStarted'),
     url(r'^$', views.index, name='index'),
 ]

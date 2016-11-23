@@ -496,6 +496,51 @@ def results(request):
 	print(rows)
 	return HttpResponse(str(rows))
 
+def exportCSV(request):
+
+	expId = request.GET.get('experiment', '');
+	usrId = request.GET.get('researcher', '');
+	print(usrId)
+	#TODO: Filter by experiment name
+	find_tasks = WorkerTask.objects.filter(experiment__name=expId, researcher=usrId);
+	data = []
+	for task in find_tasks:
+		print("SSS" + task.experiment.name)
+		d = byteify(json.loads(task.results));
+		data.append(d);
+
+	response = HttpResponse(content_type='text/csv')
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
+
+	response['Content-Disposition'] = 'attachment; filename=export.csv'
+	writer = csv.writer(response, csv.excel)
+	writer.writerow([
+		smart_str(u"ID"),
+		smart_str(u"Name"),
+		smart_str(u"Parameters"),
+		smart_str(u"Results"),
+		smart_str(u"History"),
+		smart_str(u"Status"),
+		smart_str(u"Paid"),
+		smart_str(u"WID"),
+		])
+	for obj in find_tasks:
+		writer.writerow([
+			smart_str(obj.pk),
+			smart_str(obj.name),
+			smart_str(obj.params),
+			smart_str(obj.results),
+			smart_str(obj.history),
+			smart_str(obj.currentStatus),
+			smart_str(obj.paid),
+			smart_str(obj.wid),
+			])
+	return response
+
+	print(data);
+	return HttpResponse(data)
+
 def export(request):
 	expId = request.GET.get('experiment', '');
 	usrId = request.GET.get('researcher', '');

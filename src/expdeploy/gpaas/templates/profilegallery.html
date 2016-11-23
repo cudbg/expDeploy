@@ -168,6 +168,13 @@
                                     <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
                                     <input type="submit" class="btn btn-by" style ="width:150px" value="Download Data" />
                                 </form>
+
+                                     <form action="/api/exportCSV" method="get">
+                                    <input type="hidden" value="{{experiment}}" name="experiment" id = "id2" />
+                                    <input type="hidden" value="{{username}}" name="researcher" id = "id4" />
+                                    <input type="submit" class="btn btn-by" style ="width:150px" value="Download Data (CSV)" />
+                                </form>
+
                             </div>
                             <div class="col-sm-3">
                                 <!-- Download Data -->
