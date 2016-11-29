@@ -686,6 +686,7 @@ def mturk(request):
 
 	url = request.GET.get('URL', '');
 	title = expId.replace("_"," ")
+	hit_title = exp.hit_title.replace("_"," ")
 	description = exp.hit_description
 
 
@@ -730,7 +731,7 @@ def mturk(request):
 		qualifications.add(number_approved_req)
 	 
 	create_hit_result = mturk.create_hit(
-	    title = exp.hit_title,
+	    title = hit_title,
 	    description = description,
 	    keywords = keywords,
 	    question = questionform,
