@@ -16,7 +16,8 @@ from .forms import LoginForm, UploadForm, UserForm, ExperimentForm,\
 	QualificationsForm
 from .forms import HitDescriptionForm, HitPaymentForm, \
 	HitKeywordsForm, TaskNumberForm, BonusPaymentForm, \
-	ConfigFileForm, TaskSubmissionPaymentForm, HitDurationForm
+	ConfigFileForm, TaskSubmissionPaymentForm, HitDurationForm, \
+	HitTitleForm
 
 import os
 import json
@@ -115,6 +116,7 @@ def CreateExperimentView(request):
 			bonus = form.cleaned_data['bonus_payment']
 			hit_submission_payment = form.cleaned_data['task_submission_payment']
 			hit_duration_in_seconds = form.cleaned_data['hit_duration_in_seconds']
+			title = form.cleaned_data['hit_title']
 			key = form.cleaned_data['hit_keywords']
 
 			#check if experiment already exists
@@ -124,7 +126,7 @@ def CreateExperimentView(request):
 			 	exp = ExperimentModel(name=experiment, username=user,
 			 		hit_description=desc, per_task_payment=payment,
 			 		bonus_payment=bonus, hit_keywords=key,
-			 		n=number_assignments, 
+			 		n=number_assignments, hit_title = title,
 			 		hit_duration_in_seconds=hit_duration_in_seconds)
 				exp.save()
 
@@ -259,6 +261,18 @@ def EditHitDescriptionView(request, username, experiment):
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
 
+def EditHitTitleView(request, username, experiment):
+	if request.method == 'POST':
+		form = HitTitleForm(request.POST)
+		if form.is_valid():
+			exp = GetExperiment(username, experiment)
+			exp.hit_title = form.cleaned_data['hit_title']
+			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - HIT Title Edited Successfully.')
+		return HttpResponseRedirect(reverse(profile_view))
+	else:
+		return HttpResponseRedirect(reverse(profile_view))
 
 def EditHitDurationView(request, username, experiment):
 	if request.method == 'POST':
@@ -485,7 +499,9 @@ def ProfileGalleryView(request):
 			{'config_file_name': exp.config_file}).as_p()
 		inner_formdict["hit_duration_form"] = HitDurationForm(
 			{'hit_duration_in_seconds': exp.hit_duration_in_seconds}).as_p()
-		
+		inner_formdict["hit_title_form"] = HitTitleForm(
+			{'hit_title': exp.hit_title}).as_p()
+
 		#qualifications form
 	 	qualifications = exp.qualificationsmodel_set
 		q_set = qualifications.get(username=username)
@@ -511,6 +527,7 @@ def ProfileGalleryView(request):
 		'hit_description_url' : "/hitdescription/",
 		'hit_keywords_url'    : "/hitkeywords/", 
 		'hit_payment_url'     : "/hitpayment/",
+		'hit_title_url'       : "/hittitle/",
 		'hit_duration_url'    : "/hitduration/",
 		'submit_payment_url'  : "/submitpayment/",
 		'sandbox_url'         : "/sandbox/", 

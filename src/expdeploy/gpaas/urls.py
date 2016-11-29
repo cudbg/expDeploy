@@ -14,6 +14,7 @@ urlpatterns = patterns(
     # username and experiment name passed to view from url.
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/hitdescription/$', 'EditHitDescriptionView', name='hit_description'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/hitduration/$', 'EditHitDurationView', name='hit_duration'),
+    url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/hittitle/$', 'EditHitTitleView', name='hit_title'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/hitpayment/$', 'EditHitPaymentView', name='hit_payment'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/bonuspayment/$', 'EditBonusPaymentView', name='bonus_payment'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/submitpayment/$', 'EditTaskSubmissionPaymentView', name='submit_payment'),

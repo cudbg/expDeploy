@@ -730,7 +730,7 @@ def mturk(request):
 		qualifications.add(number_approved_req)
 	 
 	create_hit_result = mturk.create_hit(
-	    title = title,
+	    title = exp.hit_title,
 	    description = description,
 	    keywords = keywords,
 	    question = questionform,
