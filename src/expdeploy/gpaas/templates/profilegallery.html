@@ -271,6 +271,18 @@
                         </div> <!-- close row -->
                         <hr>
 
+                        <!-- Hit Frame Height Form --> 
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{hit_frame_height_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "hit_frame_height_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update Frame Height"/>
+                                </div> <!-- close col -->
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
                         <!-- Bonus Payment Form -->
                         <div class="row">
                             <form action="{{url_base}}{{experiment}}{{bonus_payment_url}}" method="post" enctype="multipart/form-data">
