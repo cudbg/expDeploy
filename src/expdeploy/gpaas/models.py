@@ -22,6 +22,7 @@ class ExperimentModel(models.Model):
 	hit_keywords = models.CharField(max_length=120)
 	sandbox = models.BooleanField(default=True)
 	n = models.IntegerField(default=5)
+	hit_duration_in_seconds = models.IntegerField(default=3600)
 	published_mturk = models.BooleanField(default=False);
 	published_sandbox = models.BooleanField(default=False);	
 	banned = models.TextField(default='{"ids":[]}')

@@ -247,6 +247,18 @@
                         </div> <!-- close row -->
                         <hr>
 
+                        <!-- Hit Duration Form --> 
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{hit_duration_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "hit_duration_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Update HIT Duration"/>
+                                </div> <!-- close col -->
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
                         <!-- Bonus Payment Form -->
                         <div class="row">
                             <form action="{{url_base}}{{experiment}}{{bonus_payment_url}}" method="post" enctype="multipart/form-data">
