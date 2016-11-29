@@ -719,7 +719,8 @@ def mturk(request):
 	#qualifications.add(submitted_req)
 	#qualifications.add(locale_req)
 	#qualifications.add(number_approved_req)
-	
+
+	hit_duration = datetime.timedelta(seconds=exp.hit_duration_in_seconds)	
 
 	if (isSandbox == "False"):
 		number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "50")
@@ -735,7 +736,7 @@ def mturk(request):
 	    question = questionform,
 	    reward = boto.mturk.price.Price( amount = amount),
 	    max_assignments=exp.n,
-	    duration=datetime.timedelta(seconds=exp.hit_duration_in_seconds),
+	    duration=hit_duration,
 	    qualifications = qualifications,
 	    response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
 	)
