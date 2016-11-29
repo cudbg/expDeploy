@@ -14,6 +14,7 @@ def uuid_file_name(instance, filename):
 
 class ExperimentModel(models.Model):
 	name = models.CharField(max_length=120, blank=True, null=True)
+	hit_title = models.CharField(max_length=120, blank=True, null=True, default="title")
 	username = models.CharField(max_length=120, blank=True, null=True)
 	hit_description = models.CharField(max_length=120)
 	per_task_payment = models.FloatField(blank=0.1)

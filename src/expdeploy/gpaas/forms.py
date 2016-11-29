@@ -16,13 +16,14 @@ class BonusPaymentForm(forms.Form):
 
 class ExperimentForm(forms.Form):
 	experiment = forms.CharField(max_length=120, required=True)
+	hit_title = forms.CharField(max_length=120, required=True)
 	hit_description = forms.CharField(max_length=120, required=True)
 	per_task_payment = forms.FloatField(required=True, min_value = 0.01)
 	task_submission_payment= forms.FloatField(required=True, min_value=0)
 	bonus_payment = forms.FloatField(required=True, min_value = 0)
 	hit_keywords = forms.CharField(max_length=120, required=True)
 	number_of_assignments = forms.IntegerField(required=True)
-	hit_duration_in_seconds = forms.IntegerField(required=False)
+	hit_duration_in_seconds = forms.IntegerField(required=False, max_value=86399, min_value=30)
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
@@ -55,7 +56,18 @@ class HitDescriptionForm(forms.Form):
 			errors_on_separate_row = True)
 
 class HitDurationForm(forms.Form):
-	hit_duration_in_seconds = forms.IntegerField(required=True)
+	hit_duration_in_seconds = forms.IntegerField(required=True, max_value=86399, min_value=30)
+	def as_p(self):
+	#"Returns this form rendered as HTML <p>s."
+		return self._html_output(
+			normal_row = u'<div class="col-sm-3">%(html_class_attr)s %(label)s </div> <div class="col-sm-4"> %(field)s%(help_text)s</div>',
+			error_row = u'%s',
+			row_ender = '',
+			help_text_html = u' <span class="helptext">%s</span>',
+			errors_on_separate_row = True)
+
+class HitTitleForm(forms.Form):
+	hit_title = forms.CharField(max_length=120, required=True)
 	def as_p(self):
 	#"Returns this form rendered as HTML <p>s."
 		return self._html_output(
