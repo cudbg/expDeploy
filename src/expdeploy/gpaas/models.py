@@ -17,6 +17,7 @@ class ExperimentModel(models.Model):
 	hit_title = models.CharField(max_length=120, blank=True, null=True, default="title")
 	username = models.CharField(max_length=120, blank=True, null=True)
 	hit_description = models.CharField(max_length=120)
+	hit_frame_height = models.IntegerField(default=500)
 	per_task_payment = models.FloatField(blank=0.1)
 	bonus_payment = models.FloatField(blank=0)
 	hit_submission_payment = models.FloatField(default = 0.01, blank=0.01)

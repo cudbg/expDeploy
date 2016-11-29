@@ -17,7 +17,7 @@ from .forms import LoginForm, UploadForm, UserForm, ExperimentForm,\
 from .forms import HitDescriptionForm, HitPaymentForm, \
 	HitKeywordsForm, TaskNumberForm, BonusPaymentForm, \
 	ConfigFileForm, TaskSubmissionPaymentForm, HitDurationForm, \
-	HitTitleForm
+	HitTitleForm, HitFrameHeightForm
 
 import os
 import json
@@ -287,6 +287,19 @@ def EditHitDurationView(request, username, experiment):
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
 
+def EditHitFrameHeightView(request, username, experiment):
+	if request.method == 'POST':
+		form = HitFrameHeightForm(request.POST)
+		if form.is_valid():
+			exp = GetExperiment(username, experiment)
+			exp.hit_frame_height = form.cleaned_data['hit_frame_height']
+			exp.save()
+			messages.add_message(request, 
+				messages.SUCCESS, experiment + ' - HIT Frame Height Edited Successfully.')
+		return HttpResponseRedirect(reverse(profile_view))
+	else:
+		return HttpResponseRedirect(reverse(profile_view))
+
 
 def EditHitKeywordView(request, username, experiment):
 	if request.method == 'POST':
@@ -501,6 +514,8 @@ def ProfileGalleryView(request):
 			{'hit_duration_in_seconds': exp.hit_duration_in_seconds}).as_p()
 		inner_formdict["hit_title_form"] = HitTitleForm(
 			{'hit_title': exp.hit_title}).as_p()
+		inner_formdict["hit_frame_height_form"] = HitFrameHeightForm(
+			{'hit_frame_height': exp.hit_frame_height}).as_p()
 
 		#qualifications form
 	 	qualifications = exp.qualificationsmodel_set
@@ -528,6 +543,7 @@ def ProfileGalleryView(request):
 		'hit_keywords_url'    : "/hitkeywords/", 
 		'hit_payment_url'     : "/hitpayment/",
 		'hit_title_url'       : "/hittitle/",
+		'hit_frame_height_url': "/hitframeheight/",
 		'hit_duration_url'    : "/hitduration/",
 		'submit_payment_url'  : "/submitpayment/",
 		'sandbox_url'         : "/sandbox/", 
