@@ -32,6 +32,7 @@ class ExperimentModel(models.Model):
 	config_file = models.CharField(max_length=120,default="config.json")
 	analytics = models.TextField(default='{"log":[],"wids":[]}')
 	balanced_history = models.TextField(default="{}")
+	linked_experiments = models.CharField(max_length=250, default="")
 
 	def __str__(self):
 		return str(self.name)

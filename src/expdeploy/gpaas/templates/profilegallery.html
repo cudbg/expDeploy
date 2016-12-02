@@ -348,6 +348,21 @@
                             </form>
                         </div>
                         <hr>
+
+                        <!-- Links Form -->
+                        <p> Currently linked to:
+                        {% explink linked_exp_dict experiment %} </p>
+                        <div class="row">
+                            <form action="{{url_base}}{{experiment}}{{link_url}}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% formlookup formdict experiment "link_form" %}
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-xs btn-by pg-btn" value="Create Link"/>
+                                </div>
+                            </form>
+                        </div> <!-- close row -->
+                        <hr>
+
                     </div> <!-- close tab-space -->                
                 </div> <!-- close box edit-form-->
             {% endfor %}

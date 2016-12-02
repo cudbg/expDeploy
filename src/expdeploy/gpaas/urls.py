@@ -22,6 +22,7 @@ urlpatterns = patterns(
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/hitkeywords/$', 'EditHitKeywordView', name='hit_keyword'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/tasknumber/$', 'EditTaskNumberView', name='task_number'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/config/$', 'EditConfigFileNameView', name='config_file'),
+    url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/link/$', 'EditLinkView', name='link'),
     url(ur'^edit/(?P<username>[-\w]+)/(?P<experiment>.*)/$', 'UploadView', name='upload'),
 
     # experiment view
