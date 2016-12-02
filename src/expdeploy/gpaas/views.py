@@ -11,13 +11,14 @@ from django.conf import settings
 from .models import ExperimentFile, ExperimentModel, QualificationsModel
 from django.contrib.auth.models import User
 from .models import Researcher
+from expdeploy.api.models import WorkerTask
 
 from .forms import LoginForm, UploadForm, UserForm, ExperimentForm,\
 	QualificationsForm
 from .forms import HitDescriptionForm, HitPaymentForm, \
 	HitKeywordsForm, TaskNumberForm, BonusPaymentForm, \
 	ConfigFileForm, TaskSubmissionPaymentForm, HitDurationForm, \
-	HitTitleForm, HitFrameHeightForm
+	HitTitleForm, HitFrameHeightForm, LinkForm
 
 import os
 import json
@@ -91,7 +92,12 @@ def AuthenticateExperiment(user, experiment):
 
 def GetExperiment(username, experiment):
 	exp = ExperimentModel.objects.filter(username=username)
-	return exp.get(name=experiment)
+	#new code to prevent error
+	if not exp.filter(name=experiment):
+		return None
+	else:
+		return exp.get(name=experiment)
+	#return exp.get(name=experiment)
 
 
 def CreateExperimentView(request):
@@ -314,6 +320,37 @@ def EditHitKeywordView(request, username, experiment):
 	else:
 		return HttpResponseRedirect(reverse(profile_view))
 
+def EditLinkView(request, username, experiment):
+	#creates link
+	if request.method == 'POST':
+		form = LinkForm(request.POST)
+		if form.is_valid():
+			#first check to make sure experiment exists for user.
+			exp_to_link = GetExperiment(username, form.cleaned_data['experiment_to_link'])
+			#if that experiment doesn't exist...
+			if not exp_to_link:
+				messages.add_message(request, 
+					messages.SUCCESS, "The experiment you tried to link does not exist.")
+				return HttpResponseRedirect(reverse(profile_view))
+			else:
+				exp = GetExperiment(username, experiment)
+				exp.linked_experiments = exp.linked_experiments + " " + exp_to_link.name
+				exp_to_link.linked_experiments = exp_to_link.linked_experiments  + " " + exp.name
+				#current_links = old_links + " " + form.cleaned_data['experiment_to_link']
+				#exp.linked_experiments = current_links
+				exp.save()
+				exp_to_link.save()
+				messages.add_message(request, 
+					messages.SUCCESS, "Link created successfully.")
+				return HttpResponseRedirect(reverse(profile_view))
+
+			#exp = GetExperiment(username, experiment)
+			#exp.per_task_payment = form.cleaned_data['per_task_payment']
+			#exp.save()
+	else:
+		messages.add_message(request, 
+					messages.SUCCESS, "word.")
+		return HttpResponseRedirect(reverse(profile_view))
 
 def EditHitPaymentView(request, username, experiment):
 	if request.method == 'POST':
@@ -356,7 +393,31 @@ def EditTaskSubmissionPaymentView(request, username, experiment):
 		return HttpResponseRedirect(reverse(profile_view))
 
 def ExperimentView(request, username, experiment):
+
 	current_exp = GetExperiment(username, experiment)
+
+	#check if wid had completed any linked experiments.
+	current_wid = request.GET.get('workerid', '')
+
+	#first for current experiment get list of linked experiments
+	linked_exps = (current_exp.linked_experiments).split()
+	linked_exps.append(current_exp.name) #this is mainly for debugging purposes
+
+	#big wid list
+	disallowed_wids = ["jj"]
+	for linked_exp in linked_exps:
+		#get all workertask objects with this user and experiment name
+		tasks = WorkerTask.objects.filter(researcher=username, experiment__name=linked_exp)
+		for task in tasks:
+			disallowed_wids.append(task.wid)
+
+	#if workerid in list of not cool worker ids
+	if current_wid in disallowed_wids:
+		#return page showing they are bumped
+		messages.add_message(request, 
+				messages.SUCCESS, "YOU FAIL " + current_wid)
+		return HttpResponse("Apologies, you are ineligible to accept this HIT.")
+
 	file_objects = current_exp.experimentfile_set.all()
 	filedict = {}
 	index_file_count = file_objects.filter(original_filename="index.html")
@@ -458,6 +519,16 @@ def ProfileGalleryView(request):
 			file_list.append(file)
 		filedict[experiment.name] = file_list
 
+	linked_exp_dict = {}
+	for experiment in experiments_list:
+		links_list = []
+		current_exp = experiments_list.get(name=experiment)
+		#add names of all linked experiments
+		#do that here
+		linkstring = experiment.linked_experiments
+		linked_exp_dict[experiment.name] = linkstring
+		##come here
+
 	linkdict = {} # Dictionary of experiment links
 	publishdict = {} # Dictionary of puublished values
 	pub_sandbox = {} #Dictionary of sandbox values. True if posted
@@ -517,6 +588,9 @@ def ProfileGalleryView(request):
 		inner_formdict["hit_frame_height_form"] = HitFrameHeightForm(
 			{'hit_frame_height': exp.hit_frame_height}).as_p()
 
+		#linkform
+		inner_formdict["link_form"] = LinkForm().as_p()
+
 		#qualifications form
 	 	qualifications = exp.qualificationsmodel_set
 		q_set = qualifications.get(username=username)
@@ -535,7 +609,7 @@ def ProfileGalleryView(request):
 		# dictionaries
 		'filedict': filedict, 'linkdict': linkdict, 'q_linkdict': q_linkdict,
 		'publishdict': publishdict, 'pub_sandbox':pub_sandbox,
-		'formdict': formdict,
+		'formdict': formdict, 'linked_exp_dict':linked_exp_dict,
 		# Form urls:
 			# Use in template: {{url_base}}{{experiment}}{{specific}}
 		'bonus_payment_url'   : "/bonuspayment/", 
@@ -548,6 +622,7 @@ def ProfileGalleryView(request):
 		'submit_payment_url'  : "/submitpayment/",
 		'sandbox_url'         : "/sandbox/", 
 		'tasknumber_url'      : "/tasknumber/",
+		'link_url'			  : "/link/",
 		'upload_url'          : "/",
 		'config_url'		  : "/config/",
 		'url_base'            : "/gpaas/edit/"+str(username)+"/", 

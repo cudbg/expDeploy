@@ -128,6 +128,12 @@ class QualificationsForm(forms.Form):
 			help_text_html = u' <span class="helptext">%s</span>',
 			errors_on_separate_row = True)
 
+class LinkForm(forms.Form):
+	experiment_to_link = forms.CharField(max_length=120)
+	#exp_link_options = [("","hello")]
+	#link_options = forms.MultipleChoiceField(choices=exp_link_options, \
+	#	widget=forms.CheckboxSelectMultiple(), required=True)
+
 class TaskNumberForm(forms.Form):
 	number_of_assignments = forms.IntegerField(required=True);
 	def as_p(self):
