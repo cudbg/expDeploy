@@ -326,30 +326,39 @@ def EditLinkView(request, username, experiment):
 		form = LinkForm(request.POST)
 		if form.is_valid():
 			#first check to make sure experiment exists for user.
-			exp_to_link = GetExperiment(username, form.cleaned_data['experiment_to_link'])
-			#if that experiment doesn't exist...
-			if not exp_to_link:
-				messages.add_message(request, 
-					messages.SUCCESS, "The experiment you tried to link does not exist.")
-				return HttpResponseRedirect(reverse(profile_view))
-			else:
-				exp = GetExperiment(username, experiment)
-				exp.linked_experiments = exp.linked_experiments + " " + exp_to_link.name
-				exp_to_link.linked_experiments = exp_to_link.linked_experiments  + " " + exp.name
-				#current_links = old_links + " " + form.cleaned_data['experiment_to_link']
-				#exp.linked_experiments = current_links
-				exp.save()
-				exp_to_link.save()
-				messages.add_message(request, 
-					messages.SUCCESS, "Link created successfully.")
-				return HttpResponseRedirect(reverse(profile_view))
+			links_from_form = (form.cleaned_data['experiment_to_link']).split(',')
+			cleaned_links = []
+			for link in links_from_form:
+				cleaned_links.append(link.strip())
+
+			exps_to_link = []
+			for link in cleaned_links:
+				exp_to_link = GetExperiment(username, link)
+				exps_to_link.append(exp_to_link)
+				#if that experiment doesn't exist...
+				if not exp_to_link:
+					messages.add_message(request, 
+						messages.SUCCESS, "The experiment " + exp_to_link + " does not exist.")
+					return HttpResponseRedirect(reverse(profile_view))
+				else:
+					exp = GetExperiment(username, experiment)
+					exp_to_link = GetExperiment(username, link)
+					exp.linked_experiments = exp.linked_experiments + " " + exp_to_link.name
+					exp_to_link.linked_experiments = exp_to_link.linked_experiments  + " " + exp.name
+					#current_links = old_links + " " + form.cleaned_data['experiment_to_link']
+					#exp.linked_experiments = current_links
+					exp.save()
+					exp_to_link.save()
+			messages.add_message(request, 
+				messages.SUCCESS, "Link(s) created successfully.")
+			return HttpResponseRedirect(reverse(profile_view))
 
 			#exp = GetExperiment(username, experiment)
 			#exp.per_task_payment = form.cleaned_data['per_task_payment']
 			#exp.save()
 	else:
-		messages.add_message(request, 
-					messages.SUCCESS, "word.")
+		#messages.add_message(request, 
+		#			messages.SUCCESS, "word.")
 		return HttpResponseRedirect(reverse(profile_view))
 
 def EditHitPaymentView(request, username, experiment):
