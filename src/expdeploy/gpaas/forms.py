@@ -129,7 +129,7 @@ class QualificationsForm(forms.Form):
 			errors_on_separate_row = True)
 
 class LinkForm(forms.Form):
-	experiment_to_link = forms.CharField(max_length=120)
+	experiment_to_link = forms.CharField(max_length=600)
 	#exp_link_options = [("","hello")]
 	#link_options = forms.MultipleChoiceField(choices=exp_link_options, \
 	#	widget=forms.CheckboxSelectMultiple(), required=True)
