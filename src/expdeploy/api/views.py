@@ -1029,11 +1029,12 @@ def task(request):
 
 						balanced_history = json.loads(EX.balanced_history)
 						for p in task["params"]:
-							if p["type"] == "BalancedRange":
+							if p["type"] == "CountDownChoice":
 								if p["name"] not in balanced_history:
 									balanced_history[p["name"]] = {}
-									for i in range(p["options"][0], p["options"][1]):
-										balanced_history[p["name"]][str(i)] = 0
+
+									for i in range(0, len(p["options"])):
+										balanced_history[p["name"]][p["options"][i][1]] = p["options"][i][0]
 
 						balanced_history = json.loads(json.dumps(balanced_history))
 						pickedsofar = {}
@@ -1052,24 +1053,47 @@ def task(request):
 									pickedsofar[p["name"]] = []
 								
 
-								if p["type"] == "BalancedRange":
+								if p["type"] == "CountDownChoice":
 
 									sorter = []
 
 									historical_data = balanced_history[p["name"]]
-									pickFrom = balanced_history["pickFrom"]
-									shuffle(pickFrom)
+									possibilities = historical_data.keys()
+									possible_values = []
 
-									picked = 0
+									for key in possibilities:
+										if historical_data[key] > 0:
+											possible_values.append(key)
 
-									if len(pickFrom) > 0:
+									print(possible_values)
 
-										picked = pickFrom[0]
-										while picked in pickedsofar[p["name"]]:
-											shuffle(pickFrom)
-											picked = pickFrom[0]
-									else:
-										picked = random.randint(0,500)
+									if len(possible_values) == 0:
+										historical_data = {}
+										for i in range(0, len(p["options"])):
+											historical_data[p["options"][i][1]] = p["options"][i][0]
+											possible_values.append(p["options"][i][1])
+
+									shuffle(possible_values)
+									picked = possible_values[0]
+
+									historical_data[picked] -= 1
+									balanced_history[p["name"]] = historical_data 
+
+
+									param[p["name"]] = picked
+									# pickFrom = balanced_history["pickFrom"]
+									# shuffle(pickFrom)
+
+									# picked = 0
+
+									# if len(pickFrom) > 0:
+
+									# 	picked = pickFrom[0]
+									# 	while picked in pickedsofar[p["name"]]:
+									# 		shuffle(pickFrom)
+									# 		picked = pickFrom[0]
+									# else:
+									# 	picked = random.randint(0,500)
 
 									# for key in historical_data:
 									# 	if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
@@ -1116,11 +1140,11 @@ def task(request):
 									# #print(numchoose[0])
 									# balanced_history[p["name"]][numchoose]+=1
 
-									param[p["name"]] = picked
-									pickedsofar[p["name"]].append(picked)
-									if len(pickFrom) > 0:
-										pickFrom.pop(0)
-									balanced_history["pickFrom"] = pickFrom
+									# param[p["name"]] = picked
+									# pickedsofar[p["name"]].append(picked)
+									# if len(pickFrom) > 0:
+									# 	pickFrom.pop(0)
+									# balanced_history["pickFrom"] = pickFrom
 
 							task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 							
