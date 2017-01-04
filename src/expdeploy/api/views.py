@@ -256,8 +256,8 @@ def showResults3(request):
 		if len(data) > 0:
 			print(data)
 
-		tryThis = json.loads(data)
-		respText += str(tryThis[0]) + "\n"
+		#tryThis = json.loads(data)
+		#respText += str(tryThis[0]) + "\n"
 
 		respText += str(task.wid) + "\n"
 		respText += str(data) +"\n"
