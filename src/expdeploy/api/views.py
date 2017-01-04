@@ -258,7 +258,7 @@ def showResults3(request):
 
 		#tryThis = json.loads(data)
 		#respText += str(tryThis[0]) + "\n"
-
+		respText += str(typeof(data))
 		respText += str(task.wid) + "\n"
 		respText += str(data) +"\n"
 		respText += "\n\n\n"
