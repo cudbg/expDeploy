@@ -257,7 +257,7 @@ def showResults3(request):
 			print(data)
 
 		respText += str(task.wid) + "\n"
-		respText += str(data) +"\n"
+		respText += str(data[0]) +"\n"
 		respText += "\n\n\n"
 
 	response = HttpResponse(respText, content_type="text/plain")
