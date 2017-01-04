@@ -256,9 +256,11 @@ def showResults3(request):
 		if len(data) > 0:
 			print(data)
 			realData = data[0]
+
+			realData2 = json.loads(realData)
 			#tryThis = json.loads(data)
 			#respText += str(tryThis[0]) + "\n"
-			respText += str(realData) + "\n"
+			respText += str(realData2) + "\n"
 			respText += str(task.wid) + "\n"
 			#respText += str(data) +"\n"
 			respText += "\n\n\n"
