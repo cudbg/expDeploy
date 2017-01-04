@@ -55,6 +55,9 @@ def changeKey(dictionary, oldKey, newKey):
 	del dictionary[oldKey]
 	return dictionary
 
+
+
+
 def showResults(request):
 
 	save = request.GET.get('save', '');
@@ -218,7 +221,7 @@ def showResults2(request):
 		for task in find_tasks:
 			tasks.append(task)
 
-
+	resp = ""
 
 	for task in tasks:
 		#print(task.results)
@@ -228,11 +231,32 @@ def showResults2(request):
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
 			if "summaryModel" in lastResult:
+				resp = lastResult["summaryModel"]
 				print(lastResult["summaryModel"])
 
 			print(lastResult["summary"])
 
-		
+	return resp
+
+
+def showResults3(request):
+	wids = ['A3G00Q5JV2BE5G','A190R7H2ZY8KWY','ATEL480BFZ1F6','A1X0H6VAK3AQE9','A3N8JP3QR3VPE8','A2WYJOE2OUCAQ2','A33FA1VLSTBM74','AGRKG3YT3KMD8','A1MYLQQL8BBOYT','A365SN61J4UNGR','A1KBL89VYQR0FT','A1MADOUB1BA0A5','A11YS0T8MV3Q7C','A3BZO7NGC7REGI']
+	tasks = []
+	for wid in wids:
+		find_tasks = WorkerTask.objects.filter(wid=wid)
+		for task in find_tasks:
+			tasks.append(task)	
+
+	for task in tasks:
+		#print(task.results)
+		print(task.wid)
+		js = json.loads(task.results)
+		data = js["data"]
+		if len(data) > 0:
+			print(data)
+
+if __name__ =="__main__":
+	showResults3("hello world")
 
 def hasStarted(request):
 	expId = request.GET.get('experiment', '');
