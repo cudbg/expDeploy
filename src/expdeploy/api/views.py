@@ -247,6 +247,7 @@ def showResults3(request):
 		for task in find_tasks:
 			tasks.append(task)	
 
+	respText = ""
 	for task in tasks:
 		#print(task.results)
 		print(task.wid)
@@ -255,7 +256,11 @@ def showResults3(request):
 		if len(data) > 0:
 			print(data)
 
-	response = HttpResponse("Text only, \n please.", content_type="text/plain")
+		respText += task.wid + "\n"
+		respText += data +"\n"
+		respText += "\n\n\n"
+
+	response = HttpResponse(respText, content_type="text/plain")
 	return response
 
 
