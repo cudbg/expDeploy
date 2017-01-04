@@ -256,8 +256,8 @@ def showResults3(request):
 		if len(data) > 0:
 			print(data)
 
-		respText += task.wid + "\n"
-		respText += data +"\n"
+		respText += str(task.wid) + "\n"
+		respText += str(data) +"\n"
 		respText += "\n\n\n"
 
 	response = HttpResponse(respText, content_type="text/plain")
