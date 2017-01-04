@@ -221,7 +221,7 @@ def showResults2(request):
 		for task in find_tasks:
 			tasks.append(task)
 
-
+	resp = ""
 
 	for task in tasks:
 		#print(task.results)
@@ -231,9 +231,12 @@ def showResults2(request):
 		if len(data) > 0:
 			lastResult = data[len(data)-1]
 			if "summaryModel" in lastResult:
+				resp = lastResult["summaryModel"]
 				print(lastResult["summaryModel"])
 
 			print(lastResult["summary"])
+
+	return resp
 
 
 def showResults3(request):
