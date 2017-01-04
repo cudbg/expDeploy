@@ -256,6 +256,7 @@ def showResults3(request):
 			print(data)
 
 	response = HttpResponse("Text only, \n please.", content_type="text/plain")
+	return response
 
 
 
