@@ -255,6 +255,10 @@ def showResults3(request):
 		if len(data) > 0:
 			print(data)
 
+	response = HttpResponse("Text only, \n please.", content_type="text/plain")
+
+
+
 if __name__ =="__main__":
 	showResults3("hello world")
 
