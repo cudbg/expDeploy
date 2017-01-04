@@ -263,6 +263,7 @@ def showResults3(request):
 				#respText += str(tryThis[0]) + "\n"
 				respText += str(realData) + "\n"
 				respText += str(task.wid) + "\n"
+				respText += str(type(realData)) + "\n"
 				#respText += str(data) +"\n"
 				respText += "\n\n\n"
 			except:
