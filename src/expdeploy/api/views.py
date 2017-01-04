@@ -261,8 +261,9 @@ def showResults3(request):
 				#realData2 = json.loads(realData)
 				#tryThis = json.loads(data)
 				#respText += str(tryThis[0]) + "\n"
-				respText += str(realData) + "\n"
+				respText += str(realData['originalText']) + "\n"
 				respText += str(task.wid) + "\n"
+				respText += "typehere"
 				respText += str(type(realData)) + "\n"
 				#respText += str(data) +"\n"
 				respText += "\n\n\n"
