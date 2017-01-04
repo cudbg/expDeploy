@@ -255,13 +255,13 @@ def showResults3(request):
 		data = js["data"]
 		if len(data) > 0:
 			print(data)
-
-		#tryThis = json.loads(data)
-		#respText += str(tryThis[0]) + "\n"
-		respText += str(type(data))
-		respText += str(task.wid) + "\n"
-		respText += str(data) +"\n"
-		respText += "\n\n\n"
+			realData = data[0]
+			#tryThis = json.loads(data)
+			#respText += str(tryThis[0]) + "\n"
+			respText += str(realData) + "\n"
+			respText += str(task.wid) + "\n"
+			#respText += str(data) +"\n"
+			respText += "\n\n\n"
 
 	response = HttpResponse(respText, content_type="text/plain")
 	return response
