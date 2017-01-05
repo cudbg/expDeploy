@@ -240,22 +240,8 @@ def showResults2(request):
 
 
 def showResults3(request):
-		wids = ['A3PDWGTQL7EVSW','ANIV6ES69M2T8','AZJEGHE4605S5','A4T1X0PO5N1G9','AVFTMBOZ8TRQS','AMKBEL72J1AS8','A2F9V69F6TZIAB','A38ZV8LBZ034IZ','ANIRTJBXLLWKY']
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	wids = ['A3PDWGTQL7EVSW','ANIV6ES69M2T8','AZJEGHE4605S5','A4T1X0PO5N1G9','AVFTMBOZ8TRQS','AMKBEL72J1AS8','A2F9V69F6TZIAB','A38ZV8LBZ034IZ','ANIRTJBXLLWKY']
+	
 	tasks = []
 	for wid in wids:
 		find_tasks = WorkerTask.objects.filter(wid=wid)
