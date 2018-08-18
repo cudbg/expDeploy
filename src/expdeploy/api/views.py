@@ -763,6 +763,7 @@ def mturk(request):
 		locale_req = LocaleRequirement("EqualTo", "US")
 	#Hardcoded qualification for now. Will change later.
 	#number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "500")
+
 	qualifications = Qualifications()
 	#qualifications.add(approved_req)
 	#qualifications.add(submitted_req)
@@ -772,11 +773,15 @@ def mturk(request):
 	hit_duration = datetime.timedelta(seconds=exp.hit_duration_in_seconds)	
 
 	if (isSandbox == "False"):
-		number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "50")
+		number_approved_req = NumberHitsApprovedRequirement(comparator = "GreaterThan", integer_value = "1")
 		qualifications.add(approved_req)
+
+
+
 		qualifications.add(submitted_req)
-		qualifications.add(locale_req)
-		qualifications.add(number_approved_req)
+                if q_set.US_only:
+		    qualifications.add(locale_req)
+	#	qualifications.add(number_approved_req)
 	 
 	create_hit_result = mturk.create_hit(
 	    title = hit_title,

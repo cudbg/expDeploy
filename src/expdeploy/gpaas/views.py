@@ -458,6 +458,7 @@ def FileHttpResponse(request, username, experiment, filename):
 			'experiment':experiment})
 
 
+        print 'File', username, experiment, filename 
 	exp = GetExperiment(username, experiment)
 	file_object = exp.experimentfile_set.get(original_filename = filename)
 	static_content = file_object.filetext

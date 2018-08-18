@@ -156,6 +156,7 @@ response:
 
 
 Get Experiment Example:
+
 http://localhost:8000/api/experiment?experimentId=Experiment1&userId=hn2284
 http://localhost:8000/api/task?researcher=hn2284&experiment=Experiment1&task=VotingTask&wid=W8745453&n=5
 http://localhost:8000/api/result?researcher=hn2284&task=VotingTask&experiment=Experiment1
@@ -170,27 +171,37 @@ source Django/bin.activate
 
 Migrate DB:
 
-python manage.py makemigrations api
-python manage.py migrate
+        python manage.py makemigrations api
+        python manage.py migrate
 
-from django.contrib.auth.models import User
-user = User.objects.get(username="hn2284")
-user.is_staff = True
-user.is_admin = True
-user.save()
+        from django.contrib.auth.models import User
+        user = User.objects.get(username="hn2284")
+        user.is_staff = True
+        user.is_admin = True
+        user.save()
 
 
 
-createdb gpaasdb
-initdb db/gpaasdb -E utf8
-initdb db/postgres -E utf8
-pg_ctl -D db/postgres -l logfile start
-psql -d gpaasdb
+        createdb gpaasdb
+        initdb db/gpaasdb -E utf8
+        initdb db/postgres -E utf8
+        pg_ctl -D db/postgres -l logfile start
+        psql -d gpaasdb
 
-CREATE USER gpaasteam with PASSWORD 'gpaas';
-ALTER ROLE gpaasteam SET client_encoding TO 'utf8';
-ALTER ROLE gpaasteam SET default_transaction_isolation TO 'read committed';
-ALTER ROLE gpaasteam SET timezone to 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE gpaasdb to gpaasteam
+        CREATE USER gpaasteam with PASSWORD 'gpaas';
+        ALTER ROLE gpaasteam SET client_encoding TO 'utf8';
+        ALTER ROLE gpaasteam SET default_transaction_isolation TO 'read committed';
+        ALTER ROLE gpaasteam SET timezone to 'UTC';
+        GRANT ALL PRIVILEGES ON DATABASE gpaasdb to gpaasteam
 
-sudo service apache2 restart
+         sudo service apache2 restart
+
+Change a user's password
+
+        cd src
+        python manage.py changepassword yifanwu@berkeley.edu
+
+Connect to the database
+
+        sudo su postgres
+        psql gpaasdb
