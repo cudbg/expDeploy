@@ -58,6 +58,20 @@ logger = logging.getLogger('api')
 import heapq
 
 
+###############################
+#
+# The MTurk APIs are not great.  The following will be useful
+#
+# Boto3 mturk python library
+# https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mturk.html
+#
+# Example code:
+# https://github.com/aws-samples/mturk-code-samples/blob/master/Python/CreateHitSample.py
+#
+# MTurk API reference:
+# https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_DataStructuresArticle.html
+#
+####################################3
 
 SANDBOXHOST = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
 # 'mechanicalturk.sandbox.amazonaws.com'
