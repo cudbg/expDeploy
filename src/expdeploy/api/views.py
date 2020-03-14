@@ -740,19 +740,19 @@ def mturk(request):
     quals = []
 
     if q_set.US_only:
-      quals.append({
-        QualificationTypeId:"00000000000000000071",
-        Comparator:"EqualTo",
-        LocaleValues:[{ Country:"US" }]
-      })
+      quals.append(dict(
+        QualificationTypeId="00000000000000000071",
+        Comparator="EqualTo",
+        LocaleValues=[{ Country:"US" }]
+      ))
     
     if isSandbox == "False":
-      quals.append({
+      quals.append((
         # Num Hits Approved
-        QualificationTypeId: "00000000000000000040",
-        Comparator: "GreaterThanOrEqualTo",
-        'IntegerValues': [1]
-      })
+        QualificationTypeId= "00000000000000000040",
+        Comparator= "GreaterThanOrEqualTo",
+        IntegerValues= [1]
+      ))
 
     # quals.append({
     #     QualificationTypeId: "000000000000000000L0",
