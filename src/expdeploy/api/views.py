@@ -48,6 +48,11 @@ from wsgiref.util import FileWrapper
 import os
 import pwd
 
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 import heapq
 
 def changeKey(dictionary, oldKey, newKey):
@@ -170,12 +175,12 @@ def showResults(request):
 				vote3 = max(set(votes3), key=votes3.count)
 				output = output + "\n" + str(vote) + str(i) + str(vote2) + str(vote3) + "hi"
 
-				print >>sys.stderr, "\n" + str(votes1)
+                logger.error("\n" + str(votes1))
 
-	print >>sys.stderr, remaining
+	logger.error(remaining)
 
 					
-	print >>sys.stderr, len(remaining)
+	logger.error(len(remaining))
 
 	expModel = ExperimentModel.objects.filter(name="Label_Product_Review_Snippets")[0];
 	hist = json.loads(expModel.balanced_history)
@@ -225,7 +230,7 @@ def showResults2(request):
 
 	for task in tasks:
 		#print(task.results)
-		print(task.wid)
+        logger.info("showResults2: " + task.wid)
 		js = json.loads(task.results)
 		data = js["data"]
 		if len(data) > 0:
@@ -1007,9 +1012,8 @@ def task(request):
 
 
 
-	print(wid)
+	logger.info("task for " + wid)
 	n = int(request.GET.get('n', '1'));
-	print("test 1");
 
 	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
 	if len(exps)==0:
@@ -1023,12 +1027,10 @@ def task(request):
 
 	for exp in expsBackwards:
 
-		print(exp.original_filename)
+		logger.info(exp.original_filename)
 		if (exp.original_filename == (expModel.config_file)):
-			print("test 2");
 
 			EX = exp.experiment
-			print("n2222"+EX.name);
 			
 
 
@@ -1042,15 +1044,11 @@ def task(request):
 
 			return_tasks = []
 			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
-			print(find_tasks);
+			logger.info(strfind_tasks))
 			if (len(find_tasks) == 0):
-				
-				
 
-				print >>sys.stderr, 'docfile below!'
-				
 				data = json.loads(exp.docfile.read())
-				print(data["tasks"])
+				logger.info(data["tasks"])
 
 				for task in data["tasks"]:
 					if task["name"] == taskName:
@@ -1059,16 +1057,16 @@ def task(request):
 						gen = [{}]
 
 						for p in task["params"]:
-							if p["type"] == "UniformChoice":
-								gen2 = []
-								for inProgress in gen:
-									for choice in p["options"]:
-										modify = copy(inProgress)
-										modify[p["name"]] = choice
-										gen2.append(modify)
-								gen = gen2
+                          if p["type"] == "UniformChoice":
+                            gen2 = []
+                            for inProgress in gen:
+                              for choice in p["options"]:
+                                modify = copy(inProgress)
+                                modify[p["name"]] = choice
+                                gen2.append(modify)
+                            gen = gen2
 
-								#param[p["name"]] = random.choice(p["options"])
+                            #param[p["name"]] = random.choice(p["options"])
 
 						param = gen[0]
 						seed(abs(hash(wid)) % (10 ** 8))
@@ -1094,6 +1092,7 @@ def task(request):
 
 
 
+                        logger.info("generating %d tasks" % n)
 						for i in range(0,n):
 							
 							param = gen.pop()
@@ -1223,6 +1222,7 @@ def task(request):
 							#print(NewTask.experiment)
 
 
+                        logger.info("created %d tasks" % len(return_tasks))
 						EX.analytics = json.dumps(his)
 						#for key in balanced_history:
 						EX.balanced_history=json.dumps(balanced_history)
