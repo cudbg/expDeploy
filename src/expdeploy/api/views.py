@@ -743,7 +743,7 @@ def mturk(request):
       quals.append(dict(
         QualificationTypeId="00000000000000000071",
         Comparator="EqualTo",
-        LocaleValues=[{ Country:"US" }]
+        LocaleValues=[dict(Country="US")]
       ))
     
     if isSandbox == "False":
