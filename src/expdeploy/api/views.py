@@ -516,11 +516,9 @@ def payout(request):
                     BonusAmount=str(p), 
                     Reason="GREAT WORK! bonus + per task payments"
             )
+            logger.info("sent bonus")
+            logger.info(bon)
 
-
-            # print >>sys.stderr, (bon)
-            # print >>sys.stderr, (assignmentId)
-            # print >>sys.stderr, (wid)
 
             for t in find_tasks:
                 t.paid = True
