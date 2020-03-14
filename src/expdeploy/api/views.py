@@ -24,6 +24,7 @@ from django.utils.dateformat import format
 import importlib;
 import random
 import string
+import boto3
 import boto.mturk.connection
 from boto.mturk.connection import MTurkRequestError
 from boto.mturk.qualification import Qualifications, \
@@ -32,6 +33,7 @@ from boto.mturk.qualification import Qualifications, \
 	LocaleRequirement, NumberHitsApprovedRequirement
 	#get function from qualifications 
 import datetime
+import traceback
 import csv
 from django.utils.encoding import smart_str
 from StringIO import StringIO
@@ -51,9 +53,37 @@ import pwd
 import logging
 
 # Get an instance of a logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('api')
 
 import heapq
+
+
+
+SANDBOXHOST = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
+# 'mechanicalturk.sandbox.amazonaws.com'
+REALHOST = 'https://mturk-requester.us-east-1.amazonaws.com'
+# 'mechanicalturk.amazonaws.com'
+
+def get_mturk_connection(access_key, secret, is_sandbox):
+    host = SANDBOXHOST
+    if (is_sandbox in ("False", False)):
+        host = REALHOST
+    logger.info("is_sandbox: %s" % is_sandbox) 
+    logger.info("AWS info: accesskey: %s" % access_key) 
+    logger.info("AWS secret: %s" % secret) 
+    logger.info("AWS host: %s" % host) 
+    mturk = boto.mturk.connection.MTurkConnection(
+        aws_access_key_id = access_key,
+        aws_secret_access_key = secret,
+        host = host,
+        debug = 1 
+    )
+
+    print boto.Version 
+    print mturk.get_account_balance() 
+    return mturk
+ 
+    
 
 def changeKey(dictionary, oldKey, newKey):
 	dictionary[newKey] = dictionary[oldKey]
@@ -230,7 +260,7 @@ def showResults2(request):
 
 	for task in tasks:
 		#print(task.results)
-        logger.info("showResults2: " + task.wid)
+                logger.info("showResults2: " + task.wid)
 		js = json.loads(task.results)
 		data = js["data"]
 		if len(data) > 0:
@@ -336,18 +366,7 @@ def approve(request):
 	researcher = Researcher.objects.filter(user__username="hn2284")[0];
 	key = researcher.aws_key_id;
 	secret_key = researcher.aws_secret_key;
-	host = 'mechanicalturk.amazonaws.com'
-	
-	mturk = boto.mturk.connection.MTurkConnection(
-	    aws_access_key_id = key,
-	    aws_secret_access_key = secret_key,
-	    host = host,
-	    debug = 1 # debug = 2 prints out all requests.
-	)
-	 
-	print boto.Version 
-	print mturk.get_account_balance() 
-
+        mturk = get_mturk_connection(key, secret_key, False) 
 	
 	approve = mturk.approve_rejected_assignment("39JEC7537VK9RX8SMLEVMEW0WN3VCN")
 	return HttpResponse("done");
@@ -468,22 +487,9 @@ def payout(request):
 
 			key = researcher.aws_key_id;
 			secret_key = researcher.aws_secret_key;
-			host = 'mechanicalturk.sandbox.amazonaws.com'
+                        mturk = get_mturk_connection(key, secret_key, paySandbox) 
 
-			if (paySandbox == False):
-				host = 'mechanicalturk.amazonaws.com'
-			
-			mturk = boto.mturk.connection.MTurkConnection(
-			    aws_access_key_id = key,
-			    aws_secret_access_key = secret_key,
-			    host = host,
-			    debug = 1 # debug = 2 prints out all requests.
-			)
-			 
-			#print boto.Version 
 			balance = mturk.get_account_balance() 
-
-
 			assignmnet = mturk.get_assignment(assignmentId)
 
 			#print(assignmnet.AssignmentStatus)
@@ -677,21 +683,7 @@ def removemturk(request):
 
 	key = researcher.aws_key_id;
 	secret_key = researcher.aws_secret_key;
-	host = 'mechanicalturk.sandbox.amazonaws.com'
-
-	if (isSandbox == "False"):
-		host = 'mechanicalturk.amazonaws.com'
-	
-	mturk = boto.mturk.connection.MTurkConnection(
-	    aws_access_key_id = key,
-	    aws_secret_access_key = secret_key,
-	    host = host,
-	    debug = 1 # debug = 2 prints out all requests.
-	)
-	 
-	print boto.Version 
-	print mturk.get_account_balance() 
-
+        mturk = get_mturk_connection(key, secret_key, isSandbox)
 	 
 	disable = mturk.disable_hit(exp.hitID)
 	
@@ -718,24 +710,12 @@ def mturk(request):
 	usrId = request.GET.get('researcher', '');
 	researcher = Researcher.objects.filter(user__username=usrId)[0];
 	exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+        logger.info("called /mturk")
+        logger.info(request.GET)
 
 	key = researcher.aws_key_id;
 	secret_key = researcher.aws_secret_key;
-	host = 'mechanicalturk.sandbox.amazonaws.com'
-
-	if (isSandbox == "False"):
-		host = 'mechanicalturk.amazonaws.com'
-	
-	mturk = boto.mturk.connection.MTurkConnection(
-	    aws_access_key_id = key,
-	    aws_secret_access_key = secret_key,
-	    host = host,
-	    debug = 1 # debug = 2 prints out all requests.
-	)
-	 
-	print boto.Version 
-	print mturk.get_account_balance() 
-
+        mturk = get_mturk_connection(key, secret_key, isSandbox)
 
 	url = request.GET.get('URL', '');
 	title = expId.replace("_"," ")
@@ -744,7 +724,6 @@ def mturk(request):
 
 
 	keys = exp.hit_keywords.split(',');
-	
 
 
 	keywords = []
@@ -788,6 +767,7 @@ def mturk(request):
 		    qualifications.add(locale_req)
 	#	qualifications.add(number_approved_req)
 	 
+        logger.info("calling mturk.create_hit") 
 	create_hit_result = mturk.create_hit(
 	    title = hit_title,
 	    description = description,
@@ -802,6 +782,7 @@ def mturk(request):
 
 
 	exp.hitID = create_hit_result[0].HITId
+        logger.info("done.  Got hitid %s" % exp.hitID) 
 
 	if isSandbox == "True":
 		exp.published_sandbox = True
@@ -845,101 +826,57 @@ def result(request):
 	return HttpResponse(data)
 
 def log(request):
-	if request.method == 'POST':
-
-		
-
-		#print(request.POST)
-		#print(request.body)
-		print(request.POST.get("worker_id", ''))
-
-		body_unicode = request.body.decode('utf-8')
-		body = json.loads(body_unicode)
-		#body = request.POST.dict()
-
-		#TODO: Filter by experiment name
-
-		find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
-		print(find_tasks);
+    if request.method == 'POST':
+        try:
+            logger.info("log with wid " + request.POST.get("worker_id", ''))
 
 
-		print >>sys.stderr, body["worker_id"]
-		print >>sys.stderr, body["task_name"]
-		print >>sys.stderr, body["task_id"]
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            #body = request.POST.dict()
+
+            #TODO: Filter by experiment name
+
+            find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
+            logger.info("found %d tasks" % len(find_tasks));
 
 
-		task = find_tasks[0]
+            logger.info("wid:      %s" % body["worker_id"])
+            logger.info("taskname: %s" % body["task_name"])
+            logger.info("taskid:   %s" % body["task_id"])
 
-		if (task.results == "null"):
-			task.results = "{}";
+            task = find_tasks[0]
+            if (task.results == "null"):
+              task.results = "{}";
+            d = json.loads(task.results)
 
-		d = json.loads(task.results)
-
-		metaData = body["metaData"]
-
-
-
-		m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"],ip_address=get_client_ip(request),wid=body["worker_id"])
-
-		m.save()
-
-		task.metaData= m
+            metaData = body["metaData"]
+            m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"],ip_address=get_client_ip(request),wid=body["worker_id"])
+            m.save()
+            task.metaData= m
 
 
+            print(metaData)
 
-		print(metaData)
+            d["data"] = (body["data"]);
 
-		d["data"] = (body["data"]);
+            task.results = json.dumps(d);
+            history = json.loads(task.history)
+            timestamp_string = format(datetime.datetime.now(), u'U')
 
-		task.results = json.dumps(d);
+            task.currentStatus = "Complete"
 
-		history = json.loads(task.history)
-		timestamp_string = format(datetime.datetime.now(), u'U')
+            event = HistoryEvent(newStatus="Complete", timeStamp=int(timestamp_string))
+            event.workerTask = task
+            event.save()
 
-		task.currentStatus = "Complete"
+            task.save()
+        except Exception as e:
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
+            raise e 
+        return HttpResponse("success");
 
-		event = HistoryEvent(newStatus="Complete", timeStamp=int(timestamp_string))
-		event.workerTask = task
-		event.save()
-
-		task.save()
-
-
-
-		#find_tasks = WorkerTask.objects.filter(name=body["task_name"], wid=body["worker_id"], experiment=body["experiment_name"]);
-
-		return HttpResponse("success");
-
-	# 	n = body["experiment_name"];
-	# 	researchID = body["researcher_id"];
-
-	# 	find = Experiment.objects.filter(name=n, researcher_id=researchID);
-
-	# 	tasks = None;
-	# 	if len(find) == 0:
-	# 		e = Experiment(name=n, researcher_id=researchID);
-	# 		e.save();
-	# 		t = Tasks(name=body["task_name"],experiment=e);
-	# 		t.save();
-	# 		tasks = t;
-	# 	else:
-	# 		e = find[0];
-	# 		findTask = Tasks.objects.filter(name=body["task_name"],experiment=e);
-	# 		if len(findTask) == 0:
-	# 			t = Tasks(name=body["task_name"],experiment=e);
-	# 			t.save();
-	# 			tasks = t;
-	# 		else:
-	# 			tasks = findTask[0]
-
-	# 	d = json.loads(tasks.trials);
-	# 	d[len(d)] = body["data"];
-	# 	tasks.trials = json.dumps(d);
-	# 	tasks.save();
-	# 	print(tasks.trials);
-
-	# 	return HttpResponse("Your data has been logged.")
-	# return HttpResponse("Not a post request")
 
 def experiment(request):
 	expId = request.GET.get('experimentId', '');
@@ -1009,11 +946,9 @@ def task(request):
 	taskName = request.GET.get('task', '');
 	wid = request.GET.get('wid', '');
 	isSandbox = request.GET.get('sandbox', '');
+ 	n = int(request.GET.get('n', '1'));
 
-
-
-	logger.info("task for " + wid)
-	n = int(request.GET.get('n', '1'));
+	logger.info("get %d tasks for wid %s" % (n, wid))
 
 	exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
 	if len(exps)==0:
@@ -1044,30 +979,33 @@ def task(request):
 
 			return_tasks = []
 			find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
-			logger.info(strfind_tasks))
+                         
+                        logger.info("found %d tasks in database" % len(find_tasks))  
+                        logger.info(str(find_tasks))
 			if (len(find_tasks) == 0):
 
 				data = json.loads(exp.docfile.read())
 				logger.info(data["tasks"])
 
 				for task in data["tasks"]:
+                                        logger.info("params for task name %s.  Checking if it is same as '%s'" % (task['name'], taskName)) 
 					if task["name"] == taskName:
 
 						param = {}
 						gen = [{}]
 
 						for p in task["params"]:
-                          if p["type"] == "UniformChoice":
-                            gen2 = []
-                            for inProgress in gen:
-                              for choice in p["options"]:
-                                modify = copy(inProgress)
-                                modify[p["name"]] = choice
-                                gen2.append(modify)
-                            gen = gen2
+                                                  if p["type"] == "UniformChoice":
+                                                    gen2 = []
+                                                    for inProgress in gen:
+                                                      for choice in p["options"]:
+                                                        modify = copy(inProgress)
+                                                        modify[p["name"]] = choice
+                                                        gen2.append(modify)
+                                                    gen = gen2
 
-                            #param[p["name"]] = random.choice(p["options"])
-
+                                                    #param[p["name"]] = random.choice(p["options"])
+                         
 						param = gen[0]
 						seed(abs(hash(wid)) % (10 ** 8))
 						shuffle(gen)
@@ -1092,7 +1030,7 @@ def task(request):
 
 
 
-                        logger.info("generating %d tasks" % n)
+                                                logger.info("generating %d tasks" % n)
 						for i in range(0,n):
 							
 							param = gen.pop()
@@ -1222,7 +1160,7 @@ def task(request):
 							#print(NewTask.experiment)
 
 
-                        logger.info("created %d tasks" % len(return_tasks))
+                                                logger.info("created %d tasks" % len(return_tasks))
 						EX.analytics = json.dumps(his)
 						#for key in balanced_history:
 						EX.balanced_history=json.dumps(balanced_history)
