@@ -506,7 +506,7 @@ def payout(request):
                 return HttpResponse("Insufficient funds. Please refill your account on Amazon.")
 
             try:
-                approve = mturk.approve_assignment(assignmentId)
+                approve = mturk.approve_assignment(AssignmentId=assignmentId)
             except MTurkRequestError as e:
                 print(e)
 
@@ -686,7 +686,7 @@ def removemturk(request):
     secret_key = researcher.aws_secret_key;
     mturk = get_mturk_connection(key, secret_key, isSandbox)
 
-    disable = mturk.delete_hit(exp.hitID)
+    disable = mturk.delete_hit(HITId=exp.hitID)
 
     if isSandbox == "True":
         exp.published_sandbox = False
