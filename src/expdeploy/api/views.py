@@ -747,8 +747,8 @@ def mturk(request):
       ))
     
     if isSandbox == "False":
-      quals.append((
-        # Num Hits Approved
+      # Num Hits Approved
+      quals.append(dict(
         QualificationTypeId= "00000000000000000040",
         Comparator= "GreaterThanOrEqualTo",
         IntegerValues= [1]
