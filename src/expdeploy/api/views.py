@@ -774,6 +774,7 @@ def mturk(request):
         Question = questionform.get_as_xml(),
         Reward = str(amount),
         MaxAssignments=exp.n,
+        AssignmentDurationInSeconds=exp.hit_duration_in_seconds,
         LifetimeInSeconds=exp.hit_duration_in_seconds,
         QualificationRequirements = quals
         #response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
