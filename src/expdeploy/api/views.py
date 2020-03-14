@@ -780,8 +780,11 @@ def mturk(request):
         #response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
     )
 
+    logger.info(create_hit_result)
+    hit_type_id = create_hit_result['HIT']['HITTypeId']
+    hit_id = create_hit_result['HIT']['HITId']
 
-    exp.hitID = create_hit_result[0].HITId
+    exp.hitID = hit_id
     logger.info("done.  Got hitid %s" % exp.hitID)
 
     if isSandbox == "True":
