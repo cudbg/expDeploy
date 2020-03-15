@@ -537,7 +537,7 @@ def removemturk(request):
   if status=='Assignable':
     response = mturk.update_expiration_for_hit(
       HITId=exp.hitID,
-      ExpireAt=datetime(2015, 1, 1)
+      ExpireAt=datetime.datetime(2015, 1, 1)
     )        
     logger.info("set HIT to expire")
 
