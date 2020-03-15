@@ -534,7 +534,7 @@ def removemturk(request):
   logger.info('HITStatus: %s for %s' % (status, exp.hitID))
 
   # If HIT is active then set it to expire immediately
-  if status=='Assignable':
+  if status in ('Assignable', 'Unassignable'):
     response = mturk.update_expiration_for_hit(
       HITId=exp.hitID,
       ExpireAt=datetime.datetime(2015, 1, 1)
@@ -626,6 +626,8 @@ def mturk(request):
 
   # q_set.percentage_hits_approved
   # q_set.percentage_assignments_submitted
+
+  expiration = datetime.datetime.now() + datetime.timedelta(seconds=exp.hit_duration_in_seconds)
 
   logger.info("calling mturk.create_hit")
   create_hit_result = mturk.create_hit(
