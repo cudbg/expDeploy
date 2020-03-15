@@ -732,7 +732,6 @@ def UploadView(request, username, experiment):
             username=user,
             filetext="tmptxt")
 
-        logger.info("created new file %s at %s" % (each, newdoc.docfile.path))
         newdoc.experiment = exp
         newdoc.save()
 
@@ -741,6 +740,7 @@ def UploadView(request, username, experiment):
         file_contents = f.read()
         newdoc.filetext = file_contents
         newdoc.save()
+        logger.info("created new file %s at %s\t%s" % (each, newdoc.original_filename, newdoc.filetext))
 
       return HttpResponseRedirect(reverse(profile_view))
     else:
