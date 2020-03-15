@@ -100,7 +100,7 @@ def get_mturk_connection(access_key, secret, is_sandbox):
       raise e
 
   try:
-    logger.info("mturk balance: %s" %  mturk.get_account_balance())
+    logger.info("mturk balance: %s" %  str(mturk.get_account_balance())[:50])
   except Exception as e:
       logger.error("Failed to get account balance")
       logger.error(traceback.format_exc())
