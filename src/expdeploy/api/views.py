@@ -531,7 +531,7 @@ def removemturk(request):
 
   # Get HIT status
   status = mturk.get_hit(HITId=exp.hitID)['HIT']['HITStatus']
-  print('HITStatus:', status)
+  log.info('HITStatus: %s for %s' % (status, exp.hitID))
 
   # If HIT is active then set it to expire immediately
   if status=='Assignable':
@@ -539,10 +539,12 @@ def removemturk(request):
       HITId=exp.hitID,
       ExpireAt=datetime(2015, 1, 1)
     )        
+    log.info("set HIT to expire")
 
   try:
     disable = mturk.delete_hit(HITId=exp.hitID)
   except Exception as e:
+    log.error(traceback.format_exc())
     messages.add_message(request,
         messages.ERROR, 'Failed to delete HIT: %s' % str(e))
     raise e
