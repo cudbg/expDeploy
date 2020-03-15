@@ -732,7 +732,7 @@ def UploadView(request, username, experiment):
             username=user,
             filetext="tmptxt")
 
-        logger.info("created new file %s" % each)
+        logger.info("created new file %s at %s" % (each, newdoc.docfile.path))
         newdoc.experiment = exp
         newdoc.save()
 
