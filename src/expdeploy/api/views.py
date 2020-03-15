@@ -124,9 +124,9 @@ def hasStarted(request):
   taskName = request.GET.get('task', '');
   wid = request.GET.get('wid', '');
 
-  print(wid)
-  print(expId)
-  print(usrId)
+  logger.info(wid)
+  logger.info(expId)
+  logger.info(usrId)
 
   expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
@@ -739,7 +739,7 @@ def task(request):
   logger.info("found %d tasks in database" % len(find_tasks))
   logger.info(str(find_tasks))
 
-  if (len(find_tasks) == 0):
+  if len(find_tasks) == 0:
     data = json.loads(exp.docfile.read())
     logger.info(data["tasks"])
 
@@ -853,17 +853,22 @@ def task(request):
     return_tasks.append(workertask);
 
   params_list = []
+  ncompleted = 0
   for task in return_tasks:
     params = json.loads(task.params)
 
     results = json.loads(task.results)
-    if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
+    if len(results["data"]) == 0 and task.currentStatus=="Waiting":
       params_list.append(params);
+    else:
+      ncompleted += 1
+
 
   response = dict(
     params=params_list,
     pay=EX.per_task_payment,
     bonus=EX.bonus_payment
+    ncompleted=ncompleted
   )
   return HttpResponse(json.dumps(response))
 
