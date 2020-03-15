@@ -538,7 +538,7 @@ def removemturk(request):
     logger.info("Setting expiration to 2015 for %s" % exp.hitID)
     response = mturk.update_expiration_for_hit(
       HITId=exp.hitID,
-      ExpireAt=datetime.datetime(2015, 1, 1)
+      ExpireAt=0
     )        
     logger.info(response)
 
