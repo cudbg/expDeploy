@@ -515,6 +515,10 @@ def export(request):
 
 
 def removemturk(request):
+  """
+  Delete a HIT from mturk.  
+  First need to set its expiration to "now" and then delete it
+  """
   isSandbox = request.GET.get('isSandbox', '');
   expId = request.GET.get('experiment', '');
   usrId = request.GET.get('researcher', '');
@@ -525,16 +529,32 @@ def removemturk(request):
   secret_key = researcher.aws_secret_key;
   mturk = get_mturk_connection(key, secret_key, isSandbox)
 
-  disable = mturk.delete_hit(HITId=exp.hitID)
+  # Get HIT status
+  status = mturk.get_hit(HITId=exp.hitID)['HIT']['HITStatus']
+  print('HITStatus:', status)
+
+  # If HIT is active then set it to expire immediately
+  if status=='Assignable':
+    response = mturk.update_expiration_for_hit(
+      HITId=exp.hitID,
+      ExpireAt=datetime(2015, 1, 1)
+    )        
+
+  try:
+    disable = mturk.delete_hit(HITId=exp.hitID)
+  except Exception as e:
+    messages.add_message(request,
+        messages.ERROR, 'Failed to delete HIT: %s' % str(e))
+    raise e
 
   if isSandbox == "True":
     exp.published_sandbox = False
     messages.add_message(request,
-            messages.SUCCESS, 'Experiment successfully removed from Sandbox.')
+          messages.SUCCESS, 'Experiment successfully removed from Sandbox.')
   else:
     exp.published_mturk = False
     messages.add_message(request,
-            messages.SUCCESS, 'Experiment successfully removed from MTurk.')
+          messages.SUCCESS, 'Experiment successfully removed from MTurk.')
   exp.save()
 
 
