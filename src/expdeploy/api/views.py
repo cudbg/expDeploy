@@ -959,11 +959,11 @@ def task(request):
         if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
           params_list.append(params);
 
-      response = {
-        params: params_list,
-        pay: EX.per_task_payment,
-        bonus: EX.bonus_payment
-      }
+      response = dict(
+        params=params_list,
+        pay=EX.per_task_payment,
+        bonus=EX.bonus_payment
+      )
       return HttpResponse(json.dumps(response))
 
       return HttpResponse('{"params":' + str(params_list) + ',"pay":' + str(EX.per_task_payment) + ',"bonus":' + str(EX.bonus_payment) + '}')
