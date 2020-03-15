@@ -523,21 +523,21 @@ def mturk(request):
       LocaleValues=[dict(Country="US")]
     ))
 
-  if isSandbox == "False":
-    # Num Hits Approved
-    quals.append(dict(
-      QualificationTypeId= "00000000000000000040",
-      Comparator= "GreaterThanOrEqualTo",
-      IntegerValues= [1]
-    ))
+  # if isSandbox == "False":
+  #   # Num Hits Approved
+  #   quals.append(dict(
+  #     QualificationTypeId= "00000000000000000040",
+  #     Comparator= "GreaterThanOrEqualTo",
+  #     IntegerValues= [1]
+  #   ))
 
-  # quals.append({
-  #     QualificationTypeId: "000000000000000000L0",
-  #     Comparator: "GreaterThanOrEqualTo",
-  #     IntegerValues: [q_set.percentage_hits_approved]
-  # })
+  if isSandbox == "False" and q_set.percentage_hits_approved:
+    quals.append({
+        QualificationTypeId: "000000000000000000L0",
+        Comparator: "GreaterThanOrEqualTo",
+        IntegerValues: [q_set.percentage_hits_approved]
+    })
 
-  # q_set.percentage_hits_approved
   # q_set.percentage_assignments_submitted
 
   expiration = datetime.datetime.now() + datetime.timedelta(seconds=exp.hit_duration_in_seconds)
