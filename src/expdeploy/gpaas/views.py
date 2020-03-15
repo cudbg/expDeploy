@@ -24,6 +24,14 @@ import os
 import json
 import sys
 
+
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger('gpaas')
+
+
+
 from expdeploy.api.models import WorkerTask
 
 profile_view = 'expdeploy.gpaas.views.ProfileGalleryView'
@@ -688,7 +696,9 @@ def QualificationView(request, username, experiment):
 
 
 def UploadView(request, username, experiment):
+    logger.info("/UploadView")
 	if request.method != 'POST':
+        logger.info("Method was GET.  rejected")
 		return HttpResponseRedirect(reverse(profile_view))
 	else:
 		user = AuthenticateUser(request)
@@ -696,6 +706,7 @@ def UploadView(request, username, experiment):
 		form = UploadForm(request.POST, request.FILES)
 
 		#Create ExperimentFile instance for each uploaded file.
+        logger.info("Checking if form is valid: %s" % form.is_valid())
 		if form.is_valid():
 			for each in request.FILES.getlist('attachments'):
 				# if file exists, delete old instance.
@@ -714,9 +725,13 @@ def UploadView(request, username, experiment):
 				except ExperimentFile.DoesNotExist:
 					duplicate = None
 				#create new ExperimentFile object
-				newdoc = ExperimentFile(original_filename=each,\
-					docfile=each,username=user, filetext="tmptxt")
+				newdoc = ExperimentFile(
+                    original_filename=each,
+					docfile=each,
+                    username=user,
+                    filetext="tmptxt")
 
+                logger.info("created new file %s" % each)
 				newdoc.experiment = exp
 				newdoc.save()
 				

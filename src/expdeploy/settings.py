@@ -150,15 +150,26 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
+            'filename': '/home/ubuntu/expDeploy/src/logs/api.log'
+        },
+        'gpaas': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
             'filename': '/home/ubuntu/expDeploy/src/logs/gpaas.log'
         },
-    },
+     },
     'loggers': {
         'api': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },
+        'gpaas': {
+            'handlers': ['gpaas'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+
     },
 }
 
