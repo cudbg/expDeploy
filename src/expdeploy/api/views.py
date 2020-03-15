@@ -432,9 +432,23 @@ def removemturk(request):
   exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
   mturk = get_mturk_from_username(usrId, isSandbox)
 
-  # Get HIT status
-  status = mturk.get_hit(HITId=exp.hitID)['HIT']['HITStatus']
-  logger.info('HITStatus: %s for %s' % (status, exp.hitID))
+  # Get HIT status.  If it doesn't exist, then it's already been removed
+  try:
+    status = mturk.get_hit(HITId=exp.hitID)['HIT']['HITStatus']
+    logger.info('HITStatus: %s for %s' % (status, exp.hitID))
+  except Exception as e:
+    if "does not exist" in str(e):
+      if isSandbox == "True":
+        exp.published_sandbox = False
+        messages.add_message(request,
+              messages.SUCCESS, 'Experiment successfully removed from Sandbox.')
+      else:
+        exp.published_mturk = False
+        messages.add_message(request,
+              messages.SUCCESS, 'Experiment successfully removed from MTurk.')
+      exp.save()
+      return HttpResponseRedirect(reverse(ProfileGalleryView));
+    raise e
 
   # If HIT is active then set it to expire immediately
   if status in ('Assignable', 'Unassignable'):
