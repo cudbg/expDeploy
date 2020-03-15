@@ -143,7 +143,24 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "expdeploy/static"),
 ]
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/home/ubuntu/expDeploy/src/logs/gpaas.log'
+        },
+    },
+    'loggers': {
+        'api': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 try:
   import sys
