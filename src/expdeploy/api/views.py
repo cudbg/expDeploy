@@ -149,15 +149,18 @@ def hasStarted(request):
 
 
 def logAnalytics(request):
-  logger.info("")
-  logger.info("logAnalytics/")
   usrId = request.POST.get("usrId", '');
   expId = request.POST.get('expId', '');
-  logger.info(usrId)
-  logger.info(expId)
+  logger.info("")
+  logger.info("logAnalytics/ %s, %s" % (usrId, expId))
   logger.info(request.POST["data"])
 
-  exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+  try:
+    exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+  except Exception as e:
+    logger.error("Couldn't get experiment object")
+    raise e
+
   js = json.loads(exp.analytics)
   js["log"].append(request.POST["data"])
   exp.analytics = json.dumps(js)
