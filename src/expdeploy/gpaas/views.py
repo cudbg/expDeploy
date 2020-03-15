@@ -459,14 +459,14 @@ def FileHttpResponse(request, username, experiment, filename):
 
   DEBUG = False
 
-  if filename=="api.js" and DEBUG==False:
+  if False and filename=="api.js" and DEBUG==False:
 
-    print("\n\n\n\n TRYING TO GET THE API.")
+    logger.info("\n\n\n\n TRYING TO GET THE API.")
     return render_to_response('api.js',     {'username':username,
             'experiment':experiment})
 
 
-  print 'File', username, experiment, filename
+  logger.debug('File %s, %s, %s' % (username, experiment, filename))
   exp = GetExperiment(username, experiment)
   file_object = exp.experimentfile_set.get(original_filename = filename)
   static_content = file_object.filetext
@@ -740,7 +740,7 @@ def UploadView(request, username, experiment):
         file_contents = f.read()
         newdoc.filetext = file_contents
         newdoc.save()
-        logger.info("created new file %s at %s\t%s" % (each, newdoc.original_filename, newdoc.filetext))
+        logger.info("created new file %s at %s" % (each, newdoc.docfile.name))
 
       return HttpResponseRedirect(reverse(profile_view))
     else:
