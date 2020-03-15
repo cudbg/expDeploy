@@ -535,10 +535,12 @@ def removemturk(request):
 
   # If HIT is active then set it to expire immediately
   if status in ('Assignable', 'Unassignable'):
+    logger.info("Setting expiration to 2015 for %s" % exp.hitID)
     response = mturk.update_expiration_for_hit(
       HITId=exp.hitID,
       ExpireAt=datetime.datetime(2015, 1, 1)
     )        
+    logger.info(response)
 
   try:
     logger.info("expired the HIT.  Now deleting")
