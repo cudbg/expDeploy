@@ -545,7 +545,7 @@ def removemturk(request):
     disable = mturk.delete_hit(HITId=exp.hitID)
     logger.info(disable)
   except Exception as e:
-    log.error(traceback.format_exc())
+    logger.error(traceback.format_exc())
     messages.add_message(request,
         messages.ERROR, 'Failed to delete HIT: %s' % str(e))
     raise e
