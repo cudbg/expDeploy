@@ -711,7 +711,7 @@ def task(request):
     if exp.original_filename == expModel.config_file:
       break
   if not exp:
-    return HttpResponse("Not found: config for exp with wid=%s and exp=%s" % (wid, expId)
+    return HttpResponse("Not found: config for exp with wid=%s and exp=%s" % (wid, expId))
 
   EX = exp.experiment
 
