@@ -78,7 +78,14 @@ SANDBOXHOST = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
 REALHOST = 'https://mturk-requester.us-east-1.amazonaws.com'
 # 'mechanicalturk.amazonaws.com'
 
+def get_mturk_from_username(username, is_sandbox):
+  researcher = Researcher.objects.filter(user__username=username)[0];
+  key = researcher.aws_key_id;
+  secret_key = researcher.aws_secret_key;
+  return get_mturk_connection(key, secret_key, is_sandbox)
+
 def get_mturk_connection(access_key, secret, is_sandbox):
+
   host = SANDBOXHOST
   if (is_sandbox in ("False", False)):
     host = REALHOST
@@ -110,49 +117,6 @@ def get_mturk_connection(access_key, secret, is_sandbox):
 
 
 
-def changeKey(dictionary, oldKey, newKey):
-  dictionary[newKey] = dictionary[oldKey]
-  del dictionary[oldKey]
-  return dictionary
-
-
-
-def showResults(request):
-  """
-  Example of how to create a custom page to view the results of an experiment
-  """
-
-  wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
-  expId = request.GET.get('wid', '');
-  if expId != '':
-    wids = [expId]
-
-  tasks = []
-  for wid in wids:
-    find_tasks = WorkerTask.objects.filter(wid=wid)
-    for task in find_tasks:
-      tasks.append(task)
-
-  resp = ""
-  for task in tasks:
-    logger.info("showResults2: " + task.wid)
-    js = json.loads(task.results)
-    data = js["data"]
-    if len(data) > 0:
-      lastResult = data[len(data)-1]
-
-      # check answer attribute
-      if "summaryModel" in lastResult:
-        resp = lastResult["summaryModel"]
-        logger.info(lastResult["summaryModel"])
-
-      logger.info(lastResult.get("summary", ""))
-
-  return resp
-
-if __name__ =="__main__":
-  # using this, you can run views in the console manually
-  showResults3("hello world")
 
 def hasStarted(request):
   expId = request.GET.get('experiment', '');
@@ -201,11 +165,7 @@ def logAnalytics(request):
   return HttpResponse(request.POST)
 
 def approve(request):
-  researcher = Researcher.objects.filter(user__username="hn2284")[0];
-  key = researcher.aws_key_id;
-  secret_key = researcher.aws_secret_key;
-  mturk = get_mturk_connection(key, secret_key, False)
-
+  mturk = get_mturk_from_username("hn2284")
   approve = mturk.approve_assignment(
           AssignmentId="39JEC7537VK9RX8SMLEVMEW0WN3VCN",
           OVerrideRejection=True)
@@ -243,6 +203,7 @@ def allPay(request):
   return HttpResponse(str(find_tasks))
 
 def payout(request):
+  logger.info("/payout")
   assignmentId = request.GET.get('assignmentId', '');
   completed = request.GET.get('completed', '');
   assigned = request.GET.get('assigned', '');
@@ -252,85 +213,52 @@ def payout(request):
 
 
   assignIds = []
-
   completions = {}
   waitingAssignments = []
 
   if assignmentId == '':
     find_tasks = WorkerTask.objects.filter(experiment__name=expId,researcher=usrId)
-    print >>sys.stderr, ("TASKS BELOW")
-    print >>sys.stderr, (find_tasks)
-    print >>sys.stderr, (expId)
-    print >>sys.stderr, (usrId)
-
-
-
+    logger.info("TASKS BELOW")
+    logger.info(find_tasks)
+    logger.info(expId)
+    logger.info(usrId)
 
     for task in find_tasks:
-
-
       if task.currentStatus == "Waiting":
         waitingAssignments.append(task.assignmentId)
 
       if task.assignmentId not in completions:
-        if task.currentStatus=="Complete":
-          completions[task.assignmentId] = True
-        else:
-          completions[task.assignmentId] = False
-
+        completions[task.assignmentId] = (task.currentStatus=="Complete")
         assignIds.append(task.assignmentId)
+
       if task.currentStatus != "Complete":
         completions[task.assignmentId] = False
 
-    print(find_tasks)
   else:
     assignIds.append(assignmentId)
     completions[assignmentId] = bonus
 
   for assignmentId in assignIds:
-
     if assignmentId not in waitingAssignments:
-
-
-
-      print >>sys.stderr, (assignmentId)
-
-
-      shouldBreak = False
-
-
-
       find_tasks = WorkerTask.objects.filter(assignmentId=assignmentId);
       wid = ""
       completed = 0
+      shouldBreak = False
 
       paySandbox = find_tasks[0].isSandbox
-
       for t in find_tasks:
-        if t.paid == True:
-          shouldBreak = True
-
+        shouldBreak = shouldBreak or t.paid
         if t.currentStatus == "Complete":
           completed+=1
-
         wid = t.wid
-
-
-      print >>sys.stderr, (shouldBreak)
 
       if shouldBreak:
         continue
 
 
-      researcher = Researcher.objects.filter(user__username=usrId)[0];
       exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
-
-      key = researcher.aws_key_id;
-      secret_key = researcher.aws_secret_key;
-      mturk = get_mturk_connection(key, secret_key, paySandbox)
-
+      mturk = get_mturk_from_username(usrId, paySandbox)
       balance = float(mturk.get_account_balance()['AvailableBalance'])
-
       BONUS = exp.bonus_payment
       PERTASK = exp.per_task_payment
 
@@ -347,7 +275,8 @@ def payout(request):
       try:
         approve = mturk.approve_assignment(AssignmentId=assignmentId)
       except MTurkRequestError as e:
-        print(e)
+        logger.error(traceback.format_exc())
+        return HttpResponse("Failed to approve assignment: %s" % e)
 
       bon = mturk.send_bonus(
               WorkerId=wid,
@@ -358,11 +287,9 @@ def payout(request):
       logger.info("sent bonus")
       logger.info(bon)
 
-
       for t in find_tasks:
         t.paid = True
         t.save()
-
 
   return HttpResponse("Payments done.")
 
@@ -370,7 +297,7 @@ def results(request):
   researcherId = request.GET.get('researcher', '');
   find_tasks = WorkerTask.objects.filter(researcher=researcherId);
   rows = []
-  print(find_tasks)
+
   for workerTask in find_tasks:
     new = True
     for row in rows:
@@ -479,22 +406,6 @@ def export(request):
   cursor.execute("SELECT * INTO api_metadata_temp FROM api_metadata WHERE id = ANY(%s)", [metaDataIds]) #works
   cursor.execute("SELECT * INTO api_workertask_temp FROM api_workertask WHERE experiment_id=%s AND researcher=%s", [exp_num,usrId])
 
-  # for task in find_tasks:
-  #       sss = task.historyevent_set.all()
-  #       for his in sss:
-  #               histories.append(his)
-  #       metadata.append(task.metaData)
-  #       print("SSS" + task.experiment.name)
-  #       d = byteify(json.loads(task.results));
-  #       data.append(d);
-
-  #-t api_historyevent_temp
-  #system("sudo su - postgres")
-
-  #query failed: ERROR:  permission denied for relation api_metadata_temp
-  #sudo -u postgres /// sudo: no tty present and no askpass program specified
-
-  #resp = system('echo "$USER"')
   print >>sys.stderr, "-----"
   print >>sys.stderr, get_username()
 
@@ -508,11 +419,6 @@ def export(request):
   os.remove(filename)
   return response
 
-  #return sendfile(request, 'hn2284.dump')
-
-  #return HttpResponse("hi")
-
-
 
 def removemturk(request):
   """
@@ -522,12 +428,9 @@ def removemturk(request):
   isSandbox = request.GET.get('isSandbox', '');
   expId = request.GET.get('experiment', '');
   usrId = request.GET.get('researcher', '');
-  researcher = Researcher.objects.filter(user__username=usrId)[0];
-  exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
-  key = researcher.aws_key_id;
-  secret_key = researcher.aws_secret_key;
-  mturk = get_mturk_connection(key, secret_key, isSandbox)
+  exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+  mturk = get_mturk_from_username(usrId, isSandbox)
 
   # Get HIT status
   status = mturk.get_hit(HITId=exp.hitID)['HIT']['HITStatus']
@@ -535,7 +438,7 @@ def removemturk(request):
 
   # If HIT is active then set it to expire immediately
   if status in ('Assignable', 'Unassignable'):
-    logger.info("Setting expiration to 2015 for %s" % exp.hitID)
+    logger.info("Setting expiration to 0 for %s" % exp.hitID)
     response = mturk.update_expiration_for_hit(
       HITId=exp.hitID,
       ExpireAt=0
@@ -562,26 +465,20 @@ def removemturk(request):
           messages.SUCCESS, 'Experiment successfully removed from MTurk.')
   exp.save()
 
-
-
   return HttpResponseRedirect(reverse(ProfileGalleryView));
-  #return HttpResponse("Successfully deleted from MTurk");
 
 
 def mturk(request):
   isSandbox = request.GET.get('isSandbox', '');
   expId = request.GET.get('experiment', '');
   usrId = request.GET.get('researcher', '');
-  researcher = Researcher.objects.filter(user__username=usrId)[0];
   exp = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+  mturk = get_mturk_from_username(usrId, isSandbox)
 
   logger.info("")
   logger.info("called /mturk")
   logger.info(request.GET)
 
-  key = researcher.aws_key_id;
-  secret_key = researcher.aws_secret_key;
-  mturk = get_mturk_connection(key, secret_key, isSandbox)
 
   url = request.GET.get('URL', '');
   title = expId.replace("_"," ")
@@ -640,7 +537,7 @@ def mturk(request):
       Reward = str(amount),
       MaxAssignments=exp.n,
       AssignmentDurationInSeconds=exp.hit_duration_in_seconds,
-      LifetimeInSeconds=exp.hit_duration_in_seconds,
+      LifetimeInSeconds=60 * 60 * 24 * 2, # 2 days
       QualificationRequirements = quals
       #response_groups = ( 'Minimal', 'HITDetail' ) # I don't know what response groups are
   )
@@ -688,56 +585,58 @@ def result(request):
   return HttpResponse(data)
 
 def log(request):
-  if request.method == 'POST':
-    try:
-      logger.info("log with wid " + request.POST.get("worker_id", ''))
+  if request.method != 'POST':
+    return
 
+  try:
+    logger.info("/log wid " + request.POST.get("worker_id", ''))
 
-      body_unicode = request.body.decode('utf-8')
-      body = json.loads(body_unicode)
-      #body = request.POST.dict()
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
 
-      #TODO: Filter by experiment name
+    #TODO: Filter by experiment name
 
-      find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
-      logger.info("found %d tasks" % len(find_tasks));
+    find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
+    logger.info("found %d tasks" % len(find_tasks));
+    logger.info("wid:      %s" % body["worker_id"])
+    logger.info("taskname: %s" % body["task_name"])
+    logger.info("taskid:   %s" % body["task_id"])
 
+    task = find_tasks[0]
+    if (task.results == "null"):
+      task.results = "{}";
+    d = json.loads(task.results)
 
-      logger.info("wid:      %s" % body["worker_id"])
-      logger.info("taskname: %s" % body["task_name"])
-      logger.info("taskid:   %s" % body["task_id"])
+    metaData = body["metaData"]
+    m = Metadata(
+      userAgent=metaData["userAgent"], 
+      dimensions=metaData["dimension"], 
+      start=metaData["taskStart"],
+      end=metaData["taskFinish"],
+      ip_address=get_client_ip(request),
+      wid=body["worker_id"]
+    )
+    m.save()
+    task.metaData = m
+    print(metaData)
 
-      task = find_tasks[0]
-      if (task.results == "null"):
-        task.results = "{}";
-      d = json.loads(task.results)
+    d["data"] = body["data"]
+    task.results = json.dumps(d);
+    history = json.loads(task.history)
+    timestamp_string = format(datetime.datetime.now(), u'U')
 
-      metaData = body["metaData"]
-      m = Metadata(userAgent=metaData["userAgent"], dimensions=metaData["dimension"], start=metaData["taskStart"], end=metaData["taskFinish"],ip_address=get_client_ip(request),wid=body["worker_id"])
-      m.save()
-      task.metaData= m
+    task.currentStatus = "Complete"
 
+    event = HistoryEvent(newStatus="Complete", timeStamp=int(timestamp_string))
+    event.workerTask = task
+    event.save()
 
-      print(metaData)
-
-      d["data"] = (body["data"]);
-
-      task.results = json.dumps(d);
-      history = json.loads(task.history)
-      timestamp_string = format(datetime.datetime.now(), u'U')
-
-      task.currentStatus = "Complete"
-
-      event = HistoryEvent(newStatus="Complete", timeStamp=int(timestamp_string))
-      event.workerTask = task
-      event.save()
-
-      task.save()
-    except Exception as e:
-      logger.error(str(e))
-      logger.error(traceback.format_exc())
-      raise e
-    return HttpResponse("success");
+    task.save()
+  except Exception as e:
+    logger.error(str(e))
+    logger.error(traceback.format_exc())
+    raise e
+  return HttpResponse("success");
 
 
 def experiment(request):
@@ -751,54 +650,40 @@ def experiment(request):
     return HttpResponse(exps[0].data)
 
 def finishTasks(request):
+  logger.info("/finishTasks")
   expId = request.GET.get('experiment', '');
   usrId = request.GET.get('researcher', '');
   taskName = request.GET.get('task', '');
   wid = request.GET.get('wid', '');
-  print("test 1");
-
-  print("bleh")
 
   exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
   if len(exps)==0:
     return HttpResponse("No experiments with those specs found")
 
-
-
   return_tasks = []
   find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment__name=expId);
-  print(find_tasks);
-
-    #return HttpResponse('{"params":' + str(params) + "}")
-  for workertask in find_tasks:
-    return_tasks.append(workertask);
+  return_tasks.extend(find_tasks)
 
   params_list = []
-
-  print("THESE ARE THE STOPPED TASKS")
-  print(return_tasks)
-
-  response = "";
+  logger.info("Tasks that have been stopped:")
+  logger.info(return_tasks)
 
   for task in return_tasks:
-    params = task.params
-    params_json = byteify(json.loads(params));
+    params = json.loads(task.params)
 
     results = json.loads(task.results)
     if (len(results["data"]) == 0):
       task.currentStatus = "Stopped"
-      params_list.append(params_json);
+      params_list.append(params)
 
       timestamp_string = format(datetime.datetime.now(), u'U')
       event = HistoryEvent(newStatus="Stopped", timeStamp=int(timestamp_string))
       event.workerTask = task
       event.save()
-
-
       task.save()
-      print(params_json);
 
-  return HttpResponse('{"params":' + str(params_list) + "}")
+  response = json.dumps(dict(params=params_list))
+  return HttpResponse(response)
 
 def task(request):
   mturk_hitId = request.GET.get('hitId', '');
@@ -812,165 +697,161 @@ def task(request):
 
   logger.info("get %d tasks for wid %s" % (n, wid))
 
+  expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
+  banned_wids = json.loads(expModel.banned)["ids"]
+  if wid in banned_wids:
+    return HttpResponse("Your WorkerID has been banned")
+
   exps = ExperimentFile.objects.filter(username=usrId,experiment__name=expId);
   if len(exps)==0:
     return HttpResponse("No experiments with those specs found")
 
-  expsBackwards = reversed(exps);
+  exp = None
+  for exp in reversed(exps):
+    if exp.original_filename == expModel.config_file:
+      break
+  if not exp:
+    return HttpResponse("Not found: config for exp with wid=%s and exp=%s" % (wid, expId)
 
-  expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
-  wids = json.loads(expModel.banned)["ids"]
+  EX = exp.experiment
 
+  his = json.loads(EX.analytics)
+  if "wids" not in his:
+    his["wids"] = []
 
-  for exp in expsBackwards:
+  return_tasks = []
+  find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
 
-    logger.info(exp.original_filename)
-    if (exp.original_filename == (expModel.config_file)):
-      EX = exp.experiment
+  logger.info("found %d tasks in database" % len(find_tasks))
+  logger.info(str(find_tasks))
 
-      if wid in wids:
-        return HttpResponse("Your WorkerID has been banned")
+  if (len(find_tasks) == 0):
+    data = json.loads(exp.docfile.read())
+    logger.info(data["tasks"])
 
-      his = json.loads(EX.analytics)
-      if "wids" not in his:
-        his["wids"] = []
+    for task in data["tasks"]:
+      logger.info("params for task name %s.  Checking if it is same as '%s'" % (task['name'], taskName))
+      if task["name"] == taskName:
 
-      return_tasks = []
-      find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
+        param = {}
+        gen = [{}]
 
-      logger.info("found %d tasks in database" % len(find_tasks))
-      logger.info(str(find_tasks))
+        # Create all combinatinos of the parameters' values
+        for p in task["params"]:
+          if p["type"] == "UniformChoice":
+            gen2 = []
+            for inProgress in gen:
+              for choice in p["options"]:
+                modify = copy(inProgress)
+                modify[p["name"]] = choice
+                gen2.append(modify)
+            gen = gen2
 
-      if (len(find_tasks) == 0):
-        data = json.loads(exp.docfile.read())
-        logger.info(data["tasks"])
+        param = gen[0]
+        seed(abs(hash(wid)) % (10 ** 8))
+        shuffle(gen)
 
-        for task in data["tasks"]:
-          logger.info("params for task name %s.  Checking if it is same as '%s'" % (task['name'], taskName))
-          if task["name"] == taskName:
+        while n > len(gen):
+          gen.append({})
 
-            param = {}
-            gen = [{}]
+        balanced_history = json.loads(EX.balanced_history)
+        for p in task["params"]:
+          if p["type"] == "CountDownChoice":
+            if p["name"] not in balanced_history:
+              balanced_history[p["name"]] = {}
 
-            # Create all combinatinos of the parameters' values
-            for p in task["params"]:
-              if p["type"] == "UniformChoice":
-                gen2 = []
-                for inProgress in gen:
-                  for choice in p["options"]:
-                    modify = copy(inProgress)
-                    modify[p["name"]] = choice
-                    gen2.append(modify)
-                gen = gen2
+              for i in range(0, len(p["options"])):
+                balanced_history[p["name"]][p["options"][i][1]] = p["options"][i][0]
 
-            param = gen[0]
-            seed(abs(hash(wid)) % (10 ** 8))
-            shuffle(gen)
-
-            while n > len(gen):
-              gen.append({})
-
-            balanced_history = json.loads(EX.balanced_history)
-            for p in task["params"]:
-              if p["type"] == "CountDownChoice":
-                if p["name"] not in balanced_history:
-                  balanced_history[p["name"]] = {}
-
-                  for i in range(0, len(p["options"])):
-                    balanced_history[p["name"]][p["options"][i][1]] = p["options"][i][0]
-
-            balanced_history = json.loads(json.dumps(balanced_history))
-            pickedsofar = {}
+        balanced_history = json.loads(json.dumps(balanced_history))
+        pickedsofar = {}
 
 
 
-            logger.info("generating %d tasks" % n)
-            for i in range(0,n):
-              param = gen.pop()
+        logger.info("generating %d tasks" % n)
+        for i in range(0,n):
+          param = gen.pop()
 
-              for p in task["params"]:
-                if p["name"] not in pickedsofar:
-                  pickedsofar[p["name"]] = []
+          for p in task["params"]:
+            if p["name"] not in pickedsofar:
+              pickedsofar[p["name"]] = []
 
-                if p["type"] == "CountDownChoice":
-                  sorter = []
-                  historical_data = balanced_history[p["name"]]
-                  possibilities = historical_data.keys()
-                  possible_values = []
+            if p["type"] == "CountDownChoice":
+              sorter = []
+              historical_data = balanced_history[p["name"]]
+              possibilities = historical_data.keys()
+              possible_values = []
 
-                  for key in possibilities:
-                    if historical_data[key] > 0:
-                      possible_values.append(key)
+              for key in possibilities:
+                if historical_data[key] > 0:
+                  possible_values.append(key)
 
-                  print(possible_values)
+              print(possible_values)
 
-                  if len(possible_values) == 0:
-                    historical_data = {}
-                    for i in range(0, len(p["options"])):
-                      historical_data[p["options"][i][1]] = p["options"][i][0]
-                      possible_values.append(p["options"][i][1])
+              if len(possible_values) == 0:
+                historical_data = {}
+                for i in range(0, len(p["options"])):
+                  historical_data[p["options"][i][1]] = p["options"][i][0]
+                  possible_values.append(p["options"][i][1])
 
-                  shuffle(possible_values)
-                  picked = possible_values[0]
+              shuffle(possible_values)
+              picked = possible_values[0]
 
-                  historical_data[picked] -= 1
-                  balanced_history[p["name"]] = historical_data
-
-
-                  param[p["name"]] = picked
-
-              task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-              NewTask = WorkerTask(
-                  name=taskName, 
-                  wid=wid, 
-                  experiment=EX, 
-                  identifier=task_id, 
-                  researcher=usrId,
-                  hitId=mturk_hitId,
-                  assignmentId=mturk_assignmentId
-              )
+              historical_data[picked] -= 1
+              balanced_history[p["name"]] = historical_data
 
 
+              param[p["name"]] = picked
 
-              param["identifier"] = task_id;
-              NewTask.params = json.dumps(param);
-
-              history = json.loads(NewTask.history)
-              timestamp_string = format(datetime.datetime.now(), u'U')
-              event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
-              history["events"].append(event)
-              NewTask.history = json.dumps(history)
-
-              NewTask.isSandbox = isSandbox
-              NewTask.save();
-              return_tasks.append(NewTask);
+          task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+          NewTask = WorkerTask(
+              name=taskName, 
+              wid=wid, 
+              experiment=EX, 
+              identifier=task_id, 
+              researcher=usrId,
+              hitId=mturk_hitId,
+              assignmentId=mturk_assignmentId
+          )
 
 
-            logger.info("created %d tasks" % len(return_tasks))
-            EX.analytics = json.dumps(his)
-            EX.balanced_history=json.dumps(balanced_history)
-            EX.save()
 
-      for workertask in find_tasks:
-        return_tasks.append(workertask);
+          param["identifier"] = task_id;
+          NewTask.params = json.dumps(param);
 
-      params_list = []
-      for task in return_tasks:
-        params = json.loads(task.params)
-        #params_json = byteify(params);
+          history = json.loads(NewTask.history)
+          timestamp_string = format(datetime.datetime.now(), u'U')
+          event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
+          history["events"].append(event)
+          NewTask.history = json.dumps(history)
 
-        results = json.loads(task.results)
-        if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
-          params_list.append(params);
+          NewTask.isSandbox = isSandbox
+          NewTask.save();
+          return_tasks.append(NewTask);
 
-      response = dict(
-        params=params_list,
-        pay=EX.per_task_payment,
-        bonus=EX.bonus_payment
-      )
-      return HttpResponse(json.dumps(response))
 
-      return HttpResponse('{"params":' + str(params_list) + ',"pay":' + str(EX.per_task_payment) + ',"bonus":' + str(EX.bonus_payment) + '}')
+        logger.info("created %d tasks" % len(return_tasks))
+        EX.analytics = json.dumps(his)
+        EX.balanced_history=json.dumps(balanced_history)
+        EX.save()
+
+  for workertask in find_tasks:
+    return_tasks.append(workertask);
+
+  params_list = []
+  for task in return_tasks:
+    params = json.loads(task.params)
+
+    results = json.loads(task.results)
+    if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
+      params_list.append(params);
+
+  response = dict(
+    params=params_list,
+    pay=EX.per_task_payment,
+    bonus=EX.bonus_payment
+  )
+  return HttpResponse(json.dumps(response))
 
 
 def byteify(input):
@@ -986,3 +867,44 @@ def byteify(input):
 
 def index(request):
   return HttpResponse("Hello, world. You're at the api index.")
+
+
+
+
+def showResults(request):
+  """
+  Example of how to create a custom page to view the results of an experiment
+  """
+
+  wids = ["A26Y58YECZUZZG", "A37S96RT1P1IT2", "A18TCR555RWUZV", "A1945USNZHTROX", "A2JCHN90PRUWDH"]
+  expId = request.GET.get('wid', '');
+  if expId != '':
+    wids = [expId]
+
+  tasks = []
+  for wid in wids:
+    find_tasks = WorkerTask.objects.filter(wid=wid)
+    for task in find_tasks:
+      tasks.append(task)
+
+  resp = ""
+  for task in tasks:
+    logger.info("showResults2: " + task.wid)
+    js = json.loads(task.results)
+    data = js["data"]
+    if len(data) > 0:
+      lastResult = data[len(data)-1]
+
+      # check answer attribute
+      if "summaryModel" in lastResult:
+        resp = lastResult["summaryModel"]
+        logger.info(lastResult["summaryModel"])
+
+      logger.info(lastResult.get("summary", ""))
+
+  return resp
+
+if __name__ =="__main__":
+  # using this, you can run views in the console manually
+  showResults("hello world")
+
