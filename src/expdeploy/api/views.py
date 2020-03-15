@@ -822,10 +822,7 @@ def task(request):
 
     logger.info(exp.original_filename)
     if (exp.original_filename == (expModel.config_file)):
-
       EX = exp.experiment
-
-
 
       if wid in wids:
         return HttpResponse("Your WorkerID has been banned")
@@ -834,14 +831,13 @@ def task(request):
       if "wids" not in his:
         his["wids"] = []
 
-
       return_tasks = []
       find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
 
       logger.info("found %d tasks in database" % len(find_tasks))
       logger.info(str(find_tasks))
-      if (len(find_tasks) == 0):
 
+      if (len(find_tasks) == 0):
         data = json.loads(exp.docfile.read())
         logger.info(data["tasks"])
 
@@ -852,6 +848,7 @@ def task(request):
             param = {}
             gen = [{}]
 
+            # Create all combinatinos of the parameters' values
             for p in task["params"]:
               if p["type"] == "UniformChoice":
                 gen2 = []
@@ -862,17 +859,12 @@ def task(request):
                     gen2.append(modify)
                 gen = gen2
 
-                #param[p["name"]] = random.choice(p["options"])
-
             param = gen[0]
             seed(abs(hash(wid)) % (10 ** 8))
             shuffle(gen)
 
             while n > len(gen):
               gen.append({})
-
-
-
 
             balanced_history = json.loads(EX.balanced_history)
             for p in task["params"]:
@@ -890,21 +882,14 @@ def task(request):
 
             logger.info("generating %d tasks" % n)
             for i in range(0,n):
-
               param = gen.pop()
 
-
-
               for p in task["params"]:
-
                 if p["name"] not in pickedsofar:
                   pickedsofar[p["name"]] = []
 
-
                 if p["type"] == "CountDownChoice":
-
                   sorter = []
-
                   historical_data = balanced_history[p["name"]]
                   possibilities = historical_data.keys()
                   possible_values = []
@@ -929,74 +914,17 @@ def task(request):
 
 
                   param[p["name"]] = picked
-                  # pickFrom = balanced_history["pickFrom"]
-                  # shuffle(pickFrom)
-
-                  # picked = 0
-
-                  # if len(pickFrom) > 0:
-
-                  #       picked = pickFrom[0]
-                  #       while picked in pickedsofar[p["name"]]:
-                  #               shuffle(pickFrom)
-                  #               picked = pickFrom[0]
-                  # else:
-                  #       picked = random.randint(0,500)
-
-                  # for key in historical_data:
-                  #       if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
-                  #               sorter.append(key)
-
-                  # shuffle(sorter)
-
-                  # if len(sorter) == 0:
-                  #       balanced_history[p["name"]] = {}
-                  #       for i in range(p["options"][0], p["options"][1]):
-                  #               balanced_history[p["name"]][str(i)] = 0
-
-                  #       historical_data = balanced_history[p["name"]]
-
-                  #       for key in historical_data:
-                  #               if historical_data[key] < 3 and key not in pickedsofar[p["name"]]:
-                  #                       sorter.append(key)
-
-                  # shuffle(sorter)
-
-                  # minHist = 999
-                  # for key in sorter:
-                  #       minHist = min(minHist, balanced_history[p["name"]][key])
-
-                  # sorter2 = []
-                  # for key in sorter:
-                  #       if balanced_history[p["name"]][key] <= minHist:
-                  #               sorter2.append(key)
-
-                  # shuffle(sorter2)
-                  # sorter = sorter2
-
-                  # numchoose = sorter[0]
-
-                  # print(numchoose)
-                  # print(pickedsofar[p["name"]])
-
-
-
-
-                  # pickedsofar[p["name"]].append(numchoose)
-
-                  # #print(numchoose[1])
-                  # #print(numchoose[0])
-                  # balanced_history[p["name"]][numchoose]+=1
-
-                  # param[p["name"]] = picked
-                  # pickedsofar[p["name"]].append(picked)
-                  # if len(pickFrom) > 0:
-                  #       pickFrom.pop(0)
-                  # balanced_history["pickFrom"] = pickFrom
 
               task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-
-              NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId,hitId=mturk_hitId,assignmentId=mturk_assignmentId)
+              NewTask = WorkerTask(
+                  name=taskName, 
+                  wid=wid, 
+                  experiment=EX, 
+                  identifier=task_id, 
+                  researcher=usrId,
+                  hitId=mturk_hitId,
+                  assignmentId=mturk_assignmentId
+              )
 
 
 
@@ -1008,110 +936,38 @@ def task(request):
               event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
               history["events"].append(event)
               NewTask.history = json.dumps(history)
-              #print(NewTask.history)
+
               NewTask.isSandbox = isSandbox
               NewTask.save();
-
               return_tasks.append(NewTask);
-
-
-              #print(NewTask.experiment)
 
 
             logger.info("created %d tasks" % len(return_tasks))
             EX.analytics = json.dumps(his)
-            #for key in balanced_history:
             EX.balanced_history=json.dumps(balanced_history)
             EX.save()
 
-
-      #return HttpResponse('{"params":' + str(params) + "}")
       for workertask in find_tasks:
         return_tasks.append(workertask);
 
       params_list = []
-
-      response = "";
-
       for task in return_tasks:
-        params = task.params
-        params_json = byteify(json.loads(params));
+        params = json.loads(task.params)
+        #params_json = byteify(params);
 
         results = json.loads(task.results)
         if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
-          params_list.append(params_json);
-          print(params_json);
+          params_list.append(params);
+
+      response = {
+        params: params_list,
+        pay: EX.per_task_payment,
+        bonus: EX.bonus_payment
+      }
+      return HttpResponse(json.dumps(response))
 
       return HttpResponse('{"params":' + str(params_list) + ',"pay":' + str(EX.per_task_payment) + ',"bonus":' + str(EX.bonus_payment) + '}')
 
-
-
-
-
-
-
-  # for exp in expsBackwards:
-  #       if (exp.original_filename == (expId + ".py")):
-  #               print("test 2");
-
-  #               EX = exp.experiment
-  #               print("n2222"+EX.name);
-
-  #               return_tasks = []
-  #               find_tasks = WorkerTask.objects.filter(name=taskName, wid=wid, experiment=EX);
-  #               print(find_tasks);
-  #               if (len(find_tasks) == 0):
-  #                       Task = getattr(importlib.import_module("expdeploy." + str(exp.docfile).strip().replace(".py","").replace("/",".")), taskName)
-
-  #                       print("Creating new tasks right now");
-
-  #                       for i in range(0,n):
-  #                               exp = Task(userid=wid+str(i));
-
-  #                               task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-
-  #                               NewTask = WorkerTask(name=taskName, wid=wid, experiment=EX, identifier=task_id, researcher=usrId)
-  #                               param = exp.get_params()
-  #                               param["identifier"] = task_id;
-
-  #                               print(param)
-  #                               NewTask.params = json.dumps(param);
-
-
-  #                               history = json.loads(NewTask.history)
-  #                               timestamp_string = format(datetime.datetime.now(), u'U')
-
-
-  #                               event = {"type":"changeStatus","newStatus":"Waiting","timestamp":timestamp_string}
-  #                               history["events"].append(event)
-
-  #                               NewTask.history = json.dumps(history)
-
-  #                               #print(NewTask.history)
-  #                               NewTask.save();
-  #                               #print(NewTask.experiment)
-  #                               return_tasks.append(NewTask);
-
-  #                       #return HttpResponse('{"params":' + str(params) + "}")
-  #               for workertask in find_tasks:
-  #                       return_tasks.append(workertask);
-
-  #               params_list = []
-
-  #               response = "";
-
-  #               for task in return_tasks:
-  #                       params = task.params
-  #                       params_json = byteify(json.loads(params));
-
-  #                       results = json.loads(task.results)
-  #                       if (len(results["data"]) == 0 and task.currentStatus=="Waiting"):
-  #                               params_list.append(params_json);
-  #                               print(params_json);
-
-  #               return HttpResponse('{"params":' + str(params_list) + "}")
-
-                #return HttpResponse(return HttpResponse('{"params":' + str(params) + "}"), content_type='application/json; charset=utf-8')
 
 def byteify(input):
   if isinstance(input, dict):
