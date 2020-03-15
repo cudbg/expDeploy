@@ -539,10 +539,11 @@ def removemturk(request):
       HITId=exp.hitID,
       ExpireAt=datetime.datetime(2015, 1, 1)
     )        
-    logger.info("set HIT to expire")
 
   try:
+    logger.info("expired the HIT.  Now deleting")
     disable = mturk.delete_hit(HITId=exp.hitID)
+    logger.info(disable)
   except Exception as e:
     log.error(traceback.format_exc())
     messages.add_message(request,
