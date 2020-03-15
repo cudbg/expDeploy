@@ -655,9 +655,6 @@ def mturk(request):
     messages.add_message(request,
             messages.SUCCESS, 'Experiment successfully posted to MTurk.')
   exp.save()
-  logger.info(create_hit_result)
-
-
 
   return HttpResponseRedirect(reverse(ProfileGalleryView));
 
