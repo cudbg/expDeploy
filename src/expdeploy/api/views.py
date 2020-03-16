@@ -605,15 +605,23 @@ def log(request):
   if request.method != 'POST':
     return
 
+
   try:
     logger.info("/log wid " + request.POST.get("worker_id", ''))
 
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
 
-    #TODO: Filter by experiment name
+    expId = body['experiment_name']
+    usrId = body['researcher_id']
+    expModel = ExperimentModel.objects.filter(name=expId,username=usrId)[0];
 
-    find_tasks = WorkerTask.objects.filter( wid=body["worker_id"],name=body["task_name"],identifier=body["task_id"]);
+    #TODO: Filter by experiment name
+    find_tasks = WorkerTask.objects.filter( 
+        wid=body["worker_id"],
+        name=body["task_name"],
+        identifier=body["task_id"],
+        experiment=expModel);
     logger.info("found %d tasks" % len(find_tasks));
     logger.info("wid:      %s" % body["worker_id"])
     logger.info("taskname: %s" % body["task_name"])
