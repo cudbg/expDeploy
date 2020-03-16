@@ -829,6 +829,7 @@ def task(request):
 
               param[p["name"]] = picked
 
+          random.seed(hash(wid + taskName + expId))
           task_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
           NewTask = WorkerTask(
               name=taskName, 
