@@ -870,7 +870,7 @@ def task(request):
   response = dict(
     params=params_list,
     pay=EX.per_task_payment,
-    bonus=EX.bonus_payment
+    bonus=EX.bonus_payment,
     ncompleted=ncompleted
   )
   return HttpResponse(json.dumps(response))
