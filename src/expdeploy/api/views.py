@@ -641,6 +641,7 @@ def log(request):
     task.results = json.dumps(d);
     history = json.loads(task.history)
     timestamp_string = format(datetime.datetime.now(), u'U')
+    logger.info(body['data'])
 
     task.currentStatus = "Complete"
 
