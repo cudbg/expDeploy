@@ -535,11 +535,11 @@ def mturk(request):
   #   ))
 
   if isSandbox == "False" and q_set.percentage_hits_approved:
-    quals.append({
-        QualificationTypeId: "000000000000000000L0",
-        Comparator: "GreaterThanOrEqualTo",
-        IntegerValues: [q_set.percentage_hits_approved]
-    })
+    quals.append(dict(
+        QualificationTypeId = "000000000000000000L0",
+        Comparator= "GreaterThanOrEqualTo",
+        IntegerValues= [q_set.percentage_hits_approved]
+    ))
 
   # q_set.percentage_assignments_submitted
 
