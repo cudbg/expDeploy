@@ -333,6 +333,8 @@ def exportCSV(request):
   #TODO: Filter by experiment name
   find_tasks = WorkerTask.objects.filter(experiment__name=expId, researcher=usrId);
   data = []
+  logger.info("/exportCSV")
+  logger.info("Found %s tasks for exp %s researcher %s" % (len(find_tasks), expId, usrId))
   for task in find_tasks:
     print("SSS" + task.experiment.name)
     d = byteify(json.loads(task.results));
